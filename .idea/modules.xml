@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/SOS-CS449-PROJECT.iml" filepath="$PROJECT_DIR$/.idea/SOS-CS449-PROJECT.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/Sprint0.iml" filepath="$PROJECT_DIR$/.idea/Sprint0.iml" />
+>>>>>>> fc3051e8fbfda37edb29fb4d223d3b5ba39be324
     </modules>
   </component>
 </project>
