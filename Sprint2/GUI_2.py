@@ -68,10 +68,14 @@ class gameBoard:
 
         self.setupFrame.destroy()
 
-        self.gameFrame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
-
         self.root.grid_rowconfigure(0, weight=1)
         self.root.grid_columnconfigure(0, weight=1)
+
+        self.gameFrame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        self.gameFrame.grid_rowconfigure(1, weight=1)
+        self.gameFrame.grid_columnconfigure(0, weight=0) # Left p1Frame, do not expand at all
+        self.gameFrame.grid_columnconfigure(1, weight=1)  # Board Frame, expand to fill
+        self.gameFrame.grid_columnconfigure(0, weight=1)  # p2Frame, do not expand
 
         dimStr = self.dimensions.get()
         dimN = int(dimStr.split('x')[0])
