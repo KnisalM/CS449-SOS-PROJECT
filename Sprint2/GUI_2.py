@@ -77,7 +77,7 @@ class gameBoard:
         dimN = int(dimStr.split('x')[0])
 
         boardFrame = tk.Frame(self.gameFrame)
-        boardFrame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        boardFrame.grid(row=1, column=1, sticky=(tk.W, tk.E, tk.N, tk.S))
 
         for i in range(dimN):
             row = []
@@ -95,7 +95,7 @@ class gameBoard:
         self.p2Move = tk.StringVar(value='S')
 
         p1Frame = tk.Frame(self.gameFrame)
-        p1Frame.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        p1Frame.grid(row=1, column=0, sticky=(tk.N, tk.S))
         p1Label = tk.Label(p1Frame, text='Red Player', font=('Arial', 12))
         p1Label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
@@ -104,8 +104,18 @@ class gameBoard:
         p1SButton.grid(row=1, column=0, sticky=tk.W, pady=2)
         p1OButton.grid(row=2, column=0, sticky=tk.W, pady=2)
 
+        p2Frame = tk.Frame(self.gameFrame)
+        p2Frame.grid(row=1, column=2, sticky=(tk.N, tk.S))
+        p2Label = tk.Label(p2Frame, text='Blue Player', font=('Arial', 12))
+        p2Label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
+        p2SButton = ttk.Radiobutton(p2Frame, text='S', variable=self.p2Move, value='S')
+        p2OButton = ttk.Radiobutton(p2Frame, text='O', variable=self.p2Move, value='O')
+        p2SButton.grid(row=1, column=0, sticky=tk.W, pady=2)
+        p2OButton.grid(row=2, column=0, sticky=tk.W, pady=2)
 
+        self.gameFrame.grid_rowconfigure(1, weight=1)
+        self.gameFrame.grid_rowconfigure(1, weight=1)
 
 
 
