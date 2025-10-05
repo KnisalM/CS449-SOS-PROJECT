@@ -75,7 +75,7 @@ class gameBoard:
         self.gameFrame.grid_rowconfigure(1, weight=1)
         self.gameFrame.grid_columnconfigure(0, weight=0) # Left p1Frame, do not expand at all
         self.gameFrame.grid_columnconfigure(1, weight=1)  # Board Frame, expand to fill
-        self.gameFrame.grid_columnconfigure(0, weight=1)  # p2Frame, do not expand
+        self.gameFrame.grid_columnconfigure(2, weight=0)  # p2Frame, do not expand
 
         dimStr = self.dimensions.get()
         dimN = int(dimStr.split('x')[0])
@@ -98,8 +98,9 @@ class gameBoard:
         self.p1Move = tk.StringVar(value='S')
         self.p2Move = tk.StringVar(value='S')
 
-        p1Frame = tk.Frame(self.gameFrame)
-        p1Frame.grid(row=1, column=0, sticky=(tk.N, tk.S))
+        p1Frame = tk.Frame(self.gameFrame, width=150)
+        p1Frame.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        p1Frame.grid_propagate(False)
         p1Label = tk.Label(p1Frame, text='Red Player', font=('Arial', 12))
         p1Label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
@@ -108,8 +109,9 @@ class gameBoard:
         p1SButton.grid(row=1, column=0, sticky=tk.W, pady=2)
         p1OButton.grid(row=2, column=0, sticky=tk.W, pady=2)
 
-        p2Frame = tk.Frame(self.gameFrame)
-        p2Frame.grid(row=1, column=2, sticky=(tk.N, tk.S))
+        p2Frame = tk.Frame(self.gameFrame, width=150)
+        p2Frame.grid(row=1, column=2, sticky=(tk.W, tk.E, tk.N, tk.S))
+        p2Frame.grid_propagate(False)
         p2Label = tk.Label(p2Frame, text='Blue Player', font=('Arial', 12))
         p2Label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
