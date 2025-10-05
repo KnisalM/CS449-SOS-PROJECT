@@ -11,9 +11,11 @@ class gameBoard:
         self.dimensions = tk.StringVar(
             value='')  # The variable that will store the player's selection for the dimensions of the board
         self.ruleSet = tk.StringVar(
-            value='simple')  # This variable will store whether the player has selected to play a Simple or General game mode
+            value='')  # This variable will store whether the player has selected to play a Simple or General game mode
         self.setupFrame = tk.Frame(
             self.root)  # This assigns the setup Frame where the player is asked to set up their board, to the parent window being self.root
+        self.gameFrame = tk.Frame(
+            self.root)  # Creates Frame where the game will take place
         # self.versusType = '' Will Implement later, this will store the player's selection for Human v Human or Human v Machine
         # self.currentTurn = '' Will Implement later, this will store which player's turn it currently is for the moves placed on the board
         # self.active = '' Implement in later sprint, will track game state and update when game is over
@@ -55,7 +57,27 @@ class gameBoard:
             beginLabel = tk.Label(self.setupFrame,
                                   text=f"You've chosen to play a {self.ruleSet.get()} game on a {self.dimensions.get()} sized board, begin?")
             beginLabel.grid(row=5, column=0, sticky=tk.W, pady=5)
-            startGame = tk.Button(self.setupFrame, text='Begin', command=self.start_game)
+            startGame = tk.Button(self.setupFrame, text='Begin', command=self.start_game())
+            startGame.grid(row=5, column=1, sticky=tk.W, pady=5)
+
+    def start_game(self):
+
+        self.setupFrame.destroy(self)
+
+        self.gameFrame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        dimStr = self.dimensions.get()
+        dimN = tk.IntVar(dimStr.split('x'[0]))
+
+        for i in range(dimN):
+            for j in range(dimN):
+                button = tk.Button(self.gameFrame, text='', width=4, height=2)
+
+            button.grid(row=i, column=j, sticky='nswe')
+
+        for i in range(dimN):
+            self.gameFrame.grid_rowconfigure(i, weight=1)
+            self.gameFrame.grid_columnconfigure(i, weight=1)
+
 
 
 def main():
