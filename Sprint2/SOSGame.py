@@ -72,7 +72,7 @@ class SOSGame(gameBoard):
 
     def updatePlayerChar(self):
         self.players[0].setChar(self.p1Move.get())
-        self.players[1].setChar(self.p1Move.get())
+        self.players[1].setChar(self.p2Move.get())
 
     """Define the events when an empty cell is clicked"""
 
