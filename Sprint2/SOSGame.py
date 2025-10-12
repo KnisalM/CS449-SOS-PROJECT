@@ -42,7 +42,7 @@ class SOSGame(gameBoard):
         self.currentPlayer = 0  # Start with Player 1
         self.activeGame = True
         self.cellState = []
-        self.turnDisplayLabel = None # Displays whose turn it currently is
+        self.turnDisplayLabel = None  # Displays whose turn it currently is
 
     """Get and return the current player"""
 
@@ -57,9 +57,9 @@ class SOSGame(gameBoard):
         if self.turnDisplayLabel:
             self.turnDisplayLabel.destroy()
 
-        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is {currentPlayer.color}'s Turn", font=('Arial', 16), fg=currentPlayer.color)
+        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is {currentPlayer.color}'s Turn", font=('Arial', 16),
+                                         fg=currentPlayer.color)
         self.turnDisplayLabel.grid(row=3, column=0, columnspan=3, pady=10, sticky='ew')
-
 
     """Switch turns so that player who is not playing can't make a move and scores are tracked appropriately"""
 
@@ -74,14 +74,15 @@ class SOSGame(gameBoard):
         self.players[1].setChar(self.p1Move.get())
 
     """Define the events when an empty cell is clicked"""
+
     def cellClicked(self, row, col):
 
-        if row < 0 or col<0 or row >= len(self.cells) or col >= len(self.cells[0]):
-            self.showInvalidMoveMsg("Invalid move")
+        if row < 0 or col < 0 or row >= len(self.cells) or col >= len(self.cells[0]):
+            self.showInvalidMoveMsg("Invalid move") # Need to define the invalid message display
             return
 
         if self.cellState[row][col] != '':
-            self.showInvalidMoveMsg("This cell is occupied")
+            self.showInvalidMoveMsg("This cell is occupied") # Need to define this
             return
 
         self.updatePlayerChar()
@@ -93,10 +94,18 @@ class SOSGame(gameBoard):
 
         self.switchTurn()
 
+    """execute when an invalid move is made on the board"""
 
     """Execute when a valid move is made to reflect on board and update game state"""
+
     def makeAMove(self, row, col, moveChar, color):
 
+        self.cellState[row][col] = moveChar
+
+        self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color, relief='sunken')
+
+        # in future sprints I will add functionality here to check for SOS chain completion
+        # Function will be titled checkSOSFormed(self, row, col, moveChar)
 
     """Begin the game and apply the logic to the game board"""
 
@@ -109,4 +118,4 @@ class SOSGame(gameBoard):
 
         for i in range(dimN):
             for j in range(dimN):
-                self.cells[i][j].config(command=lambda row=i, col=j: self.cellClicked(row,col))
+                self.cells[i][j].config(command=lambda row=i, col=j: self.cellClicked(row, col))
