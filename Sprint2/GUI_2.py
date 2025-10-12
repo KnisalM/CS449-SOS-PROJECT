@@ -76,7 +76,7 @@ class gameBoard:
     Preconditions: Player has opened the application and is in the process of choosing how they would like to play 
      the game
      
-    Postconditions: The player will see a button displayed that says 'Begin', that will initialize the game board when pressed """
+    Post conditions: The player will see a button displayed that says 'Begin', that will initialize the game board when pressed """
     def startConditions(self, *args):
         # Check if the player has selected their game board dimensions and ruleSet yet, create and display Begin button
         if self.dimensions.get() and self.ruleSet.get():
@@ -92,7 +92,7 @@ class gameBoard:
     Preconditions: Parent is a valid frame, row and column are valid unoccupied placements in the grid manager for the Parent window,
     player is a valid String, and moveChar is a variable assigned to one of the players on the board
     
-    Postconditions: A sub-Frame will be created and placed within the parent Frame. This frame will have the player label
+    Post conditions: A sub-Frame will be created and placed within the parent Frame. This frame will have the player label
     at the top, and will have two radio buttons with options 'S' and 'O' """
     def createPlayerFrame(self, parent, row, column, player, moveChar):
         frame = tk.Frame(parent, width=150)
@@ -109,7 +109,7 @@ class gameBoard:
     
     Preconditions: The player has selected a valid dimension, ruleSet, and has selected the 'Begin' button
     
-    Postconditions: The player will be presented with a game board of their selected dimensions and ruleSet, with a
+    Post conditions: The player will be presented with a game board of their selected dimensions and ruleSet, with a
     grid of selectable buttons in their chosen dimension"""
     def start_game(self):
 
