@@ -1,4 +1,4 @@
-import tkinter
+import tkinter as tk
 from GUI_2 import gameBoard
 
 
@@ -42,11 +42,37 @@ class SOSGame(gameBoard):
         self.currentPlayer = 0  # Start with Player 1
         self.activeGame = True
         self.cellState = []
+        self.turnDisplayLabel = None # Displays whose turn it currently is
 
-     """Get and return the current player"""
+    """Get and return the current player"""
+
     def getCurrentPlayer(self):
         return self.players[self.currentPlayer]
 
+    """Update the GUI to reflect the turn"""
+
+    def updateTurnFrame(self):
+        currentPlayer = self.getcurrentPlayer()
+
+        if self.turnDisplayLabel:
+            self.turnDisplayLabel.destroy()
+
+        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is {currentPlayer.color}'s Turn", font=('Arial', 16), fg=currentPlayer.color)
+        self.turnDisplayLabel.grid(row=3, column=0, columnspan=3, pady=10, sticky='ew')
+
+
     """Switch turns so that player who is not playing can't make a move and scores are tracked appropriately"""
 
+    def switchTurn(self):
+        self.currentPlayer = (self.currentPlayer + 1) % 2
+        self.update
 
+    """get what character the player has selected for the move to be made"""
+
+    def updatePlayerChar(self):
+        self.players[0].setChar(self.p1Move.get())
+        self.players[1].setChar(self.p1Move.get())
+
+    """Begin the game and apply the logic to the game board"""
+
+    def start_game(self):

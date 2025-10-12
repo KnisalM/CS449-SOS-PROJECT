@@ -142,8 +142,8 @@ class gameBoard:
             boardFrame.grid_columnconfigure(i, weight=1)
 
         # Create Player Frames
-        p1Frame = self.createPlayerFrame(self.gameFrame, 1, 0, 'Red Player', self.p1Move)
-        p2Frame = self.createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p2Move)
+        self.createPlayerFrame(self.gameFrame, 1, 0, 'Red Player', self.p1Move)
+        self.createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p2Move)
 
 
 
@@ -158,7 +158,7 @@ def main():
     root.grid_columnconfigure(0, weight=1)
     root.grid_rowconfigure(0, weight=1)
 
-    game = gameBoard(root)
+    gameBoard(root)
     root.mainloop()
 
 
