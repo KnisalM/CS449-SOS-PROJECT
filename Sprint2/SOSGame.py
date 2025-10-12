@@ -90,9 +90,15 @@ class SOSGame(gameBoard):
 
     def makeAMove(self, row, col, moveChar, color):
         boardSize = len(self.cells)
-        baseFontSize = 24
-        fontSize = max(12, int(24- (boardSize -3) * 1.2))
-        fontConfig = ('Arial', fontSize)
+        if boardSize <= 5:
+            fontSize=14
+        elif boardSize <= 8:
+            fontSize = 12
+        elif boardSize <= 10:
+            fontSize = 10
+        else:
+            fontSize = 9
+        fontConfig = ('Arial', fontSize, 'bold')
         self.cellState[row][col] = moveChar
         self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color,
                                     relief='sunken', font=fontConfig)
