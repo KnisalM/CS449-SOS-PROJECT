@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from GUI_2 import gameBoard
 
 
@@ -52,7 +53,7 @@ class SOSGame(gameBoard):
     """Update the GUI to reflect the turn"""
 
     def updateTurnFrame(self):
-        currentPlayer = self.getcurrentPlayer()
+        currentPlayer = self.getCurrentPlayer()
 
         if self.turnDisplayLabel:
             self.turnDisplayLabel.destroy()
@@ -65,7 +66,7 @@ class SOSGame(gameBoard):
 
     def switchTurn(self):
         self.currentPlayer = (self.currentPlayer + 1) % 2
-        self.update
+        self.updateTurnFrame()
 
     """get what character the player has selected for the move to be made"""
 
@@ -95,6 +96,8 @@ class SOSGame(gameBoard):
         self.switchTurn()
 
     """execute when an invalid move is made on the board"""
+    def showInvalidMoveMsg(self, message):
+        messagebox.showwarning("Invalid Move", message)
 
     """Execute when a valid move is made to reflect on board and update game state"""
 
@@ -119,3 +122,7 @@ class SOSGame(gameBoard):
         for i in range(dimN):
             for j in range(dimN):
                 self.cells[i][j].config(command=lambda row=i, col=j: self.cellClicked(row, col))
+
+        self.updatePlayerChar()
+
+        self.updateTurnFrame()
