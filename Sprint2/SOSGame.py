@@ -78,36 +78,24 @@ class SOSGame(gameBoard):
 
     def cellClicked(self, row, col):
 
-        if row < 0 or col < 0 or row >= len(self.cells) or col >= len(self.cells[0]):
-            self.showInvalidMoveMsg("Invalid move")  # Need to define the invalid message display
-            return
-
-        if self.cellState[row][col] != '':
-            self.showInvalidMoveMsg("This cell is occupied")  # Need to define this
-            return
-
         self.updatePlayerChar()
 
         currentPlayer = self.getCurrentPlayer()
         moveChar = currentPlayer.getChar()
 
         self.makeAMove(row, col, moveChar, currentPlayer.color)
-
         self.switchTurn()
-
-    """execute when an invalid move is made on the board"""
-
-    def showInvalidMoveMsg(self, message):
-        messagebox.showwarning("Invalid Move", message)
 
     """Execute when a valid move is made to reflect on board and update game state"""
 
     def makeAMove(self, row, col, moveChar, color):
-
+        boardSize = len(self.cells)
+        baseFontSize = 24
+        fontSize = max(12, int(24- (boardSize -3) * 1.2))
+        fontConfig = ('Arial', fontSize)
         self.cellState[row][col] = moveChar
-
         self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color,
-                                    relief='sunken')
+                                    relief='sunken', font=fontConfig)
 
         # in future sprints I will add functionality here to check for SOS chain completion
         # Function will be titled checkSOSFormed(self, row, col, moveChar)
@@ -141,7 +129,6 @@ def main():
 
     SOSGame(root)
     root.mainloop()
-
 
 
 if __name__ == '__main__':
