@@ -73,6 +73,40 @@ class SOSGame(gameBoard):
         self.players[0].setChar(self.p1Move.get())
         self.players[1].setChar(self.p1Move.get())
 
+    """Define the events when an empty cell is clicked"""
+    def cellClicked(self, row, col):
+
+        if row < 0 or col<0 or row >= len(self.cells) or col >= len(self.cells[0]):
+            self.showInvalidMoveMsg("Invalid move")
+            return
+
+        if self.cellState[row][col] != '':
+            self.showInvalidMoveMsg("This cell is occupied")
+            return
+
+        self.updatePlayerChar()
+
+        currentPlayer = self.getCurrentPlayer()
+        moveChar = currentPlayer.getChar()
+
+        self.makeMove(row, col, moveChar, currentPlayer.color)
+
+        self.switchTurn()
+
+
+    """Execute when a valid move is made to reflect on board and update game state"""
+    def makeAMove(self, row, col, moveChar, color):
+
+
     """Begin the game and apply the logic to the game board"""
 
     def start_game(self):
+
+        super().start_game()
+        dimN = int(self.dimensions.get.split('x')[0])
+
+        self.cellState = [['' for _ in range(dimN)] for _ in range(dimN)]
+
+        for i in range(dimN):
+            for j in range(dimN):
+                self.cells[i][j].config(command=lambda row=i, col=j: self.cellClicked(row,col))
