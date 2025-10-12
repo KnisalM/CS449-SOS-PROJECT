@@ -150,17 +150,4 @@ class gameBoard:
 
 
 
-def main():
-    root = tk.Tk()
-    root.geometry('1000x800')
-    root.resizable(True, True)
 
-    root.grid_columnconfigure(0, weight=1)
-    root.grid_rowconfigure(0, weight=1)
-
-    gameBoard(root)
-    root.mainloop()
-
-
-if __name__ == '__main__':
-    main()

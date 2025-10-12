@@ -79,11 +79,11 @@ class SOSGame(gameBoard):
     def cellClicked(self, row, col):
 
         if row < 0 or col < 0 or row >= len(self.cells) or col >= len(self.cells[0]):
-            self.showInvalidMoveMsg("Invalid move") # Need to define the invalid message display
+            self.showInvalidMoveMsg("Invalid move")  # Need to define the invalid message display
             return
 
         if self.cellState[row][col] != '':
-            self.showInvalidMoveMsg("This cell is occupied") # Need to define this
+            self.showInvalidMoveMsg("This cell is occupied")  # Need to define this
             return
 
         self.updatePlayerChar()
@@ -91,11 +91,12 @@ class SOSGame(gameBoard):
         currentPlayer = self.getCurrentPlayer()
         moveChar = currentPlayer.getChar()
 
-        self.makeMove(row, col, moveChar, currentPlayer.color)
+        self.makeAMove(row, col, moveChar, currentPlayer.color)
 
         self.switchTurn()
 
     """execute when an invalid move is made on the board"""
+
     def showInvalidMoveMsg(self, message):
         messagebox.showwarning("Invalid Move", message)
 
@@ -105,7 +106,8 @@ class SOSGame(gameBoard):
 
         self.cellState[row][col] = moveChar
 
-        self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color, relief='sunken')
+        self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color,
+                                    relief='sunken')
 
         # in future sprints I will add functionality here to check for SOS chain completion
         # Function will be titled checkSOSFormed(self, row, col, moveChar)
@@ -115,7 +117,7 @@ class SOSGame(gameBoard):
     def start_game(self):
 
         super().start_game()
-        dimN = int(self.dimensions.get.split('x')[0])
+        dimN = int(self.dimensions.get().split('x')[0])
 
         self.cellState = [['' for _ in range(dimN)] for _ in range(dimN)]
 
@@ -126,3 +128,20 @@ class SOSGame(gameBoard):
         self.updatePlayerChar()
 
         self.updateTurnFrame()
+
+
+def main():
+    root = tk.Tk()
+    root.title('SOS GAME')
+    root.geometry('1000x800')
+    root.resizable(True, True)
+
+    root.grid_columnconfigure(0, weight=1)
+    root.grid_rowconfigure(0, weight=1)
+
+    SOSGame(root)
+    root.mainloop()
+
+
+if __name__ == '__main__':
+    main()
