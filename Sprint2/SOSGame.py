@@ -42,7 +42,7 @@ class SOSGame(gameBoard):
                         Player(2, 'human')]  # Player 2 Blue
         self.currentPlayer = 0  # Start with Player 1
         self.activeGame = True
-        self.cellState = []
+        self.cellState = [] # Track the state of the cells and whether there is currently a play made on a cell
         self.turnDisplayLabel = None  # Displays whose turn it currently is
 
     """Get and return the current player"""
