@@ -26,10 +26,10 @@ class Player:
     def getChar(self):
         return self.character
 
-    """Increment Player's score in a general game when they create a SOS chain"""
+    """Increment Player's score in a general game when they create a SOS chain
 
     def incrementScore(self):
-        self.score += 1
+        self.score += 1"""
 
 
 class SOSGame(gameBoard):
