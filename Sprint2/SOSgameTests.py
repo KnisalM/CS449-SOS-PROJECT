@@ -9,7 +9,6 @@ class TestSOSGameLogic(unittest.TestCase):
     pass
 
 
-
 class TestSOSGUI(unittest.TestCase):
     """This class will test the function and fulfillment of acceptance criteria for the GUI
     """
@@ -23,7 +22,6 @@ class TestSOSGUI(unittest.TestCase):
         with patch('tkinter.Frame') as mockFrame:
             self.testBoard = gameBoard(self.testRoot)
 
-
     def tearDown(self):
         """Clean up after tests"""
         self.testRoot.destroy()
@@ -31,8 +29,7 @@ class TestSOSGUI(unittest.TestCase):
     def testAC1_1_SizeMenuCreatedOnLaunch(self):
         """Verify that the dropdown menu is created upon launch of the program"""
 
-        with patch('tkinter.Label') as mockLabel, patch('tkinter.ttk.Combobox') as mockComboBox:
-
+        with patch('tkinter.ttk.Combobox') as mockComboBox:
             # Call the boardSize() method
             self.testBoard.boardSize()
 
@@ -53,9 +50,28 @@ class TestSOSGUI(unittest.TestCase):
             realVals = callRargs['values']
 
             # verify that all values are in correct range and formatting
-            expectedVals = [f"{i}x{i}" for i in range(3,13)]
+            expectedVals = [f"{i}x{i}" for i in range(3, 13)]
             self.assertEqual(realVals, expectedVals)
 
+    def testAC1_1_SelectionStoredInDimensions(self):
+        """Verify that the player's selection can be properly split and stored in self.dimensions"""
+
+        # Create list of test inputs
+        testSizes = ['5x5', '8x8', '12x12']
+
+        for testInput in testSizes:
+
+            with self.subTest(boardDim=testInput):
+                # Simulate the player selecting testInput as their dimensions
+                self.testBoard.dimensions.set(testInput)
+
+                # Verify here that the value is stored and retreivable
+                storedVal = self.testBoard.dimensions.get()
+                self.assertEqual(storedVal, testInput)
+
+                # Verify that it is stored as a string and can be split and parsed
+                dimensions = int(storedVal.split('x')[0])
+                self.assertIsInstance(dimensions, int)
 
 
 
