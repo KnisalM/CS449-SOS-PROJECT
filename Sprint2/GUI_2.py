@@ -35,12 +35,13 @@ class gameBoard:
         # self.cellsState = [] Implement in later Sprint, will track the state of the cells and prevent further moves from being played on them once played
         # self.players = [] Implement in later sprint this will be a list containing the players on the board, and their associated data i.e. color, score, etc
 
-        self.boardSetup()
+        self.boardSize()
+        self.ruleSetSelection()
 
     """This function creates the setup widgets for the game board, allowing the user to select their game board Size, 
     their Rule Set, and in future Sprints will include the player choosing between playing against another human, or 
     playing versus an algorithm"""
-    def boardSetup(self):
+    def boardSize(self):
         # Load the setup frame into the grid manager
         self.setupFrame.grid(row=0, column=0, sticky='nsew')
 
@@ -56,6 +57,7 @@ class gameBoard:
                                     width=10)
         sizeDropdown.grid(row=1, column=1, sticky=tk.W, pady=5, padx=(10, 0))
 
+    def ruleSetSelection(self):
         # Rule Set selection Widgets
         rulesLabel = tk.Label(self.setupFrame, text='Choose the rules that you will play by.')
         rulesLabel.grid(row=2, column=0, sticky=tk.W, pady=5)
