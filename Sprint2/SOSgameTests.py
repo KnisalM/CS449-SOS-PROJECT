@@ -73,7 +73,32 @@ class TestSOSGUI(unittest.TestCase):
                 dimensions = int(storedVal.split('x')[0])
                 self.assertIsInstance(dimensions, int)
 
+    def testAC2_1_SimpleandGeneralRadioButtonsExist(self):
+        """Verify that the radio buttons for simple and general both exist"""
+        with patch('tkinter.ttk.Radiobutton') as mockRadioButton:
 
+            # Call the method ruleSetSelection()
+            self.testBoard.ruleSetSelection()
+
+            # Verify that for 2 radio buttons, radio buttons was called twice
+            self.assertEqual(mockRadioButton.call_count, 2)
+
+            # Put calls to radio buttons in a list
+            calls = mockRadioButton.call_args_list
+
+            # Verify properties of radio buttons (simpleRB)
+            simpleCall = calls[0]
+            self.assertEqual(simpleCall[0][0], self.testBoard.setupFrame)
+            self.assertEqual(simpleCall[1]['variable'], self.testBoard.ruleSet)
+            self.assertEqual(simpleCall[1]['value'], 'simple')
+
+            # Verify properties of radio buttons (generalRB)
+            generalCall = calls[1]
+            self.assertEqual(generalCall[0][0], self.testBoard.setupFrame)
+            self.assertEqual(generalCall[1]['variable'], self.testBoard.ruleSet)
+            self.assertEqual(generalCall[1]['value'], 'general')
+
+    def testAC2_1_RadioButtonsExclusive(self):
 
 
 if __name__ == '__main__':
