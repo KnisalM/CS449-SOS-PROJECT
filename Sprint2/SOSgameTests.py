@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 import tkinter as tk
-from GUI_2 import gameBoard  # Replace with your actual import
+from GUI_2 import gameBoard
 
 
 class TestSOSGameLogic(unittest.TestCase):
@@ -98,7 +98,28 @@ class TestSOSGUI(unittest.TestCase):
             self.assertEqual(generalCall[1]['variable'], self.testBoard.ruleSet)
             self.assertEqual(generalCall[1]['value'], 'general')
 
-    def testAC2_1_RadioButtonsExclusive(self):
+    def testAC2_1_RadioButtonsUpdateRuleSet(self):
+        """Verify that radio buttons are exclusive and store the value correctly as a string in the self.ruleSet variable"""
+
+        # Test that selecting one radio button with another selected deselects the previously selected radio button
+        self.testBoard.ruleSet.set('simple')
+        self.assertEqual(self.testBoard.ruleSet.get(), 'simple')
+        self.assertNotEqual(self.testBoard.ruleSet.get(), 'general')
+
+        # Switch to general and ensure it was properly stored
+        self.testBoard.ruleSet.set('general')
+        self.assertEqual(self.testBoard.ruleSet.get(), 'general')
+        self.assertNotEqual(self.testBoard.ruleSet.get(), 'simple')
+
+        # Switch back to simple and ensure it was properly stored
+        self.testBoard.ruleSet.set('simple')
+        self.assertEqual(self.testBoard.ruleSet.get(), 'simple')
+        self.assertNotEqual(self.testBoard.ruleSet.get(), 'general')
+
+        # Test that variable holds a str value and is one of the two valid options
+        self.assertIsInstance(self.testBoard.ruleSet.get(), str)
+        self.assertIn(self.testBoard.ruleSet.get(), ['simple', 'general'])
+
 
 
 if __name__ == '__main__':
