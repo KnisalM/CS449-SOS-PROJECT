@@ -108,9 +108,9 @@ class SOSGame(gameBoard):
 
     """Begin the game and apply the logic to the game board"""
 
-    def start_game(self):
+    def startGame(self):
 
-        super().start_game()
+        super().startGame()
         dimN = int(self.dimensions.get().split('x')[0])
 
         self.cellState = [['' for _ in range(dimN)] for _ in range(dimN)]

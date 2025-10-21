@@ -108,7 +108,7 @@ class gameBoard:
             beginLabel = tk.Label(self.setupFrame,
                                   text=f"You've chosen to play a {self.ruleSet.get()} game on a {self.dimensions.get()} sized board, begin?")
             beginLabel.grid(row=5, column=0, sticky=tk.W, pady=5)
-            startGame = tk.Button(self.setupFrame, text='Begin', command=self.start_game)
+            startGame = tk.Button(self.setupFrame, text='Begin', command=self.startGame)
             startGame.grid(row=5, column=1, sticky=tk.W, pady=5)
 
     """This Function Initializes the game board
@@ -118,7 +118,7 @@ class gameBoard:
     Post conditions: The player will be presented with a game board of their selected dimensions and ruleSet, with a
     grid of selectable buttons in their chosen dimension"""
 
-    def start_game(self):
+    def startGame(self):
 
         self.setupFrame.destroy()
 

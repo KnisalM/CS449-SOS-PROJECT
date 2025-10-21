@@ -11,7 +11,7 @@ class TestSOSGameLogic(unittest.TestCase):
     pass
 
 
-class TestSOSGUI(unittest.TestCase):
+class TestgameBoardClass(unittest.TestCase):
     """This class will test the function and fulfillment of acceptance criteria for the GUI
     """
 
@@ -259,6 +259,17 @@ class TestSOSGUI(unittest.TestCase):
             for callArgs in callsWithP2:
                 self.assertEqual(callArgs[1]['variable'], self.testBoard.p2Move)
 
+    """The following tests will verify the functionality of the startGame() method in the GUI class, demonstrating
+    at this time that when the begin button is pressed, calling startGame(), then a board of selectable buttons
+    will be created in the proper dimension selected, and that there will be 2 player frames in addition to the game 
+    board. I will not be demonstrating in the following tests that the radio buttons exist in the player frame,
+    or that their values are correct, or that they update the correct variable, as this was all validated by my 
+    tests on the createPlayerFrame() method. I also will not be testing any of the logic implementation in the 
+    following tests, as those will be tested by my unit tests for the logic file, SOSGame.py, in which
+    the method startGame() inherits this method, and will implement rule set and computer vs human / human vs human"""
+    def testAC4_1and4_2_startGameGeneratesBoardWithCorrectDimensions
+        """Verify that when the startGame() method is called and the board is created, the board that is created
+        has the correct dimensions that match the value from self.dimensions, selected by the player"""
 
 if __name__ == '__main__':
     unittest.main()
