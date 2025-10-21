@@ -96,10 +96,10 @@ class TestSOSGUI(unittest.TestCase):
             self.assertEqual(generalCall[1]['variable'], self.testBoard.ruleSet)
             self.assertEqual(generalCall[1]['value'], 'general')
 
-    def testAC2_1_RadioButtonsUpdateRuleSet(self):
+    def testAC2_1_UpdateRuleSetStoredProperly(self):
         """Verify that radio buttons are exclusive and store the value correctly as a string in the self.ruleSet variable"""
 
-        # Test that selecting one radio button with another selected deselects the previously selected radio button
+        # Test that the selected rule set is stored properly
         self.testBoard.ruleSet.set('simple')
         self.assertEqual(self.testBoard.ruleSet.get(), 'simple')
         self.assertNotEqual(self.testBoard.ruleSet.get(), 'general')
@@ -163,6 +163,16 @@ class TestSOSGUI(unittest.TestCase):
 
             # Verify that button was created when both conditions are filled
             mockButton.assert_called()
+
+    """The following tests will apply to several user stories and their corresponding acceptance criteria
+    these tests will demonstrate that the function "create player frame" creates a valid frame within
+    the parent frame, that this frame displays the player who the frame belongs to, that this frame contains two
+    radio buttons with options 'S' and 'O', and that when one of these radio buttons is selected, the other is 
+    not selected, and that when a radio button is selected the value is stored in self.moveChar. This will assist with 
+    user stories 5-6, 8-10 (Make move in simple game human, make move in simple game computer, make move in general game
+    human, make move in general game computer, determine general game is over), with some tests still to be implemented
+    in future sprints"""
+
 
 
 if __name__ == '__main__':
