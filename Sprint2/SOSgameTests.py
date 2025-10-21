@@ -164,6 +164,7 @@ class TestSOSGUI(unittest.TestCase):
             # Verify that button was created when both conditions are filled
             mockButton.assert_called()
 
+
     """The following tests will apply to several user stories and their corresponding acceptance criteria
     these tests will demonstrate that the function "create player frame" creates a valid frame within
     the parent frame, that this frame displays the player who the frame belongs to, that this frame contains two
