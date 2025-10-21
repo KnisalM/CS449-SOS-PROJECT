@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import Mock, patch
 import tkinter as tk
+
+import GUI_2
 from GUI_2 import gameBoard
 
 
@@ -155,7 +157,6 @@ class TestSOSGUI(unittest.TestCase):
 
     def testBeginButtonShownWhenConditionsAreMet(self):
         with patch('tkinter.Button') as mockButton:
-
             # When conditions are met for self.dimensions and self.ruleSet, button is called
             self.testBoard.dimensions.set('5x5')
             self.testBoard.ruleSet.set('simple')
@@ -164,15 +165,34 @@ class TestSOSGUI(unittest.TestCase):
             # Verify that button was created when both conditions are filled
             mockButton.assert_called()
 
-
     """The following tests will apply to several user stories and their corresponding acceptance criteria
-    these tests will demonstrate that the function "create player frame" creates a valid frame within
-    the parent frame, that this frame displays the player who the frame belongs to, that this frame contains two
-    radio buttons with options 'S' and 'O', and that when one of these radio buttons is selected, the other is 
+    these tests will demonstrate that the function "createPlayerFrame()" displays the player who the frame belongs to, that this frame contains two
+    radio buttons with options 'S' and 'O', that when one of these radio buttons is selected, the other is 
     not selected, and that when a radio button is selected the value is stored in self.moveChar. This will assist with 
     user stories 5-6, 8-10 (Make move in simple game human, make move in simple game computer, make move in general game
     human, make move in general game computer, determine general game is over), with some tests still to be implemented
     in future sprints"""
+
+    def testCreatePlayerFrameCreatesPlayerNameLabel(self):
+        testNames = ['Red Player', 'Blue Player']
+
+        for playerName in testNames:
+            with patch('tkinter.Label') as mockLabel, patch('tkinter.Frame') as mockFrame, \
+                    patch('tkinter.ttk.Radiobutton'):
+                mockParent = Mock()
+                mockSubFrame = Mock()
+                mockFrame.return_value = mockSubFrame
+                mockLabelInstance = Mock()
+                mockLabel.return_value = mockLabelInstance
+
+                GUI_2.createPlayerFrame(mockParent, 1, 0, playerName, self.testBoard.p1Move)
+
+                # Verify that label was created with correct parent text and font
+                mockLabel.assert_any_call(mockSubFrame, text=playerName, font=('Arial', 12))
+
+                # Verify label was placed in grid properly
+                mockLabelInstance.grid.assert_any_call(row=0, column=0, columnspan=2, pady=(0, 10))
+
 
 
 
