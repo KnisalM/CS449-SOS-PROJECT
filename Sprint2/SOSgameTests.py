@@ -166,12 +166,12 @@ class TestSOSGUI(unittest.TestCase):
             mockButton.assert_called()
 
     """The following tests will apply to several user stories and their corresponding acceptance criteria
-    these tests will demonstrate that the function "createPlayerFrame()" displays the player who the frame belongs to, that this frame contains two
-    radio buttons with options 'S' and 'O', that when one of these radio buttons is selected, the other is 
-    not selected, and that when a radio button is selected the value is stored in self.moveChar. This will assist with 
-    user stories 5-6, 8-10 (Make move in simple game human, make move in simple game computer, make move in general game
-    human, make move in general game computer, determine general game is over), with some tests still to be implemented
-    in future sprints"""
+    these tests will demonstrate that the function "createPlayerFrame()" displays the player who the frame belongs to, 
+    that this frame contains two radio buttons with options 'S' and 'O', and that frames can be created for both players 
+    such that the selection of radio buttons in one frame has no impacton the selected character to place in the other 
+    player's frame. This will assist with user stories 5-6, 8-10 (Make move in simple game human, make move in simple 
+    game computer, make move in general game human, make move in general game computer, determine general game is over),
+    with some tests still to be implemented in future sprints"""
 
     def testCreatePlayerFrameCreatesPlayerNameLabel(self):
         testNames = ['Red Player', 'Blue Player']
@@ -200,7 +200,6 @@ class TestSOSGUI(unittest.TestCase):
             mockSubFrame = Mock()
 
             with patch('tkinter.Frame', return_value=mockSubFrame), patch('tkinter.Label'):
-
                 # Mock the radio button instances
                 mockSButton = Mock()
                 mockOButton = Mock()
@@ -232,6 +231,33 @@ class TestSOSGUI(unittest.TestCase):
                 mockSButton.grid.assert_called_once_with(row=1, column=0, sticky=tk.W, pady=2)
                 mockOButton.grid.assert_called_once_with(row=2, column=0, sticky=tk.W, pady=2)
 
+    def testCreatePlayerFrameWithDifferentMoveVariableAssociated(self):
+        """Verify that two frames can be created with different associated move variables"""
+        with patch('tkinter.Frame') as mockFrame, patch('tkinter.Label') as mockLabel, \
+                patch('tkinter.ttk.Radiobutton') as mockRadioButton:
+
+            mockParent = Mock()
+            mockSubFrame = Mock()
+            mockFrame.return_value = mockSubFrame
+
+            # Test creation with p1 move
+            gui.createPlayerFrame(mockParent, 1, 0, 'Red Player', self.testBoard.p1Move)
+
+            # Verify that radio buttons in this frame use p1Move variable
+            callsWithP1 = mockRadioButton.call_args_list
+            for callArgs in callsWithP1:
+                self.assertEqual(callArgs[1]['variable'], self.testBoard.p1Move)
+
+            # Reset the Mock and test with p2 move
+            mockRadioButton.reset_mock()
+
+            # Test creation with p1 move
+            gui.createPlayerFrame(mockParent, 1, 2, 'Blue Player', self.testBoard.p2Move)
+
+            # Verify that radio buttons in this frame use p2Move variable
+            callsWithP2 = mockRadioButton.call_args_list
+            for callArgs in callsWithP2:
+                self.assertEqual(callArgs[1]['variable'], self.testBoard.p2Move)
 
 
 if __name__ == '__main__':
