@@ -60,7 +60,6 @@ class TestSOSGUI(unittest.TestCase):
         testSizes = ['5x5', '8x8', '12x12']
 
         for testInput in testSizes:
-
             with self.subTest(boardDim=testInput):
                 # Simulate the player selecting testInput as their dimensions
                 self.testBoard.dimensions.set(testInput)
@@ -76,7 +75,6 @@ class TestSOSGUI(unittest.TestCase):
     def testAC2_1_SimpleandGeneralRadioButtonsExist(self):
         """Verify that the radio buttons for simple and general both exist"""
         with patch('tkinter.ttk.Radiobutton') as mockRadioButton:
-
             # Call the method ruleSetSelection()
             self.testBoard.ruleSetSelection()
 
@@ -120,8 +118,51 @@ class TestSOSGUI(unittest.TestCase):
         self.assertIsInstance(self.testBoard.ruleSet.get(), str)
         self.assertIn(self.testBoard.ruleSet.get(), ['simple', 'general'])
 
-    def
+    """The following tests will later be retitled to reflect the start buttons connection to User Story 4 and its
+        corresponding acceptance criteria, however at the moment I do not have the player modes created,
+        so I cannot test user story 4 in its entirety. The following tests will test the conditions under when the 
+        begin game button is called, and ensures that it is not called when not all conditions are met"""
 
+    def testBeginButtonNotShownWhenNoConditionsMet(self):
+        with patch('tkinter.Button') as mockButton:
+            # Test case when neither self.dimensions or self.ruleSet has a value
+            self.testBoard.dimensions.set('')
+            self.testBoard.ruleSet.set('')
+            self.testBoard.startConditions()
+
+            # Verify that with variables empty, no button was created
+            mockButton.assert_not_called()
+
+    def testBeginButtonNotShownWhenOnlyDimensionsSet(self):
+        with patch('tkinter.Button') as mockButton:
+            # Test case where only dimension has values
+            self.testBoard.dimensions.set('5x5')
+            self.testBoard.ruleSet.set('')
+            self.testBoard.startConditions()
+
+            # Verify that with only self.dimensions occupied, the button hasn't been called
+            mockButton.assert_not_called()
+
+    def testBeginButtonNotShownWhenOnlyRuleSetSet(self):
+        with patch('tkinter.Button') as mockButton:
+            # Test case where only self.ruleSet has value
+            self.testBoard.dimensions.set('')
+            self.testBoard.ruleSet.set('simple')
+            self.testBoard.startConditions()
+
+            # Verify that with only self.ruleSet occupied, the button was not called
+            mockButton.assert_not_called()
+
+    def testBeginButtonShownWhenConditionsAreMet(self):
+        with patch('tkinter.Button') as mockButton:
+
+            # When conditions are met for self.dimensions and self.ruleSet, button is called
+            self.testBoard.dimensions.set('5x5')
+            self.testBoard.ruleSet.set('simple')
+            self.testBoard.startConditions()
+
+            # Verify that button was created when both conditions are filled
+            mockButton.assert_called()
 
 
 if __name__ == '__main__':

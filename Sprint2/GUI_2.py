@@ -3,13 +3,22 @@ from tkinter import ttk
 import pylint
 import unittest
 
+"""This is a helper function designed in assistance with Deepseek LLM to reduce doubling up on code in the 
+    player frame creation process
+    
+    Preconditions: Parent is a valid frame, row and column are valid unoccupied placements in the grid manager for the Parent window,
+    player is a valid String, and moveChar is a variable assigned to one of the players on the board
+    
+    Post conditions: A sub-Frame will be created and placed within the parent Frame. This frame will have the player label
+    at the top, and will have two radio buttons with options 'S' and 'O' """
+
 
 def createPlayerFrame(parent, row, column, player, moveChar):
     frame = tk.Frame(parent, width=150)
     frame.grid(row=row, column=column, sticky='nsew')
     frame.grid_propagate(False)
 
-    tk.Label(frame, text=player, font=('Arial', 12)).grid(row=0, column=0, columnspan=2, pady=(0,10))
+    tk.Label(frame, text=player, font=('Arial', 12)).grid(row=0, column=0, columnspan=2, pady=(0, 10))
     ttk.Radiobutton(frame, text='S', variable=moveChar, value='S').grid(row=1, column=0, sticky=tk.W, pady=2)
     ttk.Radiobutton(frame, text='O', variable=moveChar, value='O').grid(row=2, column=0, sticky=tk.W, pady=2)
 
@@ -53,6 +62,7 @@ class gameBoard:
     """This function creates the setup widgets for the game board, allowing the user to select their game board Size, 
     their Rule Set, and in future Sprints will include the player choosing between playing against another human, or 
     playing versus an algorithm"""
+
     def boardSize(self):
         # Load the setup frame into the grid manager
         self.setupFrame.grid(row=0, column=0, sticky='nsew')
@@ -91,6 +101,7 @@ class gameBoard:
      the game
      
     Post conditions: The player will see a button displayed that says 'Begin', that will initialize the game board when pressed """
+
     def startConditions(self, *args):
         # Check if the player has selected their game board dimensions and ruleSet yet, create and display Begin button
         if self.dimensions.get() and self.ruleSet.get():
@@ -100,21 +111,13 @@ class gameBoard:
             startGame = tk.Button(self.setupFrame, text='Begin', command=self.start_game)
             startGame.grid(row=5, column=1, sticky=tk.W, pady=5)
 
-    """This is a helper function designed in assistance with Deepseek LLM to reduce doubling up on code in the 
-    player frame creation process
-    
-    Preconditions: Parent is a valid frame, row and column are valid unoccupied placements in the grid manager for the Parent window,
-    player is a valid String, and moveChar is a variable assigned to one of the players on the board
-    
-    Post conditions: A sub-Frame will be created and placed within the parent Frame. This frame will have the player label
-    at the top, and will have two radio buttons with options 'S' and 'O' """
-
     """This Function Initializes the game board
     
     Preconditions: The player has selected a valid dimension, ruleSet, and has selected the 'Begin' button
     
     Post conditions: The player will be presented with a game board of their selected dimensions and ruleSet, with a
     grid of selectable buttons in their chosen dimension"""
+
     def start_game(self):
 
         self.setupFrame.destroy()
@@ -148,10 +151,3 @@ class gameBoard:
         # Create Player Frames
         createPlayerFrame(self.gameFrame, 1, 0, 'Red Player', self.p1Move)
         createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p2Move)
-
-
-
-
-
-
-
