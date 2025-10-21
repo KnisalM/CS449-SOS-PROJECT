@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock, patch
 import tkinter as tk
 
-import GUI_2
+import GUI_2 as gui
 from GUI_2 import gameBoard
 
 
@@ -185,7 +185,7 @@ class TestSOSGUI(unittest.TestCase):
                 mockLabelInstance = Mock()
                 mockLabel.return_value = mockLabelInstance
 
-                GUI_2.createPlayerFrame(mockParent, 1, 0, playerName, self.testBoard.p1Move)
+                gui.createPlayerFrame(mockParent, 1, 0, playerName, self.testBoard.p1Move)
 
                 # Verify that label was created with correct parent text and font
                 mockLabel.assert_any_call(mockSubFrame, text=playerName, font=('Arial', 12))
@@ -193,6 +193,44 @@ class TestSOSGUI(unittest.TestCase):
                 # Verify label was placed in grid properly
                 mockLabelInstance.grid.assert_any_call(row=0, column=0, columnspan=2, pady=(0, 10))
 
+    def testCreatePlayerFrameCreatesRadioButtons(self):
+        """Verify that a player frame has two radio buttons with values 'S' and 'O' """
+        with patch('tkinter.ttk.Radiobutton') as mockRadioButton:
+            mockParent = Mock()
+            mockSubFrame = Mock()
+
+            with patch('tkinter.Frame', return_value=mockSubFrame), patch('tkinter.Label'):
+
+                # Mock the radio button instances
+                mockSButton = Mock()
+                mockOButton = Mock()
+                mockRadioButton.side_effect = [mockSButton, mockOButton]
+
+                gui.createPlayerFrame(mockParent, 1, 0, 'Red Player', self.testBoard.p1Move)
+
+                # Verify two radio buttons were created
+                self.assertEqual(mockRadioButton.call_count, 2)
+
+                # Make a list of the calls to make a radio button
+                calls = mockRadioButton.call_args_list
+
+                # Verify the properties of the 'S' radio button
+                sCall = calls[0]
+                self.assertEqual(sCall[0][0], mockSubFrame)
+                self.assertEqual(sCall[1]['text'], 'S')
+                self.assertEqual(sCall[1]['variable'], self.testBoard.p1Move)
+                self.assertEqual(sCall[1]['value'], 'S')
+
+                # Verify same properties for 'O' radio button
+                oCall = calls[1]
+                self.assertEqual(oCall[0][0], mockSubFrame)
+                self.assertEqual(oCall[1]['text'], 'O')
+                self.assertEqual(oCall[1]['variable'], self.testBoard.p1Move)
+                self.assertEqual(oCall[1]['value'], 'O')
+
+                # Verify grid placements of radio buttons
+                mockSButton.grid.assert_called_once_with(row=1, column=0, sticky=tk.W, pady=2)
+                mockOButton.grid.assert_called_once_with(row=2, column=0, sticky=tk.W, pady=2)
 
 
 
