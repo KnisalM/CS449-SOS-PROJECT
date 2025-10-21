@@ -4,6 +4,18 @@ import pylint
 import unittest
 
 
+def createPlayerFrame(parent, row, column, player, moveChar):
+    frame = tk.Frame(parent, width=150)
+    frame.grid(row=row, column=column, sticky='nsew')
+    frame.grid_propagate(False)
+
+    tk.Label(frame, text=player, font=('Arial', 12)).grid(row=0, column=0, columnspan=2, pady=(0,10))
+    ttk.Radiobutton(frame, text='S', variable=moveChar, value='S').grid(row=1, column=0, sticky=tk.W, pady=2)
+    ttk.Radiobutton(frame, text='O', variable=moveChar, value='O').grid(row=2, column=0, sticky=tk.W, pady=2)
+
+    return frame
+
+
 class gameBoard:
     def __init__(self, root):
 
@@ -96,16 +108,6 @@ class gameBoard:
     
     Post conditions: A sub-Frame will be created and placed within the parent Frame. This frame will have the player label
     at the top, and will have two radio buttons with options 'S' and 'O' """
-    def createPlayerFrame(self, parent, row, column, player, moveChar):
-        frame = tk.Frame(parent, width=150)
-        frame.grid(row=row, column=column, sticky='nsew')
-        frame.grid_propagate(False)
-
-        tk.Label(frame, text=player, font=('Arial', 12)).grid(row=0, column=0, columnspan=2, pady=(0,10))
-        ttk.Radiobutton(frame, text='S', variable=moveChar, value='S').grid(row=1, column=0, sticky=tk.W, pady=2)
-        ttk.Radiobutton(frame, text='O', variable=moveChar, value='O').grid(row=2, column=0, sticky=tk.W, pady=2)
-
-        return frame
 
     """This Function Initializes the game board
     
@@ -144,8 +146,8 @@ class gameBoard:
             boardFrame.grid_columnconfigure(i, weight=1)
 
         # Create Player Frames
-        self.createPlayerFrame(self.gameFrame, 1, 0, 'Red Player', self.p1Move)
-        self.createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p2Move)
+        createPlayerFrame(self.gameFrame, 1, 0, 'Red Player', self.p1Move)
+        createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p2Move)
 
 
 

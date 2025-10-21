@@ -120,6 +120,8 @@ class TestSOSGUI(unittest.TestCase):
         self.assertIsInstance(self.testBoard.ruleSet.get(), str)
         self.assertIn(self.testBoard.ruleSet.get(), ['simple', 'general'])
 
+    def
+
 
 
 if __name__ == '__main__':
