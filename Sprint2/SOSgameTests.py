@@ -73,6 +73,8 @@ class TestSOSGameClass(unittest.TestCase):
             self.sosGame = SOSGame.SOSGame(self.testRealRoot)
 
 
+
+
     def tearDown(self):
         """Clean up the windows after tests"""
         if hasattr(self, 'testRealRoot'):
@@ -168,6 +170,15 @@ class TestSOSGameClass(unittest.TestCase):
     def testAC5_2and8_2RedPlayerAttemptsAMoveOnAnOccupiedCell(self):
         """Verify that when a move is attempted on a cell that is already occupied, the cell will not be changed,
         and the player turn update method will not be called"""
+        # Set up a mock 3x3 game board for move testing
+        self.sosGame.cells = [[Mock() for _ in range(3)] for _ in range(3)]
+        self.sosGame.cellState = [['' for _ in range(3)] for _ in range(3)]
+
+        # Set up initial game state with Red Player's turn in an ongoing game
+        self.sosGame.currentPlayer = 0
+        firstPlayer = self.sosGame.getCurrentPlayer()
+        self.assertEqual(firstPlayer.player_number, 1)
+        self.assertEqual(firstPlayer.color, 'red')
 
 
 
