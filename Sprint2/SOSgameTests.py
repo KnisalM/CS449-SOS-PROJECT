@@ -1,14 +1,22 @@
 import unittest
 from unittest.mock import Mock, patch
 import tkinter as tk
-
+import SOSGame
 import GUI_2 as gui
 from GUI_2 import gameBoard
 
 
 class TestPlayerClass(unittest.TestCase):
-    """This class of tests will verify the function of the logic that has thus far been implemented for the game"""
-    def testAC_5_7and5_8_PlayerCurrentSelectedCharacterIsStoredInCharacter(self):
+    """This class of tests will verify the function of the Player class
+    At this time, the only testable method in the player class is setChar, which was created to replace the standard
+    .set() function for the variable self.character. In later sprints, I will implement a method to increment the
+    player's score as well"""
+
+    def setUp(self):
+        # Set up text fixtures
+        self.player = SOSGame.Player(playerNumber=1)
+
+
 
 
 class TestgameBoardClass(unittest.TestCase):
