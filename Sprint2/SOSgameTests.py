@@ -62,6 +62,9 @@ class TestPlayerClass(unittest.TestCase):
 
 class TestSOSGameClass(unittest.TestCase):
     """This class will test the functionality and fulfillment of acceptance criteria for the SOSGame class"""
+    def setUp(self):
+        # Set up text fixtures
+        self.player = SOSGame.Player(player_number=1)
 
     def testGetCurrentPlayer(self):
         """This function is a helper function. It does not directly fulfill any acceptance criteria in and of itself,
@@ -69,6 +72,7 @@ class TestSOSGameClass(unittest.TestCase):
         helps with are 5, 7, 8, and 10. This function assists by getting which is the current player and returning
         that value from the list self.players, so that the functions that call this method can read
         attributes from the player, and will be able to fulfill these user stories in their entirety"""
+
 
 
 class TestgameBoardClass(unittest.TestCase):
