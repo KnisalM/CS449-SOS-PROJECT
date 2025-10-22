@@ -307,6 +307,27 @@ class TestgameBoardClass(unittest.TestCase):
 
                 for rowIndex, row in enumerate(self.testBoard.cells):
                     self.assertEqual(len(row), expectedDim)
+    def testAC4_1and4_2_startGameCreatesPlayerFrames(self):
+        """Verify that when startGame() is ran, the method GUI_2.createPlayerFrame is called twice, and that the frames
+        have the appropriate attributes for the 2 players frames that are created"""
+
+        with patch.object(self.testBoard.setupFrame, 'destroy'), patch('tkinter.Frame') as mockFrame, \
+            patch('tkinter.Button') as mockButton, patch('GUI_2.createPlayerFrame') as mockCreatePlayerFrame:
+
+            # Set up valid conditions
+            self.testBoard.dimensions.set('5x5')
+            self.testBoard.ruleSet.set('simple')
+
+            # Create a Mock of the board frame
+            mockBoardFrame = Mock()
+            mockFrame.return_value = mockBoardFrame
+
+            # Call the method we are testing
+            self.testBoard.startGame()
+
+            # Verify that createPlayerFrame was called twice, showing that both players were attributed a sub frame
+            self.assertEqual(mockCreatePlayerFrame.call_count, 2)
+
 
 
 
