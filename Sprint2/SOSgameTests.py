@@ -228,7 +228,7 @@ class TestSOSGameClass(unittest.TestCase):
 
         # Set up initial game state with Blue Player's turn in an ongoing game
         self.sosGame.currentPlayer = 1
-        self.sosGame.p1Move.set('S')
+        self.sosGame.p2Move.set('S')
         firstPlayer = self.sosGame.getCurrentPlayer()
         self.assertEqual(firstPlayer.player_number, 2)
         self.assertEqual(firstPlayer.color, 'blue')
@@ -246,11 +246,73 @@ class TestSOSGameClass(unittest.TestCase):
             callArgs = configCall[1]
 
             self.assertEqual(callArgs.get('text'), 'S')
+            self.assertEqual(callArgs.get('fg'), 'blue')
+
+            mockSwitchTurn.assert_called_once()
+
+    def testAC5_8and8_8RedPlayerMakesAnOMove(self):
+        """Verify that when there is an ongoing game, and the red player's turn, and the red player makes a valid 'O' move
+        on an unoccupied cell, then the cell state is updated to reflect that move, and it is Blue player's turn"""
+        # Set up a mock 3x3 game board for move testing
+        self.sosGame.cells = [[Mock() for _ in range(3)] for _ in range(3)]
+        self.sosGame.cellState = [['' for _ in range(3)] for _ in range(3)]
+
+        # Set up initial game state with Red Player's turn in an ongoing game
+        self.sosGame.currentPlayer = 0
+        self.sosGame.p1Move.set('O')
+        firstPlayer = self.sosGame.getCurrentPlayer()
+        firstPlayer.setChar('O')
+        self.assertEqual(firstPlayer.player_number, 1)
+        self.assertEqual(firstPlayer.color, 'red')
+        self.assertEqual(firstPlayer.character, 'O')
+
+        # Red Player attempts an 'O' move on an empty cell
+        emptyRow, emptyCol = 1,1
+        self.assertEqual(self.sosGame.cellState[emptyRow][emptyCol], '')
+
+        with patch.object(self.sosGame, 'switchTurn') as mockSwitchTurn:
+            self.sosGame.cellClicked(emptyRow, emptyCol)
+
+            # Verify if empty cell had an 'O' placed in it in correct color
+            configCall = self.sosGame.cells[emptyRow][emptyCol].config.call_args
+            callArgs = configCall[1]
+
+            self.assertEqual(callArgs.get('text'), 'O')
             self.assertEqual(callArgs.get('fg'), 'red')
 
             mockSwitchTurn.assert_called_once()
 
+    def testAC5_8and8_8BluePlayerMakesAnOMove(self):
+        """Verify that when there is an ongoing game, and the Blue player's turn, and the Blue player makes a valid 'O'
+        move on an unoccupied cell, then the cell state is updated to reflect that move, and it is Red player's turn"""
+        # Set up a mock 3x3 game board for move testing
+        self.sosGame.cells = [[Mock() for _ in range(3)] for _ in range(3)]
+        self.sosGame.cellState = [['' for _ in range(3)] for _ in range(3)]
 
+        # Set up initial game state with Blue Player's turn in an ongoing game
+        self.sosGame.currentPlayer = 1
+        self.sosGame.p2Move.set('O')
+        firstPlayer = self.sosGame.getCurrentPlayer()
+        firstPlayer.setChar('O')
+        self.assertEqual(firstPlayer.player_number, 2)
+        self.assertEqual(firstPlayer.color, 'blue')
+        self.assertEqual(firstPlayer.character, 'O')
+
+        # Blue Player attempts an 'O' move on an empty cell
+        emptyRow, emptyCol = 1,1
+        self.assertEqual(self.sosGame.cellState[emptyRow][emptyCol], '')
+
+        with patch.object(self.sosGame, 'switchTurn') as mockSwitchTurn:
+            self.sosGame.cellClicked(emptyRow, emptyCol)
+
+            # Verify if empty cell had an 'O' placed in it in correct color
+            configCall = self.sosGame.cells[emptyRow][emptyCol].config.call_args
+            callArgs = configCall[1]
+
+            self.assertEqual(callArgs.get('text'), 'O')
+            self.assertEqual(callArgs.get('fg'), 'blue')
+
+            mockSwitchTurn.assert_called_once()
 
     def testAC5_5and8_5BluePlayerAttemptsAMoveOnAnOccupiedCell(self):
         """Verify that when a move is attempted on a cell that is already occupied, the cell will not be changed,
