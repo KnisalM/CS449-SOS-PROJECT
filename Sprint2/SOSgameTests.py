@@ -43,6 +43,14 @@ class TestPlayerClass(unittest.TestCase):
         self.player.setChar('S')
         self.assertEqual(self.player.character, 'S')
 
+    def testtestAC5_7and5_8_SetCharDoesNotUpdateWhenInvalidCharacter(self):
+        """Verify that setChar doesn't update the variable self.dimensions when passed an invalid character, and that
+        self.dimensions retains the last valid value"""
+        invalidTests = ['x', 'a', 'F', 'B', '1', '', 'So', 'SO', 'OS']
+
+        for invalidChar in invalidTests:
+            # Set to known valid state before each test
+
 
 
 
