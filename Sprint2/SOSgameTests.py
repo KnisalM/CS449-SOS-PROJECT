@@ -63,14 +63,33 @@ class TestPlayerClass(unittest.TestCase):
 class TestSOSGameClass(unittest.TestCase):
     """This class will test the functionality and fulfillment of acceptance criteria for the SOSGame class"""
 
+    def setUp(self):
+        # Create a root window for testing to occur in
+        self.testRealRoot = tk.Tk()
+        self.testRealRoot.withdraw()
 
-    def testGetCurrentPlayer(self):
-        """This function is a helper function. It does not directly fulfill any acceptance criteria in and of itself,
+        # Create an instance of the SOS game with mocked dependencies
+        with patch('tkinter.Frame') as mockFrame:
+            self.sosGame = SOSGame(self.testRealroot)
+
+    def tearDown(self):
+        """Clean up the windows after tests"""
+        if hasattr(self, 'testRealRoot'):
+            self.testRealRoot.destroy()
+
+    """This getCurrentPlayer() function is a helper function. It does not directly fulfill any acceptance criteria in and of itself,
         but it does assist with several user stories and their corresponding acceptance criteria. The stories it
         helps with are 5, 7, 8, and 10. This function assists by getting which is the current player and returning
         that value from the list self.players, so that the functions that call this method can read
-        attributes from the player, and will be able to fulfill these user stories in their entirety"""
-        self.
+        attributes from the player, and will be able to fulfill these user stories in their entirety. The tests for 
+        this function will demonstrate that it returns a Player object, and that the attributes of this Player
+        object can be accessed"""
+    def testGetCurrentPlayerReturnsCorrectPlayerWithIndex(self):
+        """Verify that getCurrentPlayer returns a Player Object and that it is the correct Player from self.players[
+        self.currentPlayer]"""
+        se
+
+
 
 
 
