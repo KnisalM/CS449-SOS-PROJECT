@@ -70,7 +70,8 @@ class TestSOSGameClass(unittest.TestCase):
 
         # Create an instance of the SOS game with mocked dependencies
         with patch('tkinter.Frame') as mockFrame:
-            self.sosGame = SOSGame(self.testRealroot)
+            self.sosGame = SOSGame.SOSGame(self.testRealRoot)
+
 
     def tearDown(self):
         """Clean up the windows after tests"""
