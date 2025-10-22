@@ -180,6 +180,23 @@ class TestSOSGameClass(unittest.TestCase):
         self.assertEqual(firstPlayer.player_number, 1)
         self.assertEqual(firstPlayer.color, 'red')
 
+        # Simulate that cell 0,0 is occupied by Blue Player
+        occRow, occCol = 0, 0
+        self.sosGame.makeAMove(occRow, occCol, 'S', 'blue')
+        self.assertEqual(self.sosGame.cellState[occRow][occCol], 'S')
+
+        # Check that config was called with state='disabled' among other parameters
+        self.sosGame.cells[occRow][occCol].config.assert_called_with(
+            text='S', fg='blue', state='disabled', disabledforeground='blue',
+            relief='sunken', font=('Arial', 14, 'bold')
+        )
+
+
+
+
+
+
+
 
 
 
