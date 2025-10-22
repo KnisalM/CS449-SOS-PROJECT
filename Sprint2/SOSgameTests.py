@@ -108,7 +108,16 @@ class TestSOSGameClass(unittest.TestCase):
     def testGetCurrentPlayerReturnedPlayerAttributesAccessible(self):
         """Verify that the currently needed Player attributes self.name, self.color, self.character, are all accessible"""
 
+        # Test that attributes are accessible in returned player objects
+        playerIndexes = [0, 1]
+        for index in playerIndexes:
+            self.sosGame.currentPlayer = index
+            player = self.sosGame.getCurrentPlayer()
 
+            # Verify that all the necessary attributes are accessible
+            self.assertNotEqual(player.name, '')
+            self.assertNotEqual(player.color, '')
+            self.assertEqual(player.character, 'S')
 
 
 
