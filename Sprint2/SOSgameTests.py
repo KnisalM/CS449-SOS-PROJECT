@@ -328,6 +328,16 @@ class TestgameBoardClass(unittest.TestCase):
             # Verify that createPlayerFrame was called twice, showing that both players were attributed a sub frame
             self.assertEqual(mockCreatePlayerFrame.call_count, 2)
 
+            # Create a list of all the calls to mockCreatePlayerFrame so that we can verify their attributes
+            calls = mockCreatePlayerFrame.call_args_list
+
+            # Verify that the Red Player frame was created with the correct parameters
+            redPlayerCall = calls[0]
+            self.assertEqual(redPlayerCall[0][0], self.testBoard.gameFrame)
+            self.assertEqual(redPlayerCall[0][3], 'Red Player')
+            self.assertEqual(redPlayerCall[0][4], self.testBoard.p1Move)
+
+
 
 
 
