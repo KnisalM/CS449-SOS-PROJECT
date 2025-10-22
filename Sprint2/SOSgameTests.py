@@ -121,8 +121,7 @@ class TestSOSGameClass(unittest.TestCase):
 
     def testAC5_1and8_1TurnUpdatedToBlueWhenRedMakesValidMove(self):
         """This test will demonstrate that when the Red Player makes a valid move, the turn will be updated to blue
-        player's turn. At the moment, the logic to seperate simple and general games is not implemented, so these AC
-        are being tested in the same method"""
+        player's turn. These AC will be tested together because the AC are exactly the same regardless of game rules"""
 
         # Setup conditions such that it is Red Player's turn
         self.sosGame.currentPlayer = 0
@@ -145,8 +144,7 @@ class TestSOSGameClass(unittest.TestCase):
 
     def testAC5_4and8_4TurnUpdatedToRedWhenBlueMakesValidMove(self):
         """This test will demonstrate that when the Red Player makes a valid move, the turn will be updated to blue
-        player's turn. At the moment, the logic to seperate simple and general games is not implemented, so these AC
-        are being tested in the same method"""
+        player's turn. These AC will be tested together because the AC are exactly the same regardless of game rules"""
 
         # Setup conditions such that it is Blue Player's turn
         self.sosGame.currentPlayer = 1
@@ -166,6 +164,11 @@ class TestSOSGameClass(unittest.TestCase):
 
             # Verify that updateTurnFrame was called once
             mockUpdateTurn.assert_called_once()
+
+    def testAC5_2and8_2RedPlayerAttemptsAMoveOnAnOccupiedCell(self):
+        """Verify that when a move is attempted on a cell that is already occupied, the cell will not be changed,
+        and the player turn update method will not be called"""
+
 
 
 
