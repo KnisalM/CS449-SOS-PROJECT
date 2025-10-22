@@ -8,6 +8,7 @@ from GUI_2 import gameBoard
 
 class TestPlayerClass(unittest.TestCase):
     """This class of tests will verify the function of the logic that has thus far been implemented for the game"""
+    def testAC_5_7and5_8_PlayerCurrentSelectedCharacterIsStoredInCharacter(self):
 
 
 class TestgameBoardClass(unittest.TestCase):
