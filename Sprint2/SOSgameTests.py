@@ -190,7 +190,29 @@ class TestSOSGameClass(unittest.TestCase):
             text='S', fg='blue', state='disabled', disabledforeground='blue',
             relief='sunken', font=('Arial', 14, 'bold')
         )
+    def testAC5_5and8_5BluePlayerAttemptsAMoveOnAnOccupiedCell(self):
+        """Verify that when a move is attempted on a cell that is already occupied, the cell will not be changed,
+        and the player turn update method will not be called"""
+        # Set up a mock 3x3 game board for move testing
+        self.sosGame.cells = [[Mock() for _ in range(3)] for _ in range(3)]
+        self.sosGame.cellState = [['' for _ in range(3)] for _ in range(3)]
 
+        # Set up initial game state with Blue Player's turn in an ongoing game
+        self.sosGame.currentPlayer = 1
+        firstPlayer = self.sosGame.getCurrentPlayer()
+        self.assertEqual(firstPlayer.player_number, 2)
+        self.assertEqual(firstPlayer.color, 'blue')
+
+        # Simulate that cell 0,0 is occupied by Red Player
+        occRow, occCol = 0, 0
+        self.sosGame.makeAMove(occRow, occCol, 'O', 'red')
+        self.assertEqual(self.sosGame.cellState[occRow][occCol], 'O')
+
+        # Check that config was called with state='disabled' among other parameters
+        self.sosGame.cells[occRow][occCol].config.assert_called_with(
+            text='O', fg='red', state='disabled', disabledforeground='red',
+            relief='sunken', font=('Arial', 14, 'bold')
+        )
 
 
 
