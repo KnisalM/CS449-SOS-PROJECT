@@ -59,7 +59,6 @@ class TestPlayerClass(unittest.TestCase):
             self.assertEqual(self.player.character, 'S')
 
 
-
 class TestSOSGameClass(unittest.TestCase):
     """This class will test the functionality and fulfillment of acceptance criteria for the SOSGame class"""
 
@@ -71,9 +70,6 @@ class TestSOSGameClass(unittest.TestCase):
         # Create an instance of the SOS game with mocked dependencies
         with patch('tkinter.Frame') as mockFrame:
             self.sosGame = SOSGame.SOSGame(self.testRealRoot)
-
-
-
 
     def tearDown(self):
         """Clean up the windows after tests"""
@@ -87,6 +83,7 @@ class TestSOSGameClass(unittest.TestCase):
         attributes from the player, and will be able to fulfill these user stories in their entirety. The tests for 
         this function will demonstrate that it returns a Player object, and that the attributes of this Player
         object can be accessed"""
+
     def testGetCurrentPlayerReturnsCorrectPlayerWithIndex(self):
         """Verify that getCurrentPlayer returns a Player Object and that it is the correct Player from self.players[
         self.currentPlayer]"""
@@ -190,6 +187,31 @@ class TestSOSGameClass(unittest.TestCase):
             text='S', fg='blue', state='disabled', disabledforeground='blue',
             relief='sunken', font=('Arial', 14, 'bold')
         )
+
+    def testAC5_7and8_7RedPlayerMakesAnSMove(self):
+        """Verify that when there is an ongoing game, and the red player's turn, and the red player makes a valid move
+        on an unoccupied cell, then the cell state is updated to reflect that move, and it is the other player's turn"""
+        # Set up a mock 3x3 game board for move testing
+        self.sosGame.cells = [[Mock() for _ in range(3)] for _ in range(3)]
+        self.sosGame.cellState = [['' for _ in range(3)] for _ in range(3)]
+
+        # Set up initial game state with Red Player's turn in an ongoing game
+        self.sosGame.currentPlayer = 0
+        firstPlayer = self.sosGame.getCurrentPlayer()
+        self.assertEqual(firstPlayer.player_number, 1)
+        self.assertEqual(firstPlayer.color, 'red')
+
+        # Red Player attempts an 'S' move on an empty cell
+        emptyRow, emptyCol = 1,1
+        self.assertEqual(self.sosGame.cellState[emptyRow][emptyCol], '')
+
+        with patch.object(self.sosGame, 'switchTurn') as mockSwitchTurn:
+            self.sosGame.cellClicked(emptyRow, emptyCol)
+
+            # Verify if empty cell had an 'S' placed in it
+            self.assertEqual(self.sosGame.cellState[emptyRow][emptyCol])
+
+
     def testAC5_5and8_5BluePlayerAttemptsAMoveOnAnOccupiedCell(self):
         """Verify that when a move is attempted on a cell that is already occupied, the cell will not be changed,
         and the player turn update method will not be called"""
@@ -213,13 +235,6 @@ class TestSOSGameClass(unittest.TestCase):
             text='O', fg='red', state='disabled', disabledforeground='red',
             relief='sunken', font=('Arial', 14, 'bold')
         )
-
-
-
-
-
-
-
 
 
 class TestgameBoardClass(unittest.TestCase):
