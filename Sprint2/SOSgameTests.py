@@ -6,9 +6,8 @@ import GUI_2 as gui
 from GUI_2 import gameBoard
 
 
-class TestSOSGameLogic(unittest.TestCase):
-    """This class contains the unit tests for SOSGame.py"""
-    pass
+class TestPlayerClass(unittest.TestCase):
+    """This class of tests will verify the function of the logic that has thus far been implemented for the game"""
 
 
 class TestgameBoardClass(unittest.TestCase):
@@ -307,13 +306,13 @@ class TestgameBoardClass(unittest.TestCase):
 
                 for rowIndex, row in enumerate(self.testBoard.cells):
                     self.assertEqual(len(row), expectedDim)
+
     def testAC4_1and4_2_startGameCreatesPlayerFrames(self):
         """Verify that when startGame() is ran, the method GUI_2.createPlayerFrame is called twice, and that the frames
         have the appropriate attributes for the 2 players frames that are created"""
 
         with patch.object(self.testBoard.setupFrame, 'destroy'), patch('tkinter.Frame') as mockFrame, \
-            patch('tkinter.Button') as mockButton, patch('GUI_2.createPlayerFrame') as mockCreatePlayerFrame:
-
+                patch('tkinter.Button') as mockButton, patch('GUI_2.createPlayerFrame') as mockCreatePlayerFrame:
             # Set up valid conditions
             self.testBoard.dimensions.set('5x5')
             self.testBoard.ruleSet.set('simple')
@@ -342,7 +341,6 @@ class TestgameBoardClass(unittest.TestCase):
             self.assertEqual(bluePlayerCall[0][0], self.testBoard.gameFrame)
             self.assertEqual(bluePlayerCall[0][3], 'Blue Player')
             self.assertEqual(bluePlayerCall[0][4], self.testBoard.p2Move)
-
 
 
 if __name__ == '__main__':
