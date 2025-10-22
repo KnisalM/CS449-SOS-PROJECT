@@ -88,7 +88,22 @@ class TestSOSGameClass(unittest.TestCase):
     def testGetCurrentPlayerReturnsCorrectPlayerWithIndex(self):
         """Verify that getCurrentPlayer returns a Player Object and that it is the correct Player from self.players[
         self.currentPlayer]"""
-        se
+
+        # Test with currentPlayer = 0 (player 1)
+        self.sosGame.currentPlayer = 0
+        player1 = self.sosGame.getCurrentPlayer()
+
+        # Verify that this call returns the correct player object
+        self.assertIsInstance(player1, SOSGame.Player)
+        self.assertEqual(player1, self.sosGame.players[0])
+
+        # Test with currentPlayer = 1 (player 2)
+        self.sosGame.currentPlayer = 1
+        player2 = self.sosGame.getCurrentPlayer()
+
+        # Verify that this call returns the correct player object
+        self.assertIsInstance(player2, SOSGame.Player)
+        self.assertEqual(player2, self.sosGame.players[1])
 
 
 
