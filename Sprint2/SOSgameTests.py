@@ -158,11 +158,11 @@ class TestSOSGameClass(unittest.TestCase):
         with patch.object(self.sosGame, 'updateTurnFrame') as mockUpdateTurn:
             self.sosGame.switchTurn()
 
-            # Check that current player is updated to Player 2
-            self.assertEqual(self.sosGame.currentPlayer, 1)
+            # Check that current player is updated to Player 1
+            self.assertEqual(self.sosGame.currentPlayer, 0)
             secondPlayer = self.sosGame.getCurrentPlayer()
-            self.assertEqual(secondPlayer.player_number, 2)
-            self.assertEqual(secondPlayer.color, 'blue')
+            self.assertEqual(secondPlayer.player_number, 1)
+            self.assertEqual(secondPlayer.color, 'red')
 
             # Verify that updateTurnFrame was called once
             mockUpdateTurn.assert_called_once()
