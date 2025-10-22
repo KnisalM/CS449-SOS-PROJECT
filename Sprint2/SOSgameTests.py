@@ -331,14 +331,17 @@ class TestgameBoardClass(unittest.TestCase):
             # Create a list of all the calls to mockCreatePlayerFrame so that we can verify their attributes
             calls = mockCreatePlayerFrame.call_args_list
 
-            # Verify that the Red Player frame was created with the correct parameters
+            # Verify that the Red Player's frame was created with the correct parameters
             redPlayerCall = calls[0]
             self.assertEqual(redPlayerCall[0][0], self.testBoard.gameFrame)
             self.assertEqual(redPlayerCall[0][3], 'Red Player')
             self.assertEqual(redPlayerCall[0][4], self.testBoard.p1Move)
 
-
-
+            # Verify that the Blue Player's frame was created with the correct parameters
+            bluePlayerCall = calls[1]
+            self.assertEqual(bluePlayerCall[0][0], self.testBoard.gameFrame)
+            self.assertEqual(bluePlayerCall[0][3], 'Blue Player')
+            self.assertEqual(bluePlayerCall[0][4], self.testBoard.p2Move)
 
 
 
