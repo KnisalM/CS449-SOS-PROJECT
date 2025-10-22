@@ -267,9 +267,46 @@ class TestgameBoardClass(unittest.TestCase):
     tests on the createPlayerFrame() method. I also will not be testing any of the logic implementation in the 
     following tests, as those will be tested by my unit tests for the logic file, SOSGame.py, in which
     the method startGame() inherits this method, and will implement rule set and computer vs human / human vs human"""
-    def testAC4_1and4_2_startGameGeneratesBoardWithCorrectDimensions
+
+    def testAC4_1and4_2_startGameGeneratesBoardWithCorrectDimensions(self):
         """Verify that when the startGame() method is called and the board is created, the board that is created
         has the correct dimensions that match the value from self.dimensions, selected by the player"""
+
+        # Testing with various board sizes,  not just one test case
+        testSizes = ['3x3', '5x5', '8x8', '11x11']
+
+        for size in testSizes:
+            with self.subTest(boardSize=size), patch.object(self.testBoard.setupFrame, 'destroy'), \
+                    patch('tkinter.Frame') as mockFrame, patch('tkinter.Button') as mockButton, \
+                    patch('GUI_2.createPlayerFrame'):
+
+                # Set up dimensions
+                self.testBoard.dimensions.set(size)
+                self.testBoard.ruleSet.set('simple')
+                expectedDim = int(size.split('x')[0])
+
+                # Mock board frame and buttons
+                mockBoardFrame = Mock()
+                mockFrame.return_value = mockBoardFrame
+
+                # Clear existing cells from any previous tests that weren't wiped
+                self.testBoard.cells = []
+
+
+
+                # Call method we are testing
+                self.testBoard.startGame()
+
+                # Verify that correct # of buttons are created (total number of buttons equals expectedDim^2
+                expectedButtonTotal = expectedDim * expectedDim
+                self.assertEqual(mockButton.call_count, expectedButtonTotal)
+
+                # Verify cell list has proper amount of rows and columns, showing that the formatting is correct
+                self.assertEqual(len(self.testBoard.cells), expectedDim)
+
+                for rowIndex, row in enumerate(self.testBoard.cells):
+                    self.assertEqual(len(row), expectedDim)
+
 
 if __name__ == '__main__':
     unittest.main()
