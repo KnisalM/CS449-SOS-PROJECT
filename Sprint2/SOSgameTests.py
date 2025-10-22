@@ -105,6 +105,12 @@ class TestSOSGameClass(unittest.TestCase):
         self.assertIsInstance(player2, SOSGame.Player)
         self.assertEqual(player2, self.sosGame.players[1])
 
+    def testGetCurrentPlayerReturnedPlayerAttributesAccessible(self):
+        """Verify that the currently needed Player attributes self.name, self.color, self.character, are all accessible"""
+
+
+
+
 
 
 
