@@ -17,14 +17,14 @@ class TestPlayerClass(unittest.TestCase):
 
     def setUp(self):
         # Set up text fixtures
-        self.player = SOSGame.Player(playerNumber=1)
+        self.player = SOSGame.Player(player_number=1)
 
     def testAC5_7and5_8_SetCharUpdatesCharacterWhenValidCharacterO(self):
         """Verify that setChar updated self.character when passed 'O'"""
 
         # Setup initial state
         initialChar = self.player.character
-        self.assertEqual(initialChar, 'S') # 'S' is the default character as established in the Player class
+        self.assertEqual(initialChar, 'S')  # 'S' is the default character as established in the Player class
 
         # Call method with valid character 'O'
         self.player.setChar('O')
@@ -55,8 +55,15 @@ class TestPlayerClass(unittest.TestCase):
             # Call method with invalidChar
             self.player.setChar(invalidChar)
 
-            #Verify character was NOT updated
+            # Verify character was NOT updated
             self.assertEqual(self.player.character, 'S')
+
+    def testGetCurrentPlayer(self):
+        """This function is a helper function. It does not directly fulfill any acceptance criteria in and of itself,
+        but it does assist with several user stories and their corresponding acceptance criteria. The stories it
+        helps with are 5, 7, 8, and 10. This function assists by getting which is the current player and returning
+        that value from the list self.players, so that the functions that call this method can read
+        attributes from the player, and will be able to fulfill these user stories in their entirety"""
 
 
 

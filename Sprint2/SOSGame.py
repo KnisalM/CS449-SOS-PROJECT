@@ -6,20 +6,25 @@ from GUI_2 import gameBoard
 class Player:
     """This class represents the player's of the game, and their related data"""
 
-    def __init__(self, playerNumber,
+    def __init__(self, player_number,
                  player_type="human"):  # Later sprints will implement that this can be a computer player
-        self.playerNumber = playerNumber  # Tracks if this is player 1 or 2
+        self.player_number = player_number  # Tracks if this is player 1 or 2
         self.player_type = player_type  # Will come into use later when implementing a human or computer opponent
         self.score = 0  # score for all player's must begin at 0
         self.character = 'S'  # S character selected by default, but at time of event will be updated to selected character
-        self.color = 'red' if playerNumber == 1 else 'blue'  # Color of character's placed on board
-        self.name = f"Player {playerNumber}"  # Determines Player Name for displaying on the board whose turn it is
+        self.color = 'red' if player_number == 1 else 'blue'  # Color of character's placed on board
+        self.name = f"Player {player_number}"  # Determines Player Name for displaying on the board whose turn it is
 
     """This function will set the character for the player to play based on their selection in the frame"""
 
     def setChar(self, character):
         if character in ['S', 'O']:
             self.character = character
+
+    """Get the current selected character"""
+
+    def getChar(self):
+        return self.character
 
     """Increment Player's score in a general game when they create a SOS chain
 
@@ -37,7 +42,7 @@ class SOSGame(gameBoard):
                         Player(2, 'human')]  # Player 2 Blue
         self.currentPlayer = 0  # Start with Player 1
         self.activeGame = True
-        self.cellState = []  # Track the state of the cells and whether there is currently a play made on a cell
+        self.cellState = [] # Track the state of the cells and whether there is currently a play made on a cell
         self.turnDisplayLabel = None  # Displays whose turn it currently is
 
     """Get and return the current player"""
@@ -86,7 +91,7 @@ class SOSGame(gameBoard):
     def makeAMove(self, row, col, moveChar, color):
         boardSize = len(self.cells)
         if boardSize <= 5:
-            fontSize = 14
+            fontSize=14
         elif boardSize <= 8:
             fontSize = 12
         elif boardSize <= 10:
