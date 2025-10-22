@@ -10,7 +10,10 @@ class TestPlayerClass(unittest.TestCase):
     """This class of tests will verify the function of the Player class
     At this time, the only testable method in the player class is setChar, which was created to replace the standard
     .set() function for the variable self.character. In later sprints, I will implement a method to increment the
-    player's score as well"""
+    player's score as well. An important note is that while I have implemented tests that demonstrate the error
+    catching capability of the function, there is no way for an invalid character to be passed to the function
+    in the real game implementation, as the only call for the setChar method is associated with the radio buttons
+    within the player frame, which exclusively contain the valid values 'S' and 'O'"""
 
     def setUp(self):
         # Set up text fixtures
@@ -28,6 +31,17 @@ class TestPlayerClass(unittest.TestCase):
 
         # Verify that self.character was updated
         self.assertEqual(self.player.character, 'O')
+
+    def testAC5_7and5_8_SetCharUpdatesCharacterWhenValidCharacterS(self):
+        """Verify that when self.character = 'O' and setChar passes 'S', self.character is updated to 'S'"""
+
+        # Already verified that when passed 'O', setChar updates from default state 'S' to 'O', start here in this test
+        self.player.setChar('O')
+        self.assertEqual(self.player.character, 'O')
+
+        # Call method setChar with valid character 'S'
+        self.player.setChar('S')
+        self.assertEqual(self.player.character, 'S')
 
 
 
