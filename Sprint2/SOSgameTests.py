@@ -289,7 +289,11 @@ class TestgameBoardClass(unittest.TestCase):
                 mockBoardFrame = Mock()
                 mockFrame.return_value = mockBoardFrame
 
+                # Clear existing cells from any previous tests that weren't wiped
+                self.testBoard.cells = []
 
+                # Reset mock counter to ensure buttons called prior to this are not counted
+                mockButton.reset_mock()
 
                 # Call method we are testing
                 self.testBoard.startGame()
