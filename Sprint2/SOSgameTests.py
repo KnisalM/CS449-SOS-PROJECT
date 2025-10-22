@@ -16,6 +16,19 @@ class TestPlayerClass(unittest.TestCase):
         # Set up text fixtures
         self.player = SOSGame.Player(playerNumber=1)
 
+    def testAC5_7and5_8_SetCharUpdatesCharacterWhenValidCharacterO(self):
+        """Verify that setChar updated self.character when passed 'O'"""
+
+        # Setup initial state
+        initialChar = self.player.character
+        self.assertEqual(initialChar, 'S') # 'S' is the default character as established in the Player class
+
+        # Call method with valid character 'O'
+        self.player.setChar('O')
+
+        # Verify that self.character was updated
+        self.assertEqual(self.player.character, 'O')
+
 
 
 
