@@ -119,6 +119,30 @@ class TestSOSGameClass(unittest.TestCase):
             self.assertNotEqual(player.color, '')
             self.assertEqual(player.character, 'S')
 
+    def testAC5_1and8_1TurnUpdatedToBlueWhenRedMakesValidMove(self):
+        """This test will demonstrate that when the Red Player makes a valid move, the turn will be updated to blue
+        player's turn. At the moment, the logic to seperate simple and general games is not implemented, so these AC
+        are being tested in the same method"""
+
+        # Setup conditions such that it is Red Player's turn
+        self.sosGame.currentPlayer = 0
+        firstPlayer = self.sosGame.getCurrentPlayer()
+        self.assertEqual(firstPlayer.player_number, 1)
+        self.assertEqual(firstPlayer.color, 'red')
+
+        # Simulate switchTurn method being called
+        with patch.object(self.sosGame, 'updateTurnFrame') as mockUpdateTurn:
+            self.sosGame.switchTurn()
+
+            # Check that current player is updated to Player 2
+            self.assertEqual(self.sosGame.currentPlayer, 1)
+            secondPlayer = self.sosGame.getCurrentPlayer()
+            self.assertEqual(secondPlayer.player_number, 2)
+            self.assertEqual(secondPlayer.color, 'blue')
+
+            # Verify that updateTurnFrame was called once
+            mockUpdateTurn.assert_called_once()
+
 
 
 
