@@ -12,7 +12,7 @@ class Player:
         self.player_type = player_type  # Will come into use later when implementing a human or computer opponent
         self.score = 0  # score for all player's must begin at 0
         self.character = 'S'  # S character selected by default, but at time of event will be updated to selected character
-        self.color = 'red' if player_number == 1 else 'blue'  # Color of character's placed on board
+        self.color = 'Red' if player_number == 1 else 'Blue'  # Color of character's placed on board
         self.name = f"Player {player_number}"  # Determines Player Name for displaying on the board whose turn it is
 
     """This function will set the character for the player to play based on their selection in the frame"""
