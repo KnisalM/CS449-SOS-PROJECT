@@ -26,6 +26,12 @@ class Player:
     def getChar(self):
         return self.character
 
+    def increment_score(self):
+        """This function will increment the player's score when they create a valid SOS
+         The simple game will utilize this function to end the game when a player's score
+         != 0, and will track the player's score in a general game until there are no moves left"""
+        self.score += 1
+
 
 class SOSGame(gameBoard):
     """This class will extend the class gameBoard from GUI_2.py, and will begin implementing the actual game logic onto the board"""
@@ -118,11 +124,7 @@ class SOSGame(gameBoard):
 
         self.updateTurnFrame()
 
-    def increment_score(self):
-        """This function will increment the player's score when they create a valid SOS
-         The simple game will utilize this function to end the game when a player's score
-         != 0, and will track the player's score in a general game until there are no moves left"""
-        pass
+
 
 
 class simpleSOSGame(SOSGame):
