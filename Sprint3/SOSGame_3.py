@@ -45,6 +45,7 @@ class SOSGame(gameBoard):
         self.activeGame = True
         self.cellState = []  # Track the state of the cells and whether there is currently a play made on a cell
         self.turnDisplayLabel = None  # Displays whose turn it currently is
+        self.versusType = ''
 
     """Get and return the current player"""
 
@@ -125,17 +126,12 @@ class SOSGame(gameBoard):
         self.updateTurnFrame()
 
 
-
-
 class simpleSOSGame(SOSGame):
     pass
 
 
 class generalSOSGame(SOSGame):
     pass
-
-
-
 
 
 def main():

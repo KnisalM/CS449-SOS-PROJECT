@@ -49,13 +49,6 @@ class gameBoard:
         # Create list to hold the cells of the game board and a list to hold moves that have been made
         self.cells = []  # Store the cells of the game board
 
-        # self.versusType = '' Will Implement later, this will store the player's selection for Human v Human or Human v Machine
-        # self.currentTurn = '' Will Implement later, this will store which player's turn it currently is for the moves placed on the board
-        # self.active = '' Implement in later sprint, will track game state and update when game is over
-
-        # self.cellsState = [] Implement in later Sprint, will track the state of the cells and prevent further moves from being played on them once played
-        # self.players = [] Implement in later sprint this will be a list containing the players on the board, and their associated data i.e. color, score, etc
-
         self.boardSize()
         self.ruleSetSelection()
 
