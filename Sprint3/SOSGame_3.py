@@ -33,6 +33,13 @@ class Player:
         self.score += 1
 
 
+class computerPlayer(Player):
+    """this class will extend the Player class to a computer player's logic. This class will
+    implement the logic for a computer player to choose how it makes decisions on move placement,
+    blocking the other player from making an SOS, and making moves to lay out a path to create
+    an SOS ahead of time"""
+
+
 class SOSGame(gameBoard):
     """This class will extend the class gameBoard from GUI_2.py, and will begin implementing the actual game logic onto the board"""
 
