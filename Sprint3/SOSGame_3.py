@@ -118,6 +118,12 @@ class SOSGame(gameBoard):
 
         self.updateTurnFrame()
 
+    def increment_score(self):
+        """This function will increment the player's score when they create a valid SOS
+         The simple game will utilize this function to end the game when a player's score
+         != 0, and will track the player's score in a general game until there are no moves left"""
+        pass
+
 
 class simpleSOSGame(SOSGame):
     pass
@@ -126,9 +132,7 @@ class simpleSOSGame(SOSGame):
 class generalSOSGame(SOSGame):
     pass
 
-    def increment_score(self):
-        """This function will increment the player's score when they create a valid SOS in a general game """
-        pass
+
 
 
 
