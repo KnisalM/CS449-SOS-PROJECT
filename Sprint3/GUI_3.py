@@ -145,7 +145,10 @@ class gameBoard:
         createPlayerFrame(self.gameFrame, 1, 0, 'Red Player', self.p1Move)
         createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p2Move)
 
-    def draw_SOS(self):
+    def drawSOSChain(self, cellLocations, pColor):
         """This function will be the helper function that will create the drawn line
         on the game board when a player creates a valid SOS chain"""
-        pass
+
+        for row, col in cellLocations:
+            self.cells[row][col].config(fg='white', bg=pColor)
+

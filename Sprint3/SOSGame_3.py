@@ -134,11 +134,18 @@ class SOSGame(gameBoard):
 
 
 class simpleSOSGame(SOSGame):
-    pass
+    "This class will implement the SOS game with the general rule set "
 
 
 class generalSOSGame(SOSGame):
-    pass
+    """This class will implement the SOS game with the general rule set, in which the player
+    with the most complete SOS chains at the end of the game will be the winner"""
+
+    def generalGameOver(self):
+        """This function will determine if a general game has ended by checking if there are valid moves left to make
+        if there are no valid moves left, the function will evaluate which of the two player's has scored the most
+        points, and will announce that that player is the winner"""
+        pass
 
 
 def main():
