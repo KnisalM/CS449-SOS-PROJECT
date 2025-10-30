@@ -171,6 +171,11 @@ class SOSGame(gameBoard):
         """Template Method to be overriden by the subclasses"""
         pass
 
+    def isBoardFull(self):
+        """Function will check to see if there are remaining moves
+        this will be used by general game to declare a tie if both player's scores = 0 when this function is called
+        and returns a positive boolean value, and will be the end game trigger in the general game to determine
+        when the game is over, check the scores, and declare a winner"""
 
     """Begin the game and apply the logic to the game board"""
 
