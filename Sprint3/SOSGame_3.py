@@ -112,8 +112,11 @@ class SOSGame(gameBoard):
         self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color,
                                     relief='sunken', font=fontConfig)
 
-        # in future sprints I will add functionality here to check for SOS chain completion
-        # Function will be titled checkSOSFormed(self, row, col, moveChar)
+    def checkSOSFormed(self, row, col, moveChar):
+        """This function will check if an SOS has been formed after each move. If a player has created an SOS, then their
+        score will be incremented. A simple game will utilize this to tell a game is over when one of the player's score
+        is !=0, and a general game will use this to increment the player's score and track who wins by who has the most
+        SOS made when there are no moves left"""
 
     """Begin the game and apply the logic to the game board"""
 
@@ -134,7 +137,12 @@ class SOSGame(gameBoard):
 
 
 class simpleSOSGame(SOSGame):
-    "This class will implement the SOS game with the general rule set "
+    """This class will implement the SOS game with the general rule set, in which the player who completes an SOS chain
+    first wins the game"""
+
+    def simpleGameOver(self):
+        """This function will be called after a move has been made to determine if the move that was made
+        created an SOS chain, and if so, end the game and announce the player who made the SOS as the winner"""
 
 
 class generalSOSGame(SOSGame):
