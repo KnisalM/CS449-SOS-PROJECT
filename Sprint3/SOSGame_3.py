@@ -167,7 +167,9 @@ class SOSGame(gameBoard):
             self.drawSOSChain(chain, currentPlayer.color)
             currentPlayer.incrementScore()
 
-
+    def gameOverHandler(self):
+        """Template Method to be overriden by the subclasses"""
+        pass
 
 
     """Begin the game and apply the logic to the game board"""
