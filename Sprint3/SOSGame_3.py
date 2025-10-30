@@ -156,6 +156,9 @@ class SOSGame(gameBoard):
                     cell3 = self.cellState[positions[2][0]][positions[2][1]]
 
                     if cell1 == 'S' and cell2 == 'O' and cell3 == 'S':
+                        sosChain.append(positions)
+
+        return sosChain
 
     """Begin the game and apply the logic to the game board"""
 
