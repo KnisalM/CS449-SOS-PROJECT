@@ -178,6 +178,14 @@ class SOSGame(gameBoard):
         when the game is over, check the scores, and declare a winner"""
         return all(cell != '' for row in self.cellState for cell in row)
 
+    def endGame(self, message):
+        """Common logic for the end of a game"""
+        self.activeGame = False
+        for row in self.cells:
+            for cell in row:
+                cell.config(state='disabled')
+        messagebox.showinfo("Game Over", message)
+
     def startGame(self):
         """Begin the game and apply the logic to the game board"""
         super().startGame()
