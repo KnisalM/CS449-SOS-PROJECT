@@ -26,7 +26,7 @@ class Player:
     def getChar(self):
         return self.character
 
-    def increment_score(self):
+    def incrementScore(self):
         """This function will increment the player's score when they create a valid SOS
          The simple game will utilize this function to end the game when a player's score
          != 0, and will track the player's score in a general game until there are no moves left"""
@@ -122,7 +122,7 @@ class SOSGame(gameBoard):
         score will be incremented. A simple game will utilize this to tell a game is over when one of the player's score
         is !=0, and a general game will use this to increment the player's score and track who wins by who has the most
         SOS made when there are no moves left"""
-        sosChain = []
+        sosChains = []
         boardDim = len(self.cellState)
 
         # Define the 4 directions to check in, their opposites are handled by checking in both directions
@@ -156,9 +156,15 @@ class SOSGame(gameBoard):
                     cell3 = self.cellState[positions[2][0]][positions[2][1]]
 
                     if cell1 == 'S' and cell2 == 'O' and cell3 == 'S':
-                        sosChain.append(positions)
+                        sosChains.append(positions)
 
-        return sosChain
+        # If SOS returned, the list sosChains will have values for the following iterator, which will draw the SOS
+        currentPlayer = self.getCurrentPlayer()
+        for chain in sosChains:
+            self.drawSOSChain(chain, currentPlayer.color)
+            currentPlayer.incrementScore()
+
+        return sosChains
 
     """Begin the game and apply the logic to the game board"""
 
