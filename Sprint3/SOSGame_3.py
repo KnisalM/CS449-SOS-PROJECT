@@ -176,11 +176,10 @@ class SOSGame(gameBoard):
         this will be used by general game to declare a tie if both player's scores = 0 when this function is called
         and returns a positive boolean value, and will be the end game trigger in the general game to determine
         when the game is over, check the scores, and declare a winner"""
-
-    """Begin the game and apply the logic to the game board"""
+        return all(cell != '' for row in self.cellState for cell in row)
 
     def startGame(self):
-
+        """Begin the game and apply the logic to the game board"""
         super().startGame()
         dimN = int(self.dimensions.get().split('x')[0])
 
