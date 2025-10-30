@@ -187,11 +187,18 @@ class SOSGame(gameBoard):
         messagebox.showinfo("Game Over", message)
 
     def startGame(self):
-        """Begin the game and apply the logic to the game board"""
+        """Begin the game and apply the logic to the game board
+        Common functionality for both subclasses"""
         super().startGame()
         dimN = int(self.dimensions.get().split('x')[0])
 
         self.cellState = [['' for _ in range(dimN)] for _ in range(dimN)]
+        self.activeGame = True
+
+        # Ensure no score data was held from previous game
+        for player in self.players:
+            if player.score != 0:
+                player.score = 0
 
         for i in range(dimN):
             for j in range(dimN):
