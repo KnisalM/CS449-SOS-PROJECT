@@ -86,7 +86,7 @@ class SOSGame(gameBoard):
     """Define the events when an empty cell is clicked"""
 
     def cellClicked(self, row, col):
-
+        if not self.activeGame or self.cellState[row][col]
         self.updatePlayerChar()
 
         currentPlayer = self.getCurrentPlayer()
@@ -112,13 +112,45 @@ class SOSGame(gameBoard):
         self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color,
                                     relief='sunken', font=fontConfig)
 
-    def checkSOSFormed(self, row, col, moveChar):
+    def checkSOSFormed(self, row, col, player):
         """This function will check if an SOS has been formed after each move. If a player has created an SOS, then their
         score will be incremented. A simple game will utilize this to tell a game is over when one of the player's score
         is !=0, and a general game will use this to increment the player's score and track who wins by who has the most
         SOS made when there are no moves left"""
+        sosChain = []
+        boardDim = len(self.cellState)
 
+        # Define the 4 directions to check in, their opposites are handled by checking in both directions
+        directionsToCheck = [
+            (0, 1), (1, 0), (1, 1), (1, -1)
+        ]  # Vertical 1 up, Horizontal 1 to the right, Up Right, Down Right, opposites will be checked
 
+        for directionOne, directionTwo in directionsToCheck:
+            # Create a negative factor to multiply by so we can check in opposite directions
+            for directionalFactor in [1, -1]:
+                actualDirectionOne, actualDirectionTwo = directionOne * directionalFactor, directionTwo * directionalFactor
+
+                # Calculate what the positions are for the 3 positions that would form an SOS in this direction
+                positions = []
+                validPositions = True
+
+                for i in range(3):
+                    r = row + (i * actualDirectionOne)
+                    c = col + (i * actualDirectionTwo)
+
+                    if 0 <= r < boardDim and 0 <= c < boardDim:
+                        positions.append((r, c))
+                    else:
+                        validPositions = False
+                        break
+
+                # If there are 3 valid positions in the list, check if they form an SOS
+                if validPositions and len(positions) == 3:
+                    cell1 = self.cellState[positions[0][0]][positions[0][1]]
+                    cell2 = self.cellState[positions[1][0]][positions[1][1]]
+                    cell3 = self.cellState[positions[2][0]][positions[2][1]]
+
+                    if cell1 == 'S' and cell2 == 'O' and cell3 == 'S':
 
     """Begin the game and apply the logic to the game board"""
 
