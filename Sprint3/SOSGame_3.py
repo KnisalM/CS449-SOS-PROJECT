@@ -165,7 +165,7 @@ class SOSGame(gameBoard):
             self.drawSOSChain(chain, currentPlayer.color)
             currentPlayer.incrementScore()
 
-        return sosChains
+
 
     """Begin the game and apply the logic to the game board"""
 
