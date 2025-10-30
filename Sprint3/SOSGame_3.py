@@ -95,7 +95,8 @@ class SOSGame(gameBoard):
         self.makeAMove(row, col, moveChar, currentPlayer.color)
         self.switchTurn()
 
-    """Execute when a valid move is made to reflect on board and update game state"""
+    """Execute when a valid move is made to reflect on board and update game state
+    Commonly Used Functionality between both general and simple SOSGame subclasses"""
 
     def makeAMove(self, row, col, moveChar, color):
         boardSize = len(self.cells)
@@ -111,6 +112,8 @@ class SOSGame(gameBoard):
         self.cellState[row][col] = moveChar
         self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color,
                                     relief='sunken', font=fontConfig)
+
+
 
     def checkSOSFormed(self, row, col, player):
         """This function will check if an SOS has been formed after each move. If a player has created an SOS, then their
