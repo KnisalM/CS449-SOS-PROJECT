@@ -114,7 +114,7 @@ class SOSGame(gameBoard):
                                     relief='sunken', font=fontConfig)
 
         # Check for a SOS chain after the move by calling checkSOSFormed function
-        sosChain = self.checkSOSFormed(row, col, moveChar)
+        self.checkSOSFormed(row, col, moveChar)
 
 
     def checkSOSFormed(self, row, col, player):
