@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from GUI_3 import gameBoard
-from GUI_3 import setupGame
+
 
 
 class Player:
@@ -263,6 +263,8 @@ def main():
     root.grid_columnconfigure(0, weight=1)
     root.grid_rowconfigure(0, weight=1)
 
+    # Import setupGame locally to prevent circular imports
+    from GUI_3 import setupGame
     setupInstance = setupGame(root)
 
     root.mainloop()
