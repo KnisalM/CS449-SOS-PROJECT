@@ -36,13 +36,13 @@ class computerPlayer(Player):
     implement the logic for a computer player to choose how it makes decisions on move placement,
     blocking the other player from making an SOS, and making moves to lay out a path to create
     an SOS ahead of time"""
+    pass
 
 
-class SOSGame(gameBoard):
+class SOSGame():
     """This class will extend the class gameBoard from GUI_2.py, and will begin implementing the actual game logic onto the board"""
 
     def __init__(self, root):
-        super().__init__(root)
 
         self.players = [Player(1, 'human'),  # Player 1 Red
                         Player(2, 'human')]  # Player 2 Blue
@@ -51,6 +51,13 @@ class SOSGame(gameBoard):
         self.cellState = []  # Track the state of the cells and whether there is currently a play made on a cell
         self.turnDisplayLabel = None  # Displays whose turn it currently is
         self.versusType = ''
+
+        self.cells = None       # Will reference the UI cells
+        self.gameFrame = None   # Will reference the game frame
+        self.p1Move = None      # Will reference player 1 move variable
+        self.p2Move = None      # Will reference player 2 move variable
+        self.dimensions = tk.StringVar(value='')  # Board dimensions
+        self.ruleSet = tk.StringVar(value='')     # Game rule set
 
     def getCurrentPlayer(self):
         """Get and return the current player"""
