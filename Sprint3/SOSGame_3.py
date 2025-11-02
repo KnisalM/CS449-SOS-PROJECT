@@ -15,15 +15,15 @@ class Player:
         self.color = 'Red' if player_number == 1 else 'Blue'  # Color of character's placed on board
         self.name = f"Player {player_number}"  # Determines Player Name for displaying on the board whose turn it is
 
-    """This function will set the character for the player to play based on their selection in the frame"""
 
     def setChar(self, character):
+        """This function will set the character for the player to play based on their selection in the frame"""
         if character in ['S', 'O']:
             self.character = character
 
-    """Get the current selected character"""
 
     def getChar(self):
+        """Get the current selected character"""
         return self.character
 
     def incrementScore(self):
@@ -54,14 +54,14 @@ class SOSGame(gameBoard):
         self.turnDisplayLabel = None  # Displays whose turn it currently is
         self.versusType = ''
 
-    """Get and return the current player"""
 
     def getCurrentPlayer(self):
+        """Get and return the current player"""
         return self.players[self.currentPlayer]
 
-    """Update the GUI to reflect the turn"""
 
     def updateTurnFrame(self):
+        """Update the GUI to reflect the turn"""
         currentPlayer = self.getCurrentPlayer()
 
         if self.turnDisplayLabel:
@@ -71,21 +71,21 @@ class SOSGame(gameBoard):
                                          fg=currentPlayer.color)
         self.turnDisplayLabel.grid(row=3, column=0, columnspan=3, pady=10, sticky='ew')
 
-    """Switch turns so that player who is not playing can't make a move and scores are tracked appropriately"""
 
     def switchTurn(self):
+        """Switch turns so that player who is not playing can't make a move and scores are tracked appropriately"""
         self.currentPlayer = (self.currentPlayer + 1) % 2
         self.updateTurnFrame()
 
-    """get what character the player has selected for the move to be made"""
 
     def updatePlayerChar(self):
+        """get what character the player has selected for the move to be made"""
         self.players[0].setChar(self.p1Move.get())
         self.players[1].setChar(self.p2Move.get())
 
-    """Define the events when an empty cell is clicked"""
 
     def cellClicked(self, row, col):
+        """Define the events when an empty cell is clicked"""
         if not self.activeGame or self.cellState[row][col] != '':
             return
 
@@ -97,10 +97,10 @@ class SOSGame(gameBoard):
         self.makeAMove(row, col, moveChar, currentPlayer.color)
         self.switchTurn()
 
-    """Execute when a valid move is made to reflect on board and update game state
-    Commonly Used Functionality between both general and simple SOSGame subclasses"""
 
     def makeAMove(self, row, col, moveChar, color):
+        """Execute when a valid move is made to reflect on board and update game state
+    Commonly Used Functionality between both general and simple SOSGame subclasses"""
         boardSize = len(self.cells)
         if boardSize <= 5:
             fontSize = 14
