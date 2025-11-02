@@ -44,7 +44,7 @@ class SOSGame(gameBoard):
 
     def __init__(self, root):
         # Initialize gameBoard components
-        super.__init__(root)
+        super().__init__(root)
 
         # Initialize game variables
         self.players = [Player(1, 'human'),  # Player 1 Red
@@ -205,7 +205,7 @@ class simpleSOSGame(SOSGame):
     """This class will implement the SOS game with the general rule set, in which the player who completes an SOS chain
     first wins the game"""
 
-    def simpleGameOver(self):
+    def gameOverHandler(self):
         """This function will be called after a move has been made to determine if the move that was made
         created an SOS chain, and if so, end the game and announce the player who made the SOS as the winner"""
 
@@ -223,7 +223,7 @@ class generalSOSGame(SOSGame):
     """This class will implement the SOS game with the general rule set, in which the player
     with the most complete SOS chains at the end of the game will be the winner"""
 
-    def generalGameOver(self):
+    def gameOverHandler(self):
         """This function will determine if a general game has ended by checking if there are valid moves left to make
         if there are no valid moves left, the function will evaluate which of the two player's has scored the most
         points, and will announce that that player is the winner"""
@@ -251,10 +251,18 @@ class generalSOSGame(SOSGame):
         self.endGame(message)
 
     # Create a setup class to handle rule selection, will look at refactoring into classes, but testing for function
+
+
 class setupGame(gameBoard):
+
+    def __init__(self, root):
+        super().__init__(root)
+        self.instance = None
+
     def startGame(self):
         """Override startGame to create appropriate game instance based on rules"""
         ruleSet = self.ruleSet.get()
+        dimensions = self.dimensions.get()
 
         # Destroy setup frame
         self.setupFrame.destroy()
@@ -262,16 +270,18 @@ class setupGame(gameBoard):
         # Create appropriate game instance based on the selected rule set
         if ruleSet == 'simple':
             gameInstance = simpleSOSGame(self.root)
-        else: # Covers general condition
+        else:  # Covers general condition
             gameInstance = generalSOSGame(self.root)
 
         # Pass variables to game instance
-        gameInstance.dimensions.set(self.dimensions.get())
-        gameInstance.ruleSet.set(self.ruleSet.get())
+        gameInstance.dimensions.set(dimensions)
+        gameInstance.ruleSet.set(ruleSet)
         gameInstance.p1Move = self.p1Move
         gameInstance.p2Move = self.p2Move
 
+        self.instance = gameInstance
         gameInstance.startGame()
+
 
 def main():
     root = tk.Tk()
@@ -282,6 +292,9 @@ def main():
     root.grid_columnconfigure(0, weight=1)
     root.grid_rowconfigure(0, weight=1)
 
+    setupInstance = setupGame(root)
+
+    root.mainloop()
 
 
 if __name__ == '__main__':
