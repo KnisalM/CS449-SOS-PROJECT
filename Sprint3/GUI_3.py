@@ -3,17 +3,18 @@ from tkinter import ttk
 import pylint
 import unittest
 
-"""This is a helper function designed in assistance with Deepseek LLM to reduce doubling up on code in the 
-    player frame creation process
-    
-    Preconditions: Parent is a valid frame, row and column are valid unoccupied placements in the grid manager for the Parent window,
-    player is a valid String, and moveChar is a variable assigned to one of the players on the board
-    
-    Post conditions: A sub-Frame will be created and placed within the parent Frame. This frame will have the player label
-    at the top, and will have two radio buttons with options 'S' and 'O' """
+
 
 
 def createPlayerFrame(parent, row, column, player, moveChar):
+    """This is a helper function designed in assistance with Deepseek LLM to reduce doubling up on code in the
+    player frame creation process
+
+    Preconditions: Parent is a valid frame, row and column are valid unoccupied placements in the grid manager for the Parent window,
+    player is a valid String, and moveChar is a variable assigned to one of the players on the board
+
+    Post conditions: A sub-Frame will be created and placed within the parent Frame. This frame will have the player label
+    at the top, and will have two radio buttons with options 'S' and 'O' """
     frame = tk.Frame(parent, width=150)
     frame.grid(row=row, column=column, sticky='nsew')
     frame.grid_propagate(False)
@@ -88,15 +89,16 @@ class gameBoard:
         self.dimensions.trace('w', self.startConditions)
         self.ruleSet.trace('w', self.startConditions)
 
-    """This function determines when the conditions dimensions and ruleSet have been chosen, and allows the user to 
-    select a 'Begin' button that will create the game board with their chosen conditions
-    
-    Preconditions: Player has opened the application and is in the process of choosing how they would like to play 
-     the game
-     
-    Post conditions: The player will see a button displayed that says 'Begin', that will initialize the game board when pressed """
+
 
     def startConditions(self, *args):
+         """This function determines when the conditions dimensions and ruleSet have been chosen, and allows the user to
+    select a 'Begin' button that will create the game board with their chosen conditions
+
+    Preconditions: Player has opened the application and is in the process of choosing how they would like to play
+     the game
+
+    Post conditions: The player will see a button displayed that says 'Begin', that will initialize the game board when pressed """
         # Check if the player has selected their game board dimensions and ruleSet yet, create and display Begin button
         if self.dimensions.get() and self.ruleSet.get():
             beginLabel = tk.Label(self.setupFrame,
@@ -105,17 +107,15 @@ class gameBoard:
             startGame = tk.Button(self.setupFrame, text='Begin', command=self.startGame)
             startGame.grid(row=5, column=1, sticky=tk.W, pady=5)
 
-    """This Function Initializes the game board
-    
-    Preconditions: The player has selected a valid dimension, ruleSet, and has selected the 'Begin' button
-    
-    Post conditions: The player will be presented with a game board of their selected dimensions and ruleSet, with a
-    grid of selectable buttons in their chosen dimension"""
+
 
     def startGame(self):
+        """This Function Initializes the game board
 
-        # Import the game classes locally for the simple and general SOS games
-        from SOSGame_3 import simpleSOSGame, generalSOSGame
+    Preconditions: The player has selected a valid dimension, ruleSet, and has selected the 'Begin' button
+
+    Post conditions: The player will be presented with a game board of their selected dimensions and ruleSet, with a
+    grid of selectable buttons in their chosen dimension"""
 
         self.setupFrame.destroy()
 
@@ -149,21 +149,6 @@ class gameBoard:
         createPlayerFrame(self.gameFrame, 1, 0, 'Red Player', self.p1Move)
         createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p2Move)
 
-        # Initialize the game logic to the board based on rule selection
-        if self.ruleSet.get() == 'simple':
-            self.gameLogic = simpleSOSGame(self.root)
-        else: # This will cover when it is a general game
-            self.gameLogic = generalSOSGame(self.root)
-
-        # Configure the UI for the game logic
-        self.gameLogic.cells = self.cells
-        self.gameLogic.gameFrame = self.gameFrame
-        self.gameLogic.p1Move = self.p1Move
-        self.gameLogic.p2Move = self.p2Move
-        self.gameLogic.dimensions.set(self.dimensions.get())
-        self.gameLogic.ruleSet.set(self.ruleSet.get())
-
-        self.gameLogic.startGame()
 
     def drawSOSChain(self, cellLocations, pColor):
         """This function will be the helper function that will create the drawn line
