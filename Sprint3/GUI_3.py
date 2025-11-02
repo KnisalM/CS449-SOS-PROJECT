@@ -171,6 +171,9 @@ class setupGame(gameBoard):
         # Destroy setup frame
         self.setupFrame.destroy()
 
+        # Import game classes locally to avoid any import issues
+        from SOSGame_3 import simpleSOSGame, generalSOSGame
+
         # Create appropriate game instance based on the selected rule set
         if ruleSet == 'simple':
             gameInstance = simpleSOSGame(self.root)

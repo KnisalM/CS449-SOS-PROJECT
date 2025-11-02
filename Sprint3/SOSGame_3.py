@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from GUI_3 import gameBoard
+from GUI_3 import setupGame
 
 
 class Player:
@@ -251,9 +252,6 @@ class generalSOSGame(SOSGame):
         self.endGame(message)
 
     # Create a setup class to handle rule selection, will look at refactoring into classes, but testing for function
-
-
-
 
 
 def main():
