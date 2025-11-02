@@ -110,7 +110,11 @@ class SOSGame(gameBoard):
                                     relief='sunken', font=fontConfig)
 
         # Check for a SOS chain after the move by calling checkSOSFormed function
-        self.checkSOSFormed(row, col, moveChar)
+        sosChains = self.checkSOSFormed(row, col, moveChar)
+        currentPlayer = self.getCurrentPlayer()
+        for chain in sosChains:
+            self.drawSOSChain(chain, currentPlayer.color)
+            currentPlayer.incrementScore()
 
         self.gameOverHandler()
 
@@ -170,31 +174,32 @@ class SOSGame(gameBoard):
     def endGame(self, message):
         """Common logic for the end of a game"""
         self.activeGame = False
+        messagebox.showinfo("Game Over", message)
         for row in self.cells:
             for cell in row:
                 cell.config(state='disabled')
-        messagebox.showinfo("Game Over", message)
+
 
     def startGame(self):
-        """Begin the game and apply the logic to the game board
-        Common functionality for both subclasses"""
-        super().startGame()
+        """Initialize the game board state and prepare it for the game"""
+        self.createUIElements()
+
         dimN = int(self.dimensions.get().split('x')[0])
 
+        # Initialize the game state
         self.cellState = [['' for _ in range(dimN)] for _ in range(dimN)]
         self.activeGame = True
 
-        # Ensure no score data was held from previous game
+        # Ensure all scores are reset
         for player in self.players:
-            if player.score != 0:
-                player.score = 0
+            player.score = 0
 
+        # Set up cell clicks
         for i in range(dimN):
             for j in range(dimN):
                 self.cells[i][j].config(command=lambda row=i, col=j: self.cellClicked(row, col))
 
         self.updatePlayerChar()
-
         self.updateTurnFrame()
 
 
