@@ -244,7 +244,14 @@ class generalSOSGame(SOSGame):
 
         if p1Score > p2Score:
             winner = self.players[0]
-            message = f"{winner.name} wins the game with a score of "
+            message = f"{winner.name} wins the game with a score of {winner.score}"
+        elif p2Score > p1Score:
+            winner = self.players[1]
+            message = f"{winner.name} wins the game with a score of {winner.score}"
+        else:
+            message = f"It's a tie! Both Players scored {p1Score} points"
+
+        self.endGame(message)
 
 
 def main():
