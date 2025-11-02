@@ -15,12 +15,10 @@ class Player:
         self.color = 'Red' if player_number == 1 else 'Blue'  # Color of character's placed on board
         self.name = f"Player {player_number}"  # Determines Player Name for displaying on the board whose turn it is
 
-
     def setChar(self, character):
         """This function will set the character for the player to play based on their selection in the frame"""
         if character in ['S', 'O']:
             self.character = character
-
 
     def getChar(self):
         """Get the current selected character"""
@@ -54,11 +52,9 @@ class SOSGame(gameBoard):
         self.turnDisplayLabel = None  # Displays whose turn it currently is
         self.versusType = ''
 
-
     def getCurrentPlayer(self):
         """Get and return the current player"""
         return self.players[self.currentPlayer]
-
 
     def updateTurnFrame(self):
         """Update the GUI to reflect the turn"""
@@ -71,18 +67,15 @@ class SOSGame(gameBoard):
                                          fg=currentPlayer.color)
         self.turnDisplayLabel.grid(row=3, column=0, columnspan=3, pady=10, sticky='ew')
 
-
     def switchTurn(self):
         """Switch turns so that player who is not playing can't make a move and scores are tracked appropriately"""
         self.currentPlayer = (self.currentPlayer + 1) % 2
         self.updateTurnFrame()
 
-
     def updatePlayerChar(self):
         """get what character the player has selected for the move to be made"""
         self.players[0].setChar(self.p1Move.get())
         self.players[1].setChar(self.p2Move.get())
-
 
     def cellClicked(self, row, col):
         """Define the events when an empty cell is clicked"""
@@ -96,7 +89,6 @@ class SOSGame(gameBoard):
 
         self.makeAMove(row, col, moveChar, currentPlayer.color)
         self.switchTurn()
-
 
     def makeAMove(self, row, col, moveChar, color):
         """Execute when a valid move is made to reflect on board and update game state
