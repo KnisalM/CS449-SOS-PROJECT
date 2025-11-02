@@ -151,3 +151,37 @@ class gameBoard:
 
         for row, col in cellLocations:
             self.cells[row][col].config(fg='white', bg=pColor)
+
+
+class setupGame(gameBoard):
+
+    def __init__(self, root):
+        super().__init__(root)
+        self.instance = None
+
+    def startGame(self):
+        """Override startGame to create appropriate game instance based on rules"""
+        ruleSet = self.ruleSet.get()
+        dimensions = self.dimensions.get()
+
+        # Store the move values
+        p1MoveVal = self.p1Move.get()
+        p2MoveVal = self.p2Move.get()
+
+        # Destroy setup frame
+        self.setupFrame.destroy()
+
+        # Create appropriate game instance based on the selected rule set
+        if ruleSet == 'simple':
+            gameInstance = simpleSOSGame(self.root)
+        else:  # Covers general condition
+            gameInstance = generalSOSGame(self.root)
+
+        # Pass variables to game instance
+        gameInstance.dimensions.set(dimensions)
+        gameInstance.ruleSet.set(ruleSet)
+        gameInstance.p1Move.set(p1MoveVal)
+        gameInstance.p2Move.set(p2MoveVal)
+
+        self.instance = gameInstance
+        gameInstance.startGame()
