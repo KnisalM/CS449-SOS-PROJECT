@@ -49,17 +49,15 @@ class gameBoard:
         # Create list to hold the cells of the game board and a list to hold moves that have been made
         self.cells = []  # Store the cells of the game board
 
-        # Game logic controller variable
-        self.gameLogic = None
-
         self.boardSize()
         self.ruleSetSelection()
 
-    """This function creates the setup widgets for the game board, allowing the user to select their game board Size, 
-    their Rule Set, and in future Sprints will include the player choosing between playing against another human, or 
-    playing versus an algorithm"""
+
 
     def boardSize(self):
+        """This function creates the setup widgets for the game board, allowing the user to select their game board Size,
+    their Rule Set, and in future Sprints will include the player choosing between playing against another human, or
+    playing versus an algorithm"""
         # Load the setup frame into the grid manager
         self.setupFrame.grid(row=0, column=0, sticky='nsew')
 
