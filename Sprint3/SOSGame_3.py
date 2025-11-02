@@ -91,7 +91,6 @@ class SOSGame(gameBoard):
 
         self.makeAMove(row, col, moveChar, currentPlayer.color)
 
-
     def makeAMove(self, row, col, moveChar, color):
         """Execute when a valid move is made to reflect on board and update game state
     Commonly Used Functionality between both general and simple SOSGame subclasses"""
@@ -179,7 +178,6 @@ class SOSGame(gameBoard):
             for cell in row:
                 cell.config(state='disabled')
 
-
     def startGame(self):
         """Initialize the game board state and prepare it for the game"""
         self.createUIElements()
@@ -235,7 +233,6 @@ class generalSOSGame(SOSGame):
         else:
             # Continue game - switch turns
             self.switchTurn()
-
 
     def determineWinner(self):
         """Determine and announce the winner when the board is full in a general game"""
