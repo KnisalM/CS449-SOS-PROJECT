@@ -250,6 +250,28 @@ class generalSOSGame(SOSGame):
 
         self.endGame(message)
 
+    # Create a setup class to handle rule selection, will look at refactoring into classes, but testing for function
+class setupGame(gameBoard):
+    def startGame(self):
+        """Override startGame to create appropriate game instance based on rules"""
+        ruleSet = self.ruleSet.get()
+
+        # Destroy setup frame
+        self.setupFrame.destroy()
+
+        # Create appropriate game instance based on the selected rule set
+        if ruleSet == 'simple':
+            gameInstance = simpleSOSGame(self.root)
+        else: # Covers general condition
+            gameInstance = generalSOSGame(self.root)
+
+        # Pass variables to game instance
+        gameInstance.dimensions.set(self.dimensions.get())
+        gameInstance.ruleSet.set(self.ruleSet.get())
+        gameInstance.p1Move = self.p1Move
+        gameInstance.p2Move = self.p2Move
+
+        gameInstance.startGame()
 
 def main():
     root = tk.Tk()
@@ -260,8 +282,6 @@ def main():
     root.grid_columnconfigure(0, weight=1)
     root.grid_rowconfigure(0, weight=1)
 
-    SOSGame(root)
-    root.mainloop()
 
 
 if __name__ == '__main__':
