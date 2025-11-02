@@ -264,6 +264,10 @@ class setupGame(gameBoard):
         ruleSet = self.ruleSet.get()
         dimensions = self.dimensions.get()
 
+        # Store the move values
+        p1MoveVal = self.p1Move.get()
+        p2MoveVal = self.p2Move.get()
+
         # Destroy setup frame
         self.setupFrame.destroy()
 
@@ -276,8 +280,8 @@ class setupGame(gameBoard):
         # Pass variables to game instance
         gameInstance.dimensions.set(dimensions)
         gameInstance.ruleSet.set(ruleSet)
-        gameInstance.p1Move = self.p1Move
-        gameInstance.p2Move = self.p2Move
+        gameInstance.p1Move.set(p1MoveVal)
+        gameInstance.p2Move.set(p2MoveVal)
 
         self.instance = gameInstance
         gameInstance.startGame()
