@@ -116,6 +116,9 @@ class gameBoard:
 
     def startGame(self):
 
+        # Import the game classes locally for the simple and general SOS games
+        from SOSGame_3 import simpleSOSGame, generalSOSGame
+
         self.setupFrame.destroy()
 
         self.root.grid_rowconfigure(0, weight=1)
@@ -150,7 +153,19 @@ class gameBoard:
 
         # Initialize the game logic to the board based on rule selection
         if self.ruleSet.get() == 'simple':
-            self.gameLogic =
+            self.gameLogic = simpleSOSGame(self.root)
+        else: # This will cover when it is a general game
+            self.gameLogic = generalSOSGame(self.root)
+
+        # Configure the UI for the game logic
+        self.gameLogic.cells = self.cells
+        self.gameLogic.gameFrame = self.gameFrame
+        self.gameLogic.p1Move = self.p1Move
+        self.gameLogic.p2Move = self.p2Move
+        self.gameLogic.dimensions.set(self.dimensions.get())
+        self.gameLogic.ruleSet.set(self.ruleSet.get())
+
+        self.gameLogic.startGame()
 
     def drawSOSChain(self, cellLocations, pColor):
         """This function will be the helper function that will create the drawn line
