@@ -49,6 +49,9 @@ class gameBoard:
         # Create list to hold the cells of the game board and a list to hold moves that have been made
         self.cells = []  # Store the cells of the game board
 
+        # Game logic controller variable
+        self.gameLogic = None
+
         self.boardSize()
         self.ruleSetSelection()
 
@@ -144,6 +147,10 @@ class gameBoard:
         # Create Player Frames
         createPlayerFrame(self.gameFrame, 1, 0, 'Red Player', self.p1Move)
         createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p2Move)
+
+        # Initialize the game logic to the board based on rule selection
+        if self.ruleSet.get() == 'simple':
+            self.gameLogic =
 
     def drawSOSChain(self, cellLocations, pColor):
         """This function will be the helper function that will create the drawn line
