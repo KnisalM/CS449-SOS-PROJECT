@@ -52,6 +52,7 @@ class SOSGame():
         self.turnDisplayLabel = None  # Displays whose turn it currently is
         self.versusType = ''
 
+        # these variables will be set when the GUI calls startGame to implement the specific game logic
         self.cells = None       # Will reference the UI cells
         self.gameFrame = None   # Will reference the game frame
         self.p1Move = None      # Will reference player 1 move variable
@@ -90,12 +91,11 @@ class SOSGame():
             return
 
         self.updatePlayerChar()
-
         currentPlayer = self.getCurrentPlayer()
         moveChar = currentPlayer.getChar()
 
         self.makeAMove(row, col, moveChar, currentPlayer.color)
-        self.switchTurn()
+
 
     def makeAMove(self, row, col, moveChar, color):
         """Execute when a valid move is made to reflect on board and update game state
@@ -226,6 +226,9 @@ class generalSOSGame(SOSGame):
         if there are no valid moves left, the function will evaluate which of the two player's has scored the most
         points, and will announce that that player is the winner"""
         pass
+
+    def determineWinner(self):
+        """Determine and announce the winner when the board is full in a general game"""
 
 
 def main():
