@@ -4,8 +4,6 @@ import pylint
 import unittest
 
 
-
-
 def createPlayerFrame(parent, row, column, player, moveChar):
     """This is a helper function designed in assistance with Deepseek LLM to reduce doubling up on code in the
     player frame creation process
@@ -53,8 +51,6 @@ class gameBoard:
         self.boardSize()
         self.ruleSetSelection()
 
-
-
     def boardSize(self):
         """This function creates the setup widgets for the game board, allowing the user to select their game board Size,
     their Rule Set, and in future Sprints will include the player choosing between playing against another human, or
@@ -89,10 +85,8 @@ class gameBoard:
         self.dimensions.trace('w', self.startConditions)
         self.ruleSet.trace('w', self.startConditions)
 
-
-
     def startConditions(self, *args):
-         """This function determines when the conditions dimensions and ruleSet have been chosen, and allows the user to
+        """This function determines when the conditions dimensions and ruleSet have been chosen, and allows the user to
     select a 'Begin' button that will create the game board with their chosen conditions
 
     Preconditions: Player has opened the application and is in the process of choosing how they would like to play
@@ -107,9 +101,7 @@ class gameBoard:
             startGame = tk.Button(self.setupFrame, text='Begin', command=self.startGame)
             startGame.grid(row=5, column=1, sticky=tk.W, pady=5)
 
-
-
-    def startGame(self):
+    def createUIElements(self):
         """This Function Initializes the game board
 
     Preconditions: The player has selected a valid dimension, ruleSet, and has selected the 'Begin' button
@@ -149,6 +141,9 @@ class gameBoard:
         createPlayerFrame(self.gameFrame, 1, 0, 'Red Player', self.p1Move)
         createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p2Move)
 
+    def startGame(self):
+        """Template method that will be implemented by subclasses in SOSGame_3.py file
+"""
 
     def drawSOSChain(self, cellLocations, pColor):
         """This function will be the helper function that will create the drawn line
@@ -156,4 +151,3 @@ class gameBoard:
 
         for row, col in cellLocations:
             self.cells[row][col].config(fg='white', bg=pColor)
-
