@@ -211,6 +211,15 @@ class simpleSOSGame(SOSGame):
         """This function will be called after a move has been made to determine if the move that was made
         created an SOS chain, and if so, end the game and announce the player who made the SOS as the winner"""
 
+        currentPlayer = self.getCurrentPlayer()
+
+        # If Player scored, they win game
+        if currentPlayer.score > 0:
+            self.endGame(f"{currentPlayer.name} wins!")
+        else:
+            # Switch turns if no SOS was formed
+            self.switchTurn()
+
 
 class generalSOSGame(SOSGame):
     """This class will implement the SOS game with the general rule set, in which the player
@@ -220,10 +229,22 @@ class generalSOSGame(SOSGame):
         """This function will determine if a general game has ended by checking if there are valid moves left to make
         if there are no valid moves left, the function will evaluate which of the two player's has scored the most
         points, and will announce that that player is the winner"""
-        pass
+        if self.isBoardFull():
+            # Board is full - determine winner
+            self.determineWinner()
+        else:
+            # Continue game - switch turns
+            self.switchTurn()
+
 
     def determineWinner(self):
         """Determine and announce the winner when the board is full in a general game"""
+        p1Score = self.players[0].score
+        p2Score = self.players[1].score
+
+        if p1Score > p2Score:
+            winner = self.players[0]
+            message = f"{winner.name} wins the game with a score of "
 
 
 def main():
