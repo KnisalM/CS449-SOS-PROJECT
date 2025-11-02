@@ -39,11 +39,14 @@ class computerPlayer(Player):
     pass
 
 
-class SOSGame():
+class SOSGame(gameBoard):
     """This class will extend the class gameBoard from GUI_2.py, and will begin implementing the actual game logic onto the board"""
 
     def __init__(self, root):
+        # Initialize gameBoard components
+        super.__init__(root)
 
+        # Initialize game variables
         self.players = [Player(1, 'human'),  # Player 1 Red
                         Player(2, 'human')]  # Player 2 Blue
         self.currentPlayer = 0  # Start with Player 1
@@ -51,14 +54,6 @@ class SOSGame():
         self.cellState = []  # Track the state of the cells and whether there is currently a play made on a cell
         self.turnDisplayLabel = None  # Displays whose turn it currently is
         self.versusType = ''
-
-        # these variables will be set when the GUI calls startGame to implement the specific game logic
-        self.cells = None       # Will reference the UI cells
-        self.gameFrame = None   # Will reference the game frame
-        self.p1Move = None      # Will reference player 1 move variable
-        self.p2Move = None      # Will reference player 2 move variable
-        self.dimensions = tk.StringVar(value='')  # Board dimensions
-        self.ruleSet = tk.StringVar(value='')     # Game rule set
 
     def getCurrentPlayer(self):
         """Get and return the current player"""
@@ -159,12 +154,7 @@ class SOSGame():
 
                     if cell1 == 'S' and cell2 == 'O' and cell3 == 'S':
                         sosChains.append(positions)
-
-        # If SOS returned, the list sosChains will have values for the following iterator, which will draw the SOS
-        currentPlayer = self.getCurrentPlayer()
-        for chain in sosChains:
-            self.drawSOSChain(chain, currentPlayer.color)
-            currentPlayer.incrementScore()
+        return sosChains
 
     def gameOverHandler(self):
         """Template Method to be overriden by the subclasses"""
