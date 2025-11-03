@@ -53,6 +53,7 @@ class SOSGame(gameBoard):
         self.currentPlayer = 0  # Start with Player 1
         self.activeGame = True
         self.cellState = []  # Track the state of the cells and whether there is currently a play made on a cell
+        self.cellOwner = [] # Track ownership of cells
         self.turnDisplayLabel = None  # Displays whose turn it currently is
         self.versusType = ''
 
@@ -188,6 +189,8 @@ class SOSGame(gameBoard):
 
         # Initialize the game state
         self.cellState = [['' for _ in range(dimN)] for _ in range(dimN)]
+        self.cellOwner = [[None for _ in range(dimN)] for _ in range(dimN)]
+
         self.activeGame = True
 
         # Ensure all scores are reset
