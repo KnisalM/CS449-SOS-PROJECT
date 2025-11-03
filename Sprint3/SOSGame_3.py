@@ -215,6 +215,9 @@ class simpleSOSGame(SOSGame):
         # If Player scored, they win game
         if currentPlayer.score > 0:
             self.endGame(f"{currentPlayer.name} wins!")
+        elif self.isBoardFull():
+            # Board is now full and no SOS was made
+            self.endGame("Game ended in a draw, no one scored!")
         else:
             # Switch turns if no SOS was formed
             self.switchTurn()

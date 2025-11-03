@@ -150,7 +150,7 @@ class gameBoard:
         on the game board when a player creates a valid SOS chain"""
 
         for row, col in cellLocations:
-            self.cells[row][col].config(fg='white', bg=pColor)
+            self.cells[row][col].config(disabledforeground = 'white', fg='white', bg=pColor)
 
 
 class setupGame(gameBoard):
