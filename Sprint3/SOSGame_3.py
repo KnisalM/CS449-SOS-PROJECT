@@ -107,6 +107,7 @@ class SOSGame(gameBoard):
             fontSize = 9
         fontConfig = ('Arial', fontSize, 'bold')
         self.cellState[row][col] = moveChar
+        self.cellOwner[row][col] = self.currentPlayer # Track player that made move
         self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color,
                                     relief='sunken', font=fontConfig)
 
