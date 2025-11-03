@@ -118,6 +118,7 @@ class SOSGame(gameBoard):
 
         self.gameOverHandler()
 
+
     def checkSOSFormed(self, row, col, player):
         """This function will check if an SOS has been formed after each move. If a player has created an SOS, then their
         score will be incremented. A simple game will utilize this to tell a game is over when one of the player's score
