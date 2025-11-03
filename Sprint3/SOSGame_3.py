@@ -3,7 +3,6 @@ from tkinter import messagebox
 from GUI_3 import gameBoard
 
 
-
 class Player:
     """This class represents the player's of the game, and their related data"""
 
@@ -53,7 +52,7 @@ class SOSGame(gameBoard):
         self.currentPlayer = 0  # Start with Player 1
         self.activeGame = True
         self.cellState = []  # Track the state of the cells and whether there is currently a play made on a cell
-        self.cellOwner = [] # Track ownership of cells
+        self.cellOwner = []  # Track ownership of cells
         self.turnDisplayLabel = None  # Displays whose turn it currently is
         self.versusType = ''
 
@@ -107,7 +106,7 @@ class SOSGame(gameBoard):
             fontSize = 9
         fontConfig = ('Arial', fontSize, 'bold')
         self.cellState[row][col] = moveChar
-        self.cellOwner[row][col] = self.currentPlayer # Track player that made move
+        self.cellOwner[row][col] = self.currentPlayer  # Track player that made move
         self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color,
                                     relief='sunken', font=fontConfig)
 
@@ -120,7 +119,6 @@ class SOSGame(gameBoard):
 
         self.gameOverHandler()
 
-
     def checkSOSFormed(self, row, col, player):
         """This function will check if an SOS has been formed after each move. If a player has created an SOS, then their
         score will be incremented. A simple game will utilize this to tell a game is over when one of the player's score
@@ -129,37 +127,42 @@ class SOSGame(gameBoard):
         sosChains = []
         boardDim = len(self.cellState)
 
-        # Define the 4 directions to check in, their opposites are handled by checking in both directions
+        # Define the directions to check in, their opposites are handled by checking in both directions
         directionsToCheck = [
-            (0, 1), (1, 0), (1, 1), (1, -1)
-        ]  # Vertical 1 up, Horizontal 1 to the right, Up Right, Down Right, opposites will be checked
+            (0, 1), (1, 0), (1, 1), (1, -1), (0, -1), (-1, 0), (-1, -1), (-1, 1)
+        ]
 
         for directionOne, directionTwo in directionsToCheck:
-            # Create a negative factor to multiply by so we can check in opposite directions
-            for directionalFactor in [1, -1]:
-                actualDirectionOne, actualDirectionTwo = directionOne * directionalFactor, directionTwo * directionalFactor
 
-                # Calculate what the positions are for the 3 positions that would form an SOS in this direction
-                positions = []
-                validPositions = True
+            # Calculate what the positions are for the 3 positions that would form an SOS in this direction
+            positions = []
+            validPositions = True
 
-                for i in range(3):
-                    r = row + (i * actualDirectionOne)
-                    c = col + (i * actualDirectionTwo)
+            for i in range(3):
+                r = row + (i * directionOne)
+                c = col + (i * directionTwo)
 
-                    if 0 <= r < boardDim and 0 <= c < boardDim:
-                        positions.append((r, c))
-                    else:
-                        validPositions = False
-                        break
+                if 0 <= r < boardDim and 0 <= c < boardDim:
+                    positions.append((r, c))
+                else:
+                    validPositions = False
+                    break
 
-                # If there are 3 valid positions in the list, check if they form an SOS
-                if validPositions and len(positions) == 3:
-                    cell1 = self.cellState[positions[0][0]][positions[0][1]]
-                    cell2 = self.cellState[positions[1][0]][positions[1][1]]
-                    cell3 = self.cellState[positions[2][0]][positions[2][1]]
+            # If there are 3 valid positions in the list, check if they form an SOS
+            if validPositions and len(positions) == 3:
+                # get cell values and owners
+                cellValues = []
+                cellOwners = []
 
-                    if cell1 == 'S' and cell2 == 'O' and cell3 == 'S':
+                for posRow, posCol in positions:
+                    cellValues.append(self.cellState[posRow][posCol])
+                    cellOwners.append(self.cellOwner[posRow][posCol])
+
+                # Check if pattern is an SOS
+                if cellValues[0] == 'S' and cellValues[1] == 'O' and cellValues[2] == 'S':
+                    # Check all cells are same player
+                    if (cellOwners[0] is not None and
+                            cellOwners[0] == cellOwners[1] == cellOwners[2]):
                         sosChains.append(positions)
         return sosChains
 
