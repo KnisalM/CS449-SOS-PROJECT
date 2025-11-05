@@ -687,36 +687,64 @@ class TestSOSGameClass(unittest.TestCase):
 
 
 class testSimpleSOSGame(unittest.TestCase):
+
+    def setUp(self):
+        """Set up a tkinter root window and game instance before each test"""
+        from SOSGame_3 import simpleSOSGame
+
+        self.root = tk.Tk()
+        self.root.withdraw()
+        self.game = simpleSOSGame(self.root)
+
+        # Set up game conditions
+        self.game.dimensions.set('3x3')
+        self.game.ruleSet.set('simple')
+        self.game.p1Move.set('S')
+        self.game.p2Move.set('O')
+
+        # Initialize game state without creating a UI
+        dimN = 3
+        self.game.cells = [[Mock() for _ in range(dimN)] for _ in range(dimN)]
+
+        # Mock cell buttons to avoid GUI operations
+        for i in range(dimN):
+            for j in range(dimN):
+                self.game.cells[i][j] = Mock()
+                self.game.cells[i][j].config = Mock()
+
+        # Initialize game array
+        self.game.cellState = [['' for _ in range(dimN)] for _ in range(dimN)]
+        self.game.cellOwner = [[None for _ in range(dimN)] for _ in range(dimN)]
+
+        # Set initial game state
+        self.game.activeGame = True
+        self.game.currentPlayer = 0
+        for player in self.game.players:
+            player.score = 0
+
+    def tearDown(self):
+        """Destroy windows after tests"""
+        self.root.destroy()
+
     def testAC7_1RedPlayerCreatesValidSOSChainWithS(self):
         """Test that when the Red Player completed a valid SOS chain by placing an S character, the game ends and the
         red player wins"""
-        # Using mock to avoid GUI issues
-        with patch('tkinter.Tk') as mock_tk:
-            root = mock_tk.return_value
 
-            # Import and create a simple game instance
-            from SOSGame_3 import simpleSOSGame
-            game = simpleSOSGame(root)
 
-            # Set up conditions for an ongoing simple game
-            game.dimensions.set('3x3')
-            game.ruleSet.set('simple')
-            game.p1Move.set('S')
-            game.p2Move.set('O')
 
-            game.startGame()
-
-            game.cellState =  [
-                ['S', '', 'S'],
-                ['O', '', 'O'],
-                ['', '', '']
-            ]
+        self.game.cellState =  [
+            ['S', '', 'S'],
+            ['O', '', 'O'],
+            ['', '', '']
+        ]
 
         game.cellOwner = [
             [0, None, 1],
             [0, None, 1],
             [None, None, None]
         ]
+
+
 
         game.endGame = Mock()
 
