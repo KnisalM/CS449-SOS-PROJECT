@@ -887,6 +887,7 @@ class testSimpleSOSGame(unittest.TestCase):
         self.assertEqual(self.game.players[1].score, 1)
 
     def testAC7_3NeitherPlayerHasMadeAnSOSAndNoMovesLeft(self):
+
         """This unit test will verify that when no SOS is formed and the board is full, the game ends in a draw"""
         # Set up a nearly full board with no SOS opportunities
         self.game.cellState = [
