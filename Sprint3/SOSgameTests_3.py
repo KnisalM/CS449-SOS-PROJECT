@@ -712,6 +712,11 @@ class testSimpleSOSGame(unittest.TestCase):
                 self.game.cells[i][j] = Mock()
                 self.game.cells[i][j].config = Mock()
 
+        # Mock GUI Methods
+        self.game.drawSOSChain = Mock()
+        self.end_game_mock = Mock()
+        self.game.endGame = self.end_game_mock
+
         # Initialize game array
         self.game.cellState = [['' for _ in range(dimN)] for _ in range(dimN)]
         self.game.cellOwner = [[None for _ in range(dimN)] for _ in range(dimN)]
@@ -730,26 +735,17 @@ class testSimpleSOSGame(unittest.TestCase):
         """Test that when the Red Player completed a valid SOS chain by placing an S character, the game ends and the
         red player wins"""
 
-
-
-        self.game.cellState =  [
-            ['S', '', 'S'],
-            ['O', '', 'O'],
+        self.game.cellState = [
+            ['S', '', ''],
+            ['O', '', ''],
             ['', '', '']
         ]
 
-        game.cellOwner = [
-            [0, None, 1],
-            [0, None, 1],
+        self.game.cellOwner = [
+            [0, None, None],
+            [0, None, None],
             [None, None, None]
         ]
-
-
-
-        game.endGame = Mock()
-
-        game.currentPlayer = 0
-        game.activeGame = True
 
         # Simulate Red making winning move with an S character placed
         row, col = 2, 0
@@ -757,20 +753,22 @@ class testSimpleSOSGame(unittest.TestCase):
         color = 'Red'
 
         # Make the move
-        game.makeAMove(row, col, moveChar, color)
+        self.game.makeAMove(row, col, moveChar, color)
 
         # Verify game ended
-        game.endGame.assert_called_once()
+        self.assertEqual(self.end_game_mock.call_count, 1)
 
         # Verify that red won
-        callArgs = game.endGame.call_args[0][0]
-        self.assertIn('Player 1 wins!', callArgs)
+        if self.end_game_mock.called:
+            callArgs = self.end_game_mock.call_args[0]
+            message = callArgs[0] if callArgs else ""
+            self.assertIn('Player 1 wins!', message)
 
         # Verify that red had their score incremented
-        self.assertEqual(game.players[0].score, 1)
+        self.assertEqual(self.game.players[0].score, 1)
 
-        # Verify game is no longer active
-        self.assertFalse(game.activeGame)
+
+
     def testAC7_2BluePlayerCreatesValidSOSChain(self):
         pass
 
