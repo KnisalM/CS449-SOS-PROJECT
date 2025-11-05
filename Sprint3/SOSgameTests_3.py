@@ -1059,11 +1059,60 @@ class testGeneralSOSGame(unittest.TestCase):
         self.assertEqual(self.end_game_mock.call_count, 0,
                          "endGame should not be called in general game for single SOS")
 
-    def testAC8_10BluePlayerCompletesValidSOSChainScoreIsIncremented(self):
-        pass
+    def testAC10_1RedWinsWhenRedPlayerHasMoreSOSCompleteWhenNoMovesLeft(self):
+        """Test that when Red Player has a higher score and no moves remain, Red wins the general game"""
 
-    def testAC10_1RedPlayerHasMoreSOSCompleteWhenNoMovesLeft(self):
-        pass
+        # Set up a nearly full board where Red has higher score
+        self.game.cellState = [
+            ['S', 'O', 'S'],
+            ['O', 'S', 'O'],
+            ['S', 'O', '']
+        ]
+
+        self.game.cellOwner = [
+            [0, 1, 0],
+            [1, 0, 1],
+            [0, 1, None]
+        ]
+
+        # Set initial scores - Red has higher score
+        self.game.players[0].score = 3  # Red Player
+        self.game.players[1].score = 2  # Blue Player
+
+        # Make sure it's a player's turn and game is active
+        self.game.currentPlayer = 0  # Red Player's turn
+        self.game.activeGame = True
+        self.end_game_mock.call_count = 0
+
+        # Make the move - this should fill the last cell and trigger game end
+        row, col = 2, 2
+        moveChar = 'S'
+        color = 'Red'
+
+        # Make the move
+        self.game.makeAMove(row, col, moveChar, color)
+
+        # Verify Game ended (endGame was called)
+        self.assertEqual(self.end_game_mock.call_count, 1,
+                         "endGame should be called when board is full in general game")
+
+        # Verify Red Player wins with correct message
+        if self.end_game_mock.called:
+            callArgs = self.end_game_mock.call_args[0]
+            message = callArgs[0] if callArgs else ""
+            print(f"End game message: {message}")
+            self.assertIn('Player 1 wins', message,
+                          "Win message should indicate Player 1 (Red) won")
+            self.assertIn('score of 3', message,
+                          "Win message should show Red Player's score of 3")
+
+        # Verify Scores remain unchanged (no new SOS created)
+        self.assertEqual(self.game.players[0].score, 3,
+                         "Red Player score should remain 3")
+        self.assertEqual(self.game.players[1].score, 2,
+                         "Blue Player score should remain 2")
+
+
 
     def testAC10_2BluePlayerHasMoreSOSCompleteWhenNoMovesLeft(self):
         pass
