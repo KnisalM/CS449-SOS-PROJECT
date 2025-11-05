@@ -768,86 +768,39 @@ class testSimpleSOSGame(unittest.TestCase):
         self.assertEqual(self.game.players[0].score, 1)
 
     def testAC7_1RedPlayerCreatesValidSOSChainWithO(self):
-        """Test that when the Red Player completed a valid SOS chain by placing an O character, the game ends and the
+        """Test that when the Red Player completed a valid SOS chain by placing an S character, the game ends and the
         red player wins"""
 
-        print("=== DEBUGGING O PLACEMENT ===")
-
-        # Set up the board
         self.game.cellState = [
             ['S', '', ''],
             ['', '', ''],
             ['S', '', '']
         ]
+
         self.game.cellOwner = [
             [0, None, None],
             [None, None, None],
             [0, None, None]
         ]
 
-        # Test the vertical direction specifically for O placement
-        print("Testing vertical direction for O at (1,0):")
-
-        # Check what happens when we look up and down from position (1,0)
-        directions_to_test = [(1, 0), (-1, 0)]  # Down and Up
-
-        for direction in directions_to_test:
-            dr, dc = direction
-            positions = []
-            valid = True
-            print(f"Direction ({dr},{dc}):")
-
-            for i in range(3):
-                r = 1 + (i * dr)
-                c = 0 + (i * dc)
-                if 0 <= r < 3 and 0 <= c < 3:
-                    cell_val = self.game.cellState[r][c] if (r != 1 or c != 0) else 'O'  # Our planned move
-                    cell_owner = self.game.cellOwner[r][c] if (r != 1 or c != 0) else 0   # Our planned move
-                    positions.append((r, c))
-                    print(f"  Pos {i}: ({r},{c}) = '{cell_val}' owned by {cell_owner}")
-                else:
-                    valid = False
-                    print(f"  Pos {i}: OUT OF BOUNDS")
-                    break
-
-            if valid and len(positions) == 3:
-                # Simulate the values after our move
-                values = []
-                owners = []
-                for r, c in positions:
-                    if r == 1 and c == 0:  # This is our new O
-                        values.append('O')
-                        owners.append(0)
-                    else:
-                        values.append(self.game.cellState[r][c])
-                        owners.append(self.game.cellOwner[r][c])
-
-                is_sos = values == ['S', 'O', 'S']
-                same_owner = owners[0] == owners[1] == owners[2] and owners[0] is not None
-                print(f"  Result: values={values}, is_SOS={is_sos}, same_owner={same_owner}")
-
-        # Now test the actual game
-        print("\n=== RUNNING ACTUAL TEST ===")
-        self.end_game_mock.call_count = 0
-        self.game.players[0].score = 0
-
-        # Make the O move in the middle
+        # Simulate Red making winning move with an S character placed
         row, col = 1, 0
         moveChar = 'O'
         color = 'Red'
+
+        # Make the move
         self.game.makeAMove(row, col, moveChar, color)
 
-        print(f"Results:")
-        print(f"  endGame called: {self.end_game_mock.called}")
-        print(f"  Red score: {self.game.players[0].score}")
-        print(f"  Final board: {self.game.cellState}")
-
-        # Assertions
+        # Verify game ended
         self.assertEqual(self.end_game_mock.call_count, 1)
+
+        # Verify that red won
         if self.end_game_mock.called:
             callArgs = self.end_game_mock.call_args[0]
             message = callArgs[0] if callArgs else ""
             self.assertIn('Player 1 wins!', message)
+
+        # Verify that red had their score incremented
         self.assertEqual(self.game.players[0].score, 1)
 
 
