@@ -1112,10 +1112,8 @@ class testGeneralSOSGame(unittest.TestCase):
         self.assertEqual(self.game.players[1].score, 2,
                          "Blue Player score should remain 2")
 
-
-
     def testAC10_2BlueWinsWhenBluePlayerHasMoreSOSCompleteWhenNoMovesLeft(self):
-        """Test that when Red Player has a higher score and no moves remain, Red wins the general game"""
+        """Test that when Blue Player has a higher score and no moves remain, Blue wins the general game"""
 
         # Set up a nearly full board where Red has higher score
         self.game.cellState = [
@@ -1168,7 +1166,57 @@ class testGeneralSOSGame(unittest.TestCase):
                          "Blue Player score should remain 3")
 
     def testAC10_3NeitherPlayerHasMoreSOSCompleteWhenNoMovesLeft(self):
-        pass
+        # Set up a nearly full board where Blue has higher score
+        self.game.cellState = [
+            ['S', 'O', 'S'],
+            ['O', 'S', 'O'],
+            ['S', 'O', '']
+        ]
+
+        self.game.cellOwner = [
+            [0, 1, 0],
+            [1, 0, 0],
+            [0, 1, None]
+        ]
+
+        # Set initial scores - Red has higher score
+        self.game.players[0].score = 2  # Red Player
+        self.game.players[1].score = 3  # Blue Player
+
+        # Make sure it's a player's turn and game is active
+        self.game.currentPlayer = 0
+        self.game.activeGame = True
+        self.end_game_mock.call_count = 0
+
+        # Make the move - this should fill the last cell and trigger game end
+        row, col = 2, 2
+        moveChar = 'S'
+        color = 'Red'
+
+        # Make the move
+        self.game.makeAMove(row, col, moveChar, color)
+
+        # Verify Game ended (endGame was called)
+        self.assertEqual(self.end_game_mock.call_count, 1,
+                         "endGame should be called when board is full in general game")
+
+        # Verify No one wins with correct message
+        if self.end_game_mock.called:
+            callArgs = self.end_game_mock.call_args[0]
+            message = callArgs[0] if callArgs else ""
+            print(f"End game message: {message}")
+            self.assertIn('tie', message.lower(),
+                          "Draw message should indicate a tie")
+            self.assertIn('both', message.lower(),
+                          "Draw message should mention both players")
+            self.assertIn('3', message,
+                          "Draw message should show the tied score of 3")
+
+        # Verify Scores remain unchanged (no new SOS created)
+        self.assertEqual(self.game.players[0].score, 3,
+                         "Red Player score should be 3")
+        self.assertEqual(self.game.players[1].score, 3,
+                         "Blue Player score should remain 3")
 
 
 if __name__ == '__main__':
