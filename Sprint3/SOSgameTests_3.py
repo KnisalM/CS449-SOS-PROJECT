@@ -926,11 +926,52 @@ class testSimpleSOSGame(unittest.TestCase):
             message = callArgs[0] if callArgs else ''
             self.assertIn('draw', message.lower())
 
-class testGeneralSOSGame():
-    def testAC8_9RedPlayerCompletesValidSOSChain(self):
-        pass
+class testGeneralSOSGame(unittest.TestCase):
+    def setUp(self):
+        """Set up a tkinter root window and general game instance before each test"""
+        from SOSGame_3 import generalSOSGame
+        self.root = tk.Tk()
+        self.root.withdraw()  # Hide the window
 
-    def testAC8_10BluePlayerCompletesValidSOSChain(self):
+        # Create the general game instance
+        self.game = generalSOSGame(self.root)
+
+        # Set up common game conditions for general game
+        self.game.dimensions.set('3x3')
+        self.game.ruleSet.set('general')
+        self.game.p1Move.set('S')
+        self.game.p2Move.set('O')
+
+        # Initialize minimal game state without full UI
+        dimN = 3
+        self.game.cells = [[Mock() for _ in range(dimN)] for _ in range(dimN)]
+
+        # Mock the individual cell buttons
+        for i in range(dimN):
+            for j in range(dimN):
+                self.game.cells[i][j] = Mock()
+                self.game.cells[i][j].config = Mock()
+
+        # Mock GUI methods
+        self.game.drawSOSChain = Mock()
+        self.end_game_mock = Mock()
+        self.game.endGame = self.end_game_mock
+
+        # Initialize game arrays
+        self.game.cellState = [['' for _ in range(dimN)] for _ in range(dimN)]
+        self.game.cellOwner = [[None for _ in range(dimN)] for _ in range(dimN)]
+
+        # Set initial game state
+        self.game.activeGame = True
+        self.game.currentPlayer = 0  # Start with Red Player
+        for player in self.game.players:
+            player.score = 0
+
+    def tearDown(self):
+        """Clean up after each test"""
+        self.root.destroy()
+
+    def testAC8_10BluePlayerCompletesValidSOSChainScoreIsIncremented(self):
         pass
 
     def testAC10_1RedPlayerHasMoreSOSCompleteWhenNoMovesLeft(self):
