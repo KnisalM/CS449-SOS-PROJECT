@@ -887,8 +887,43 @@ class testSimpleSOSGame(unittest.TestCase):
         self.assertEqual(self.game.players[1].score, 1)
 
     def testAC7_3NeitherPlayerHasMadeAnSOSAndNoMovesLeft(self):
-        pass
+        """This unit test will verify that when no SOS is formed and the board is full, the game ends in a draw"""
+        # Set up a nearly full board with no SOS opportunities
+        self.game.cellState = [
+            ['S', 'O', 'S'],
+            ['O', 'S', 'O'],
+            ['S', 'O', '']
+        ]
 
+        self.game.cellOwner = [
+            [0,1,0],
+            [1,0,1],
+            [0,1,None]
+        ]
+
+        # Set up player turn conditions
+        self.game.currentPlayer = 0
+        self.game.activeGame = True
+        self.end_game_mock.call_count = 0
+
+        row, col = 2, 2
+        moveChar = 'S'
+        color = 'Red'
+
+        # Make this move
+        self.game.makeAMove(row, col, moveChar, color)
+
+        self.assertEqual(self.end_game_mock.call_count, 1)
+
+        # Verify neither player scored
+        self.assertEqual(self.game.players[0].score, 0)
+        self.assertEqual(self.game.players[1].score, 0)
+
+        # Verify game was called as a draw
+        if self.end_game_mock.called:
+            callArgs = self.end_game_mock.call_args[0]
+            message = callArgs[0] if callArgs else ''
+            self.assertIn('draw', message.lower())
 
 class testGeneralSOSGame():
     def testAC8_9RedPlayerCompletesValidSOSChain(self):
