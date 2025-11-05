@@ -75,8 +75,6 @@ class TestgameBoardClass(unittest.TestCase):
         conditions as the initial setup frame"""
         pass
 
-
-
     def testAC2_1_SimpleandGeneralRadioButtonsExist(self):
         """Verify that the radio buttons for simple and general both exist"""
         with patch('tkinter.ttk.Radiobutton') as mockRadioButton:
@@ -687,15 +685,27 @@ class TestSOSGameClass(unittest.TestCase):
             relief='sunken', font=('Arial', 14, 'bold')
         )
 
+
 class testSimpleSOSGame():
-    def testAC7_1RedPlayerCreatesValidSOSChain(self):
-        pass
+    def testAC7_1RedPlayerCreatesValidSOSChainWithS(self):
+        """Test that when the Red Player completed a valid SOS chain by placing an S character, the game ends and the
+        red player wins"""
+        # Using mock to avoid GUI issues
+        with patch('tkinter.Tk') as mock_tk:
+            root = mock_tk.return_value
+
+            # Import and create a simple game instance
+            from SOSGame_3 import simpleSOSGame
+            game = simpleSOSGame(root)
+
+            # Set up conditions for an ongoing simple game
 
     def testAC7_2BluePlayerCreatesValidSOSChain(self):
         pass
 
     def testAC7_3NeitherPlayerHasMadeAnSOSAndNoMovesLeft(self):
         pass
+
 
 class testGeneralSOSGame():
     def testAC8_9RedPlayerCompletesValidSOSChain(self):
@@ -712,6 +722,7 @@ class testGeneralSOSGame():
 
     def testAC10_3NeitherPlayerHasMoreSOSCompleteWhenNoMovesLeft(self):
         pass
+
 
 if __name__ == '__main__':
     unittest.main()
