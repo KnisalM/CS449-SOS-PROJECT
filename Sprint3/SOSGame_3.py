@@ -214,6 +214,7 @@ class simpleSOSGame(SOSGame):
     """This class will implement the SOS game with the general rule set, in which the player who completes an SOS chain
     first wins the game"""
 
+
     def gameOverHandler(self):
         """This function will be called after a move has been made to determine if the move that was made
         created an SOS chain, and if so, end the game and announce the player who made the SOS as the winner"""
