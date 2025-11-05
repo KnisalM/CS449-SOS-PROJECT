@@ -686,7 +686,7 @@ class TestSOSGameClass(unittest.TestCase):
         )
 
 
-class testSimpleSOSGame():
+class testSimpleSOSGame(unittest.TestCase):
     def testAC7_1RedPlayerCreatesValidSOSChainWithS(self):
         """Test that when the Red Player completed a valid SOS chain by placing an S character, the game ends and the
         red player wins"""
@@ -699,7 +699,50 @@ class testSimpleSOSGame():
             game = simpleSOSGame(root)
 
             # Set up conditions for an ongoing simple game
+            game.dimensions.set('3x3')
+            game.ruleSet.set('simple')
+            game.p1Move.set('S')
+            game.p2Move.set('O')
 
+            game.startGame()
+
+            game.cellState =  [
+                ['S', '', 'S'],
+                ['O', '', 'O'],
+                ['', '', '']
+            ]
+
+        game.cellOwner = [
+            [0, None, 1],
+            [0, None, 1],
+            [None, None, None]
+        ]
+
+        game.endGame = Mock()
+
+        game.currentPlayer = 0
+        game.activeGame = True
+
+        # Simulate Red making winning move with an S character placed
+        row, col = 2, 0
+        moveChar = 'S'
+        color = 'Red'
+
+        # Make the move
+        game.makeAMove(row, col, moveChar, color)
+
+        # Verify game ended
+        game.endGame.assert_called_once()
+
+        # Verify that red won
+        callArgs = game.endGame.call_args[0][0]
+        self.assertIn('Player 1 wins!', callArgs)
+
+        # Verify that red had their score incremented
+        self.assertEqual(game.players[0].score, 1)
+
+        # Verify game is no longer active
+        self.assertFalse(game.activeGame)
     def testAC7_2BluePlayerCreatesValidSOSChain(self):
         pass
 
