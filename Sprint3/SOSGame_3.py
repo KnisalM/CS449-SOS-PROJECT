@@ -132,13 +132,16 @@ class SOSGame(gameBoard):
             (0, 1), (1, 0), (1, 1), (1, -1), (0, -1), (-1, 0), (-1, -1), (-1, 1)
         ]
 
+        # Use a set to track unique SOS Chains
         for directionOne, directionTwo in directionsToCheck:
+
+            # Updating function to check both directions from an O placed in the middle
 
             # Calculate what the positions are for the 3 positions that would form an SOS in this direction
             positions = []
             validPositions = True
 
-            for i in range(3):
+            for i in range(-1, 2): # Checks positions from one behind cell and next 2 cells
                 r = row + (i * directionOne)
                 c = col + (i * directionTwo)
 
@@ -213,7 +216,6 @@ class SOSGame(gameBoard):
 class simpleSOSGame(SOSGame):
     """This class will implement the SOS game with the general rule set, in which the player who completes an SOS chain
     first wins the game"""
-
 
     def gameOverHandler(self):
         """This function will be called after a move has been made to determine if the move that was made
