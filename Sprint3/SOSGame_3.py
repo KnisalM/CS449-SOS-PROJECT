@@ -137,42 +137,49 @@ class SOSGame(gameBoard):
 
         for directionOne, directionTwo in directionsToCheck:
 
-            # Updating function to check both directions from an O placed in the middle
+            # Updating function to check both directions from an O placed in the middle and check when a char is placed at beginning or end
+            patternsToCheck = [
+                [0, 1, 2],
+                [-1, 0, 1],
+                [-2, -1, 0]
+            ]
 
-            # Calculate what the positions are for the 3 positions that would form an SOS in this direction
-            positions = []
-            validPositions = True
+            for pattern in patternsToCheck:
 
-            for i in range(-1, 2):  # Checks positions from one behind cell and next 2 cells
-                r = row + (i * directionOne)
-                c = col + (i * directionTwo)
+                # Calculate what the positions are for the 3 positions that would form an SOS in this direction
+                positions = []
+                validPositions = True
 
-                if 0 <= r < boardDim and 0 <= c < boardDim:
-                    positions.append((r, c))
-                else:
-                    validPositions = False
-                    break
+                for offset in pattern:
+                    r = row + (offset * directionOne)
+                    c = col + (offset * directionTwo)
 
-            # If there are 3 valid positions in the list, check if they form an SOS
-            if validPositions and len(positions) == 3:
-                # get cell values and owners
-                cellValues = []
-                cellOwners = []
+                    if 0 <= r < boardDim and 0 <= c < boardDim:
+                        positions.append((r, c))
+                    else:
+                        validPositions = False
+                        break
 
-                for posRow, posCol in positions:
-                    cellValues.append(self.cellState[posRow][posCol])
-                    cellOwners.append(self.cellOwner[posRow][posCol])
+                # If there are 3 valid positions in the list, check if they form an SOS
+                if validPositions and len(positions) == 3:
+                    # get cell values and owners
+                    cellValues = []
+                    cellOwners = []
 
-                # Check if pattern is an SOS
-                if cellValues[0] == 'S' and cellValues[1] == 'O' and cellValues[2] == 'S':
-                    # Check all cells are same player
-                    if (cellOwners[0] is not None and
-                            cellOwners[0] == cellOwners[1] == cellOwners[2]):
+                    for posRow, posCol in positions:
+                        cellValues.append(self.cellState[posRow][posCol])
+                        cellOwners.append(self.cellOwner[posRow][posCol])
 
-                        chainId = tuple(sorted(positions))  # Sort to make order consistent
-                        if chainId not in uniqueChains:
-                            uniqueChains.add(chainId)
-                            sosChains.append(positions)
+                    # Check if pattern is an SOS
+                    if cellValues[0] == 'S' and cellValues[1] == 'O' and cellValues[2] == 'S':
+                        # Check all cells are same player
+                        if (cellOwners[0] is not None and
+                                cellOwners[0] == cellOwners[1] == cellOwners[2]):
+
+                            chainId = tuple(sorted(positions))  # Sort to make order consistent
+                            if chainId not in uniqueChains:
+                                uniqueChains.add(chainId)
+                                sosChains.append(positions)
 
         return sosChains
 
