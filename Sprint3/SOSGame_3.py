@@ -133,6 +133,8 @@ class SOSGame(gameBoard):
         ]
 
         # Use a set to track unique SOS Chains
+        uniqueChains = set()
+
         for directionOne, directionTwo in directionsToCheck:
 
             # Updating function to check both directions from an O placed in the middle
@@ -141,7 +143,7 @@ class SOSGame(gameBoard):
             positions = []
             validPositions = True
 
-            for i in range(-1, 2): # Checks positions from one behind cell and next 2 cells
+            for i in range(-1, 2):  # Checks positions from one behind cell and next 2 cells
                 r = row + (i * directionOne)
                 c = col + (i * directionTwo)
 
@@ -166,7 +168,12 @@ class SOSGame(gameBoard):
                     # Check all cells are same player
                     if (cellOwners[0] is not None and
                             cellOwners[0] == cellOwners[1] == cellOwners[2]):
-                        sosChains.append(positions)
+
+                        chainId = tuple(sorted(positions))  # Sort to make order consistent
+                        if chainId not in uniqueChains:
+                            uniqueChains.add(chainId)
+                            sosChains.append(positions)
+
         return sosChains
 
     def gameOverHandler(self):
