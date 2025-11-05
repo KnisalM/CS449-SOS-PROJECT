@@ -1014,6 +1014,51 @@ class testGeneralSOSGame(unittest.TestCase):
         self.assertEqual(self.end_game_mock.call_count, 0,
                          "endGame should not be called in general game for single SOS")
 
+    def testAC8_10BluePlayerScoresSOSAndPlayContinuesInGeneralGame(self):
+        # Set up initial board state with SOS opportunity
+        self.game.cellState = [
+            ['S', '', ''],
+            ['', '', ''],
+            ['S', '', '']
+        ]
+        self.game.cellOwner = [
+            [1, None, None],
+            [None, None, None],
+            [1, None, None]
+        ]
+
+        # Ensure it is blues turn
+        self.game.currentPlayer = 1
+        self.end_game_mock.call_count = 0
+        self.game.players[1].score = 0
+
+        # Red Player makes move that completes SOS chain
+        row, col = 1, 0  # Place O in the middle to complete vertical S-O-S
+        moveChar = 'O'
+        color = 'Blue'
+
+        self.game.makeAMove(row, col, moveChar, color)
+
+        # Verify Blue Player has one point added to their score
+        self.assertEqual(self.game.players[1].score, 1,
+                         "Blue Player should have 1 point after completing SOS")
+
+        # Verify Red Player's score remains unchanged
+        self.assertEqual(self.game.players[0].score, 0,
+                         "Red Player should still have 0 points")
+
+        # Verify It changed to Red Player's turn
+        self.assertEqual(self.game.currentPlayer, 0,
+                         "Current player should be Red Player (0) after Blue scores")
+
+        # Verify Game is still active (not ended)
+        self.assertTrue(self.game.activeGame,
+                        "Game should still be active in general game after single SOS")
+
+        # Verify endGame was NOT called (game continues)
+        self.assertEqual(self.end_game_mock.call_count, 0,
+                         "endGame should not be called in general game for single SOS")
+
     def testAC8_10BluePlayerCompletesValidSOSChainScoreIsIncremented(self):
         pass
 
