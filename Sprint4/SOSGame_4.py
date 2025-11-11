@@ -105,6 +105,7 @@ class SOSGame(gameBoard):
         self.players[0].setChar(self.p1Move.get())
         self.players[1].setChar(self.p2Move.get())
 
+
     def cellClicked(self, row, col):
         """Define the events when an empty cell is clicked"""
         if not self.activeGame or self.cellState[row][col] != '':
