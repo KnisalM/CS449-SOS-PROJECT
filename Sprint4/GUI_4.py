@@ -187,6 +187,7 @@ class setupGame(gameBoard):
         """Override startGame to create appropriate game instance based on rules"""
         ruleSet = self.ruleSet.get()
         dimensions = self.dimensions.get()
+        gameType = self.gameType.get()
 
         # Store the move values
         p1MoveVal = self.p1Move.get()
@@ -207,6 +208,7 @@ class setupGame(gameBoard):
         # Pass variables to game instance
         gameInstance.dimensions.set(dimensions)
         gameInstance.ruleSet.set(ruleSet)
+        gameInstance.gameType.set(gameType)
         gameInstance.p1Move.set(p1MoveVal)
         gameInstance.p2Move.set(p2MoveVal)
 

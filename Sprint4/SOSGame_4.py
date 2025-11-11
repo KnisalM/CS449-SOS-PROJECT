@@ -47,14 +47,27 @@ class SOSGame(gameBoard):
         super().__init__(root)
 
         # Initialize game variables
-        self.players = [Player(1, 'human'),  # Player 1 Red
-                        Player(2, 'human')]  # Player 2 Blue
+        self.gameType = tk.StringVar(value='Human')
+        self.players = []
         self.currentPlayer = 0  # Start with Player 1
         self.activeGame = True
         self.cellState = []  # Track the state of the cells and whether there is currently a play made on a cell
         self.cellOwner = []  # Track ownership of cells
         self.turnDisplayLabel = None  # Displays whose turn it currently is
-        self.versusType = ''
+
+    def initializePlayers(self):
+        """Initialize the players based on selected game type"""
+
+        # Player 1 is always human player
+        player1 = Player(1, 'Human')
+
+        # Player 2 changes based on the game type selected
+        if self.gameType.get() == 'Human':
+            player2 = Player(2, 'Human')
+        else:
+            player2 = computerPlayer(2)
+
+        self.players = [player1, player2]
 
     def getCurrentPlayer(self):
         """Get and return the current player"""
@@ -67,7 +80,18 @@ class SOSGame(gameBoard):
         if self.turnDisplayLabel:
             self.turnDisplayLabel.destroy()
 
-        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is {currentPlayer.color}'s Turn", font=('Arial', 16),
+        # Update display frame based on game type
+        if self.gameType.get() == 'Human':
+            # Human v Human game mode show the colors
+            playerText = f"{currentPlayer.color}'s Turn"
+        else:
+            # Human v Computer - show player types
+            if currentPlayer.player_number == 1:
+                playerText = "Human's turn"
+            else:
+                playerText = "Computer's Turn"
+
+        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is {playerText}'s Turn", font=('Arial', 16),
                                          fg=currentPlayer.color)
         self.turnDisplayLabel.grid(row=3, column=0, columnspan=3, pady=10, sticky='ew')
 
