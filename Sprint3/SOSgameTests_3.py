@@ -292,7 +292,7 @@ class TestgameBoardClass(unittest.TestCase):
                 self.testBoard.cells = []
                 mockButton.reset_mock()
 
-                # Call createUIElements directly - this is where the board is actually created
+                # Call createUIElements directly
                 self.testBoard.createUIElements()
 
                 # Verify that correct # of buttons are created
