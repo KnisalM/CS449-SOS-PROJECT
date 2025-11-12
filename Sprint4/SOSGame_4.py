@@ -87,11 +87,11 @@ class SOSGame(gameBoard):
         else:
             # Human v Computer - show player types
             if currentPlayer.player_number == 1:
-                playerText = "Human's turn"
+                playerText = "Human Player's turn"
             else:
-                playerText = "Computer's Turn"
+                playerText = "Computer Player's Turn"
 
-        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is {playerText}'s Turn", font=('Arial', 16),
+        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is the {playerText}", font=('Arial', 16),
                                          fg=currentPlayer.color)
         self.turnDisplayLabel.grid(row=3, column=0, columnspan=3, pady=10, sticky='ew')
 
@@ -104,7 +104,6 @@ class SOSGame(gameBoard):
         """get what character the player has selected for the move to be made"""
         self.players[0].setChar(self.p1Move.get())
         self.players[1].setChar(self.p2Move.get())
-
 
     def cellClicked(self, row, col):
         """Define the events when an empty cell is clicked"""
@@ -230,6 +229,7 @@ class SOSGame(gameBoard):
     def startGame(self):
         """Initialize the game board state and prepare it for the game"""
         self.createUIElements()
+        self.initializePlayers()
 
         dimN = int(self.dimensions.get().split('x')[0])
 
