@@ -61,6 +61,19 @@ class gameBoard:
         self.setup_ui_components()
 
 
+    def setup_ui_components(self):
+        """Setup the UI components without making any changes to game logic, separates UI and Game Logic"""
+        self.board_size_dropdown()
+        self.rule_set_radio_buttons()
+        self.player_type_radio_buttons()
+
+        # Track configuration types
+        self.config.dimensions.trace('w', self.start_conditions)
+        self.config.rule_set.trace('w', self.start_conditions)
+        self.config.game_type.trace('w', self.start_conditions)
+
+
+
     def startGame(self):
         """Template method that will be implemented by subclasses in SOSGame_4.py file
 """
