@@ -331,6 +331,7 @@ class generalSOSGame(SOSGame):
     # Create a setup class to handle rule selection, will look at refactoring into classes, but testing for function
 
 
+
 def main():
     root = tk.Tk()
     root.title('SOS GAME')
