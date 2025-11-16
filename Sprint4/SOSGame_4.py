@@ -37,15 +37,50 @@ class Player:
 
     def makeAMove(self, row, col):
         """Execute a move that will be reflected on the board and update the game state"""
+        if not self.gameInstance.activeGame:
+            return False
 
+        # Check if the move made was valid
+        if (row < 0 or row >= len(self.gameInstance.cellState) or
+                col < 0 or col >= len(self.gameInstance.cellState[0]) or self.gameInstance.cellState[row][col] != ''):
+            return False
+
+        boardSize = len(self.gameInstance.cells)
+        if boardSize <= 5:
+            fontSize = 14
+        elif boardSize <= 8:
+            fontSize = 12
+        elif boardSize <= 10:
+            fontSize = 10
+        else:
+            fontSize = 9
+        fontConfig = ('Arial', fontSize, 'bold')
+
+        self.gameInstance.cellState[row][col] = self.character
+        self.gameInstance.cellOwner[row][col] = self.gameInstance.currentPlayer
+
+        # Update cell appearance
+        self.gameInstance.cells[row][col].config(text=self.character, fg=self.color, state='disabled',
+                                                 disabledforeground=self.color,
+                                                 relief='sunken', font=fontConfig)
+
+        # check for SOS chains
+        sosChains = self.gameInstance.checkSOSFormed(row, col, self.character)
+        for chain in sosChains:
+            self.gameInstance.drawSOSChain(chain, self.color)
+            self.incrementScore()
+
+        # Handle game over logic
+
+        self.gameInstance.gameOverHandler()
+        return True
 
 
 class computerPlayer(Player):
-    """this class will extend the Player class to a computer player's logic. This class will
-    implement the logic for a computer player to choose how it makes decisions on move placement,
-    blocking the other player from making an SOS, and making moves to lay out a path to create
-    an SOS ahead of time"""
-    pass
+    """this class will extend the Player class to a computer player's logic."""
+    def makeAMove(self):
+        """computer player's move logic will be defined here"""
+        pass
 
 
 class SOSGame(gameBoard):
@@ -119,38 +154,8 @@ class SOSGame(gameBoard):
         if not self.activeGame or self.cellState[row][col] != '':
             return
 
-        self.updatePlayerChar()
-        currentPlayer = self.getCurrentPlayer()
-        moveChar = currentPlayer.getChar()
-
-        self.makeAMove(row, col, moveChar, currentPlayer.color)
-
-    def makeAMove(self, row, col, moveChar, color):
-        """Execute when a valid move is made to reflect on board and update game state
-    Commonly Used Functionality between both general and simple SOSGame subclasses"""
-        boardSize = len(self.cells)
-        if boardSize <= 5:
-            fontSize = 14
-        elif boardSize <= 8:
-            fontSize = 12
-        elif boardSize <= 10:
-            fontSize = 10
-        else:
-            fontSize = 9
-        fontConfig = ('Arial', fontSize, 'bold')
-        self.cellState[row][col] = moveChar
-        self.cellOwner[row][col] = self.currentPlayer  # Track player that made move
-        self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color,
-                                    relief='sunken', font=fontConfig)
-
-        # Check for a SOS chain after the move by calling checkSOSFormed function
-        sosChains = self.checkSOSFormed(row, col, moveChar)
-        currentPlayer = self.getCurrentPlayer()
-        for chain in sosChains:
-            self.drawSOSChain(chain, currentPlayer.color)
-            currentPlayer.incrementScore()
-
-        self.gameOverHandler()
+        player = self.getCurrentPlayer()
+        player.makeAMove(row, col)
 
     def checkSOSFormed(self, row, col, player):
         """This function will check if an SOS has been formed after each move. If a player has created an SOS, then their
