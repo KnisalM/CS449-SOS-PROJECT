@@ -35,6 +35,10 @@ class Player:
          != 0, and will track the player's score in a general game until there are no moves left"""
         self.score += 1
 
+    def makeAMove(self, row, col):
+        """Execute a move that will be reflected on the board and update the game state"""
+
+
 
 class computerPlayer(Player):
     """this class will extend the Player class to a computer player's logic. This class will
