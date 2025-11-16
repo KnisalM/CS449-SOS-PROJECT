@@ -78,6 +78,7 @@ class Player:
 
 class computerPlayer(Player):
     """this class will extend the Player class to a computer player's logic."""
+
     def makeAMove(self):
         """computer player's move logic will be defined here"""
         pass
@@ -104,12 +105,15 @@ class SOSGame(gameBoard):
 
         # Player 1 is always human player
         player1 = Player(1, 'Human')
+        player1.setGameInstance(self)
 
         # Player 2 changes based on the game type selected
         if self.gameType.get() == 'Human':
             player2 = Player(2, 'Human')
         else:
             player2 = computerPlayer(2)
+
+        player2.setGameInstance(self)
 
         self.players = [player1, player2]
 
@@ -131,11 +135,12 @@ class SOSGame(gameBoard):
         else:
             # Human v Computer - show player types
             if currentPlayer.player_number == 1:
-                playerText = "Human Player's turn"
+                playerText = "Human"
             else:
-                playerText = "Computer Player's Turn"
+                playerText = "Computer"
 
-        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is the {playerText}", font=('Arial', 16),
+        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is the {playerText} Player's Turn",
+                                         font=('Arial', 16),
                                          fg=currentPlayer.color)
         self.turnDisplayLabel.grid(row=3, column=0, columnspan=3, pady=10, sticky='ew')
 
@@ -143,6 +148,11 @@ class SOSGame(gameBoard):
         """Switch turns so that player who is not playing can't make a move and scores are tracked appropriately"""
         self.currentPlayer = (self.currentPlayer + 1) % 2
         self.updateTurnFrame()
+
+        # If computer game, trigger computer move
+        if ((self.gameType.get() == 'Computer') and
+                (self.players[self.currentPlayer].playerType == 'computer') and self.activeGame):
+            pass
 
     def updatePlayerChar(self):
         """get what character the player has selected for the move to be made"""
