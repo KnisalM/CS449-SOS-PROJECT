@@ -28,6 +28,16 @@ class GameConfig:
     """This class improves the encapsulation of game configuration data, and the cohesion of the data and related methods
     """
 
+    def __init__(self):
+        self.dimensions = tk.StringVar(value='')
+        self.rule_set = tk.StringVar(value='')
+        self.p1_move = tk.StringVar(value='S')
+        self.p2_move = tk.StringVar(value='S')
+        self.game_type = tk.StringVar(value='Human')
+
+    def config_complete(self):
+        """Check if all configuration options are selected"""
+        return all([self.dimensions.get(), self.rule_set.get(), self.game_type.get()])
 class gameBoard:
     def __init__(self, root):
 
