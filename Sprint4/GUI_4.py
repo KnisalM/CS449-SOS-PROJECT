@@ -50,9 +50,9 @@ class gameBoard:
         self.config = GameConfig()
 
         # Create Frames that setup and main game will run in
-        self.setupFrame = tk.Frame(
+        self.setup_frame = tk.Frame(
             self.root)  # This creates the setup Frame where the player is asked to set up their board, ties it to the parent window self.root
-        self.gameFrame = tk.Frame(
+        self.game_frame = tk.Frame(
             self.root)  # Creates Frame where the game will take place, ties to parent window self.root
 
         # Create list to hold the cells of the game board and a list to hold moves that have been made
@@ -71,6 +71,21 @@ class gameBoard:
         self.config.dimensions.trace('w', self.start_conditions)
         self.config.rule_set.trace('w', self.start_conditions)
         self.config.game_type.trace('w', self.start_conditions)
+
+    def board_size_dropdown(self):
+        """Setup the dropdown menu for the game board size selection"""
+        self.setup_frame.grid(row=0, column=0, sticky='nsew')
+
+        title_label = tk.Label(self.setup_frame, text='Setup Your Game!', font=('Arial', 16, 'bold'))
+        title_label.grid(row=0, column=0, columnspan=2, pady=(0,20))
+
+        size_label = tk.Label(self.setup_frame, text='Choose the size of your game board from the dropdown menu')
+        size_label.grid(row=1, column=0, sticky=tk.W, pady=5)
+
+        sizes = [f"{i}x{i}" for i in range(3, 13)]
+        size_dropdown = ttk.Combobox(self.setup_frame, textvariable=self.config.dimensions, values=sizes,
+                                     state='readonly', width=10)
+        size_dropdown.grid(row=1, column=1, sticky=tk.W, pady=5, padx=(10, 0))
 
 
 
