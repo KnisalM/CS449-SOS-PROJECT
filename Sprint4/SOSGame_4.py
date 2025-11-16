@@ -15,6 +15,11 @@ class Player:
         self.color = 'Red' if player_number == 1 else 'Blue'  # Color of character's placed on board
         self.name = f"Player {player_number}"  # Determines Player Name for displaying on the board whose turn it is
         self.gameInstance = None
+
+    def setGameInstance(self, gameboardInstance):
+        """Set the game instance for the player to interact with"""
+        self.gameInstance = gameboardInstance
+
     def setChar(self, character):
         """This function will set the character for the player to play based on their selection in the frame"""
         if character in ['S', 'O']:
