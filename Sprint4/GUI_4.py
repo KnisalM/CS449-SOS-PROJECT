@@ -4,7 +4,7 @@ import pylint
 import unittest
 
 
-def createPlayerFrame(parent, row, column, player, moveChar):
+def create_player_frame(parent, row, column, player, move_char):
     """This is a helper function designed in assistance with Deepseek LLM to reduce doubling up on code in the
     player frame creation process
 
@@ -18,11 +18,15 @@ def createPlayerFrame(parent, row, column, player, moveChar):
     frame.grid_propagate(False)
 
     tk.Label(frame, text=player, font=('Arial', 12)).grid(row=0, column=0, columnspan=2, pady=(0, 10))
-    ttk.Radiobutton(frame, text='S', variable=moveChar, value='S').grid(row=1, column=0, sticky=tk.W, pady=2)
-    ttk.Radiobutton(frame, text='O', variable=moveChar, value='O').grid(row=2, column=0, sticky=tk.W, pady=2)
+    ttk.Radiobutton(frame, text='S', variable=move_char, value='S').grid(row=1, column=0, sticky=tk.W, pady=2)
+    ttk.Radiobutton(frame, text='O', variable=move_char, value='O').grid(row=2, column=0, sticky=tk.W, pady=2)
 
     return frame
 
+
+class GameConfig:
+    """This class improves the encapsulation of game configuration data, and the cohesion of the data and related methods
+    """
 
 class gameBoard:
     def __init__(self, root):
