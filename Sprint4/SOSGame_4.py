@@ -14,20 +14,11 @@ class Player:
         self.character = 'S'  # S character selected by default, but at time of event will be updated to selected character
         self.color = 'Red' if player_number == 1 else 'Blue'  # Color of character's placed on board
         self.name = f"Player {player_number}"  # Determines Player Name for displaying on the board whose turn it is
-        self.gameInstance = None
 
-    def setGameInstance(self, gameboardInstance):
-        """Set the game instance for the player to interact with"""
-        self.gameInstance = gameboardInstance
-
-    def setChar(self, character):
+    def set_char(self, character):
         """This function will set the character for the player to play based on their selection in the frame"""
         if character in ['S', 'O']:
             self.character = character
-
-    def getChar(self):
-        """Get the current selected character"""
-        return self.character
 
     def incrementScore(self):
         """This function will increment the player's score when they create a valid SOS
@@ -35,53 +26,8 @@ class Player:
          != 0, and will track the player's score in a general game until there are no moves left"""
         self.score += 1
 
-    def makeAMove(self, row, col):
-        """Execute a move that will be reflected on the board and update the game state"""
-        if not self.gameInstance.activeGame:
-            return False
-
-        # Check if the move made was valid
-        if (row < 0 or row >= len(self.gameInstance.cellState) or
-                col < 0 or col >= len(self.gameInstance.cellState[0]) or self.gameInstance.cellState[row][col] != ''):
-            return False
-
-        boardSize = len(self.gameInstance.cells)
-        if boardSize <= 5:
-            fontSize = 14
-        elif boardSize <= 8:
-            fontSize = 12
-        elif boardSize <= 10:
-            fontSize = 10
-        else:
-            fontSize = 9
-        fontConfig = ('Arial', fontSize, 'bold')
-
-        self.gameInstance.cellState[row][col] = self.character
-        self.gameInstance.cellOwner[row][col] = self.gameInstance.currentPlayer
-
-        # Update cell appearance
-        self.gameInstance.cells[row][col].config(text=self.character, fg=self.color, state='disabled',
-                                                 disabledforeground=self.color,
-                                                 relief='sunken', font=fontConfig)
-
-        # check for SOS chains
-        sosChains = self.gameInstance.checkSOSFormed(row, col, self.character)
-        for chain in sosChains:
-            self.gameInstance.drawSOSChain(chain, self.color)
-            self.incrementScore()
-
-        # Handle game over logic
-
-        self.gameInstance.gameOverHandler()
-        return True
-
-
 class computerPlayer(Player):
     """this class will extend the Player class to a computer player's logic."""
-
-    def makeAMove(self, row, col):
-        """computer player's move logic will be defined here"""
-        pass
 
 
 class SOSGame(GameBoard):
@@ -167,7 +113,7 @@ class SOSGame(GameBoard):
         player = self.getCurrentPlayer()
         player.makeAMove(row, col)
 
-    def checkSOSFormed(self, row, col, player):
+    def check_sos_formed(self, row, col, player):
         """This function will check if an SOS has been formed after each move. If a player has created an SOS, then their
         score will be incremented. A simple game will utilize this to tell a game is over when one of the player's score
         is !=0, and a general game will use this to increment the player's score and track who wins by who has the most
@@ -329,7 +275,6 @@ class generalSOSGame(SOSGame):
         self.endGame(message)
 
     # Create a setup class to handle rule selection, will look at refactoring into classes, but testing for function
-
 
 
 def main():
