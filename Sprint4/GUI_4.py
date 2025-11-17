@@ -40,7 +40,7 @@ class GameConfig:
         return all([self.dimensions.get(), self.rule_set.get(), self.game_type.get()])
 
 
-class gameBoard:
+class GameBoard:
     def __init__(self, root):
 
         # Define parent window that application runs in
@@ -57,9 +57,9 @@ class gameBoard:
 
         # Create list to hold the cells of the game board and a list to hold moves that have been made
         self.cells = []  # Store the cells of the game board
+        self.turn_display_label = None
 
         self.setup_ui_components()
-
 
     def setup_ui_components(self):
         """Setup the UI components without making any changes to game logic, separates UI and Game Logic"""
@@ -89,12 +89,12 @@ class gameBoard:
     def rule_set_radio_buttons(self):
         """Setup rule set selection UI widgets"""
         rule_label = tk.Label(self.setup_frame, text='Choose the rule set you will use')
-        rule_label.grid(row=1, column=1, sticky=tk.W, pady=2, padx=(10,0))
+        rule_label.grid(row=1, column=1, sticky=tk.W, pady=2, padx=(10, 0))
 
         ttk.Radiobutton(self.setup_frame, text='Simple, first SOS wins!', variable=self.config.rule_set,
-                        value='Simple').grid(row=2, column=1, sticy=tk.W, pady=2, padx=(10,0))
+                        value='Simple').grid(row=2, column=1, sticy=tk.W, pady=2, padx=(10, 0))
         ttk.Radiobutton(self.setup_frame, text='General, most SOS chains wins!', variable=self.config.rule_set,
-                        value='General').grid(row=3, column=1, sticky=tk.W, pady=2, padx=(10,0))
+                        value='General').grid(row=3, column=1, sticky=tk.W, pady=2, padx=(10, 0))
 
     def player_type_radio_buttons(self):
         """Setup player type selection widgets"""
@@ -102,9 +102,9 @@ class gameBoard:
         player_type.grid(row=4, column=0, sticky=tk.W, pady=5)
 
         ttk.Radiobutton(self.setup_frame, text='Human vs Human', variable=self.config.game_type, value='Human'
-                        ).grid(row=4, column=1, sticky=tk.W, pady=2, padx=(10,0))
+                        ).grid(row=4, column=1, sticky=tk.W, pady=2, padx=(10, 0))
         ttk.Radiobutton(self.setup_frame, text='Human vs Computer', variable=self.config.game_type, value='Computer'
-                        ).grid(row=4, column=2, sticky=tk.W, pady=2, padx=(10,0))
+                        ).grid(row=4, column=2, sticky=tk.W, pady=2, padx=(10, 0))
 
     def start_conditions(self):
         """Check if game can be started, show begin button if ready to start"""
@@ -118,56 +118,142 @@ class gameBoard:
             start_game = tk.Button(self.setup_frame, text='Begin', command=self.start_game)
             start_game.grid(row=6, column=1, sticky=tk.W, pady=5)
 
+    def create_gameboard_ui(self):
+        """Create the UI for the gameboard in this function, common functionality for both classes"""
+        # clear setup frame and setup game frame
+        self.setup_frame.destroy()
+
+        self.root.grid_rowconfigure(0, weight=1)
+        self.root.grid_columnconfigure(0, weight=1)
+
+        self.game_frame.grid(row=0, column=0, sticky='nsew')
+        self.game_frame.grid_rowconfigure(1, weight=1)
+        self.game_frame.grid_columnconfigure(0, weight=0)  # Left player frame
+        self.game_frame.grid_columnconfigure(1, weight=1)  # Board frame - expands
+        self.game_frame.grid_columnconfigure(2, weight=0)  # Right player frame
+
+        dimension = int(self.config.dimensions.get().split('x')[0])
+
+        # Create the board frame that will contain the cells
+        board_frame = tk.Frame(self.game_frame)
+        board_frame.grid(row=1, column=1, sticky='nsew')
+
+        # Create the grid of cells
+        self.cells = []
+        for i in range(dimension):
+            row_cells = []
+            for j in range(dimension):
+                # Create each cell as a button
+                cell_button = tk.Button(
+                    board_frame,
+                    text='',
+                    width=4,
+                    height=2,
+                    font=('Arial', 12, 'bold')
+                )
+                cell_button.grid(row=i, column=j, sticky='nswe')
+                row_cells.append(cell_button)
+
+                # Configure grid weights for proper scaling
+                board_frame.grid_rowconfigure(i, weight=1)
+                board_frame.grid_columnconfigure(j, weight=1)
+
+            self.cells.append(row_cells)
+
+        # Create player frames using the factory
+        if self.config.game_type.get() == 'Human':
+            create_player_frame(
+                self.game_frame, 1, 0, 'Red Player', self.config.p1_move)
+            create_player_frame(
+                self.game_frame, 1, 2, 'Blue Player', self.config.p2_move)
+        else:
+            create_player_frame(
+                self.game_frame, 1, 0, 'Human Player', self.config.p1_move)
+            create_player_frame(
+                self.game_frame, 1, 2, 'Computer Player', self.config.p2_move)
+
+    def update_cell_appearance(self, row, col, character, color):
+        """Update the visual appearance of a cell """
+        board_size = len(self.cells)
+        font_config = self.get_font_config(board_size)
+
+        self.cells[row][col].config(
+            text=character,
+            fg=color,
+            state='disabled',
+            disabledforeground=color,
+            relief='sunken',
+            font=font_config
+        )
+
+    def draw_sos_chain(self, cell_locations, player_color):
+        """Highlight an SOS chain on the board """
+        for row, col in cell_locations:
+            self.cells[row][col].config(
+                disabledforeground='white',
+                fg='white',
+                bg=player_color
+            )
+
+    def update_turn_display(self, player_text, player_color):
+        """Update the turn display label """
+        if self.turn_display_label:
+            self.turn_display_label.destroy()
+
+        self.turn_display_label = tk.Label(
+            self.game_frame,
+            text=f"It is the {player_text}",
+            font=('Arial', 16),
+            fg=player_color
+        )
+        self.turn_display_label.grid(row=3, column=0, columnspan=3, pady=10, sticky='ew')
+
+    def disable_all_cells(self):
+        """Disable all cells when game ends"""
+        for row in self.cells:
+            for cell in row:
+                cell.config(state='disabled')
+
+    def set_cell_click_handler(self, row, col, handler):
+        """Set click handler for a cell - game logic provides the handler"""
+        self.cells[row][col].config(command=lambda: handler(row, col))
+
+    def get_font_config(self, board_size):
+        """Helper method to determine appropriate font size based on board dimensions"""
+        if board_size <= 5:
+            return 'Arial', 14, 'bold'
+        elif board_size <= 8:
+            return 'Arial', 12, 'bold'
+        elif board_size <= 10:
+            return 'Arial', 10, 'bold'
+        else:
+            return 'Arial', 9, 'bold'
+
+    def start_game(self):
+        """Template method to be implemented by subclasses"""
+        pass
 
 
-
-
-    def startGame(self):
-        """Template method that will be implemented by subclasses in SOSGame_4.py file
-"""
-
-    def drawSOSChain(self, cellLocations, pColor):
-        """This function will be the helper function that will create the drawn line
-        on the game board when a player creates a valid SOS chain"""
-
-        for row, col in cellLocations:
-            self.cells[row][col].config(disabledforeground='white', fg='white', bg=pColor)
-
-
-class setupGame(gameBoard):
+class SetupGame(GameBoard):
+    """Handles game setup and initialization"""
 
     def __init__(self, root):
         super().__init__(root)
-        self.instance = None
+        self.game_instance = None
 
-    def startGame(self):
-        """Override startGame to create appropriate game instance based on rules"""
-        ruleSet = self.ruleSet.get()
-        dimensions = self.dimensions.get()
-        gameType = self.gameType.get()
+    def start_game(self):
+        """Start the game with selected configuration"""
+        # Create the game board UI first
+        self.create_gameboard_ui()
 
-        # Store the move values
-        p1MoveVal = self.p1Move.get()
-        p2MoveVal = self.p2Move.get()
+        # Import locally to avoid circular imports
+        from SOSGame_4 import SimpleSOSGame, GeneralSOSGame
 
-        # Destroy setup frame
-        self.setupFrame.destroy()
+        # Create appropriate game instance based on rule set
+        if self.config.rule_set.get() == 'Simple':
+            self.game_instance = SimpleSOSGame(self.root, self.config, self)
+        else:
+            self.game_instance = GeneralSOSGame(self.root, self.config, self)
 
-        # Import game classes locally to avoid any import issues
-        from SOSGame_4 import simpleSOSGame, generalSOSGame
-
-        # Create appropriate game instance based on the selected rule set
-        if ruleSet == 'simple':
-            gameInstance = simpleSOSGame(self.root)
-        else:  # Covers general condition
-            gameInstance = generalSOSGame(self.root)
-
-        # Pass variables to game instance
-        gameInstance.dimensions.set(dimensions)
-        gameInstance.ruleSet.set(ruleSet)
-        gameInstance.gameType.set(gameType)
-        gameInstance.p1Move.set(p1MoveVal)
-        gameInstance.p2Move.set(p2MoveVal)
-
-        self.instance = gameInstance
-        gameInstance.startGame()
+        # Start the game logic
+        self.game_instance.start_game()

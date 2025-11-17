@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from GUI_4 import gameBoard
+from GUI_4 import GameBoard
 
 
 class Player:
@@ -79,12 +79,12 @@ class Player:
 class computerPlayer(Player):
     """this class will extend the Player class to a computer player's logic."""
 
-    def makeAMove(self):
+    def makeAMove(self, row, col):
         """computer player's move logic will be defined here"""
         pass
 
 
-class SOSGame(gameBoard):
+class SOSGame(GameBoard):
     """This class will extend the class gameBoard from GUI_2.py, and will begin implementing the actual game logic onto the board"""
 
     def __init__(self, root):
@@ -139,7 +139,7 @@ class SOSGame(gameBoard):
             else:
                 playerText = "Computer"
 
-        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is the {playerText} Player's Turn",
+        self.turnDisplayLabel = tk.Label(self.game_frame, text=f"It is the {playerText} Player's Turn",
                                          font=('Arial', 16),
                                          fg=currentPlayer.color)
         self.turnDisplayLabel.grid(row=3, column=0, columnspan=3, pady=10, sticky='ew')
@@ -156,8 +156,8 @@ class SOSGame(gameBoard):
 
     def updatePlayerChar(self):
         """get what character the player has selected for the move to be made"""
-        self.players[0].setChar(self.p1Move.get())
-        self.players[1].setChar(self.p2Move.get())
+        self.players[0].setChar(self.p1_move.get())
+        self.players[1].setChar(self.p2_move.get())
 
     def cellClicked(self, row, col):
         """Define the events when an empty cell is clicked"""
