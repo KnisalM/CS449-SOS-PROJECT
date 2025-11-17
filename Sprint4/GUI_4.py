@@ -106,6 +106,20 @@ class gameBoard:
         ttk.Radiobutton(self.setup_frame, text='Human vs Computer', variable=self.config.game_type, value='Computer'
                         ).grid(row=4, column=2, sticky=tk.W, pady=2, padx=(10,0))
 
+    def start_conditions(self):
+        """Check if game can be started, show begin button if ready to start"""
+        if self.config.config_complete():
+            begin_label = tk.Label(self.setup_frame, text=f"You've chose to play a {self.config.rule_set.get()} game "
+                                                          f"on a {self.config.dimensions.get()} sized board, against a"
+                                                          f"{self.config.game_type.get()}, begin?")
+
+            begin_label.grid(row=6, column=0, sticky=tk.W, pady=5)
+
+            start_game = tk.Button(self.setup_frame, text='Begin', command=self.start_game)
+            start_game.grid(row=6, column=1, sticky=tk.W, pady=5)
+
+
+
 
 
     def startGame(self):
