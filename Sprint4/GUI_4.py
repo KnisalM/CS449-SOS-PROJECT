@@ -76,17 +76,26 @@ class gameBoard:
         """Setup the dropdown menu for the game board size selection"""
         self.setup_frame.grid(row=0, column=0, sticky='nsew')
 
-        title_label = tk.Label(self.setup_frame, text='Setup Your Game!', font=('Arial', 16, 'bold'))
-        title_label.grid(row=0, column=0, columnspan=2, pady=(0,20))
+        tk.Label(self.setup_frame, text='Setup Your Game!', font=('Arial', 16, 'bold')).grid(row=0, column=0,
+                                                                                             columnspan=2, pady=(0, 20))
 
-        size_label = tk.Label(self.setup_frame, text='Choose the size of your game board from the dropdown menu')
-        size_label.grid(row=1, column=0, sticky=tk.W, pady=5)
-
+        tk.Label(self.setup_frame, text='Choose the size of your game board from the dropdown menu').grid(row=1,
+                                                                                                          column=0,
+                                                                                                          sticky=tk.W,
+                                                                                                          pady=5)
         sizes = [f"{i}x{i}" for i in range(3, 13)]
-        size_dropdown = ttk.Combobox(self.setup_frame, textvariable=self.config.dimensions, values=sizes,
-                                     state='readonly', width=10)
-        size_dropdown.grid(row=1, column=1, sticky=tk.W, pady=5, padx=(10, 0))
+        ttk.Combobox(self.setup_frame, textvariable=self.config.dimensions, values=sizes,
+                     state='readonly', width=10).grid(row=1, column=1, sticky=tk.W, pady=5, padx=(10, 0))
 
+    def rule_set_radio_buttons(self):
+        """Setup rule set selection UI widgets"""
+        rule_label = tk.Label(self.setup_frame, text='Choose the rule set you will use')
+        rule_label.grid(row=1, column=1, sticky=tk.W, pady=2, padx=(10,0))
+
+        ttk.Radiobutton(self.setup_frame, text='Simple, first SOS wins!', variable=self.config.rule_set,
+                        value='Simple').grid(row=2, column=1, sticy=tk.W, pady=2, padx=(10,0))
+        ttk.Radiobutton(self.setup_frame, text='General, most SOS chains wins!', variable=self.config.rule_set,
+                        value='General').grid(row=3, column=1, sticky=tk.W, pady=2, padx=(10,0))
 
 
     def startGame(self):
