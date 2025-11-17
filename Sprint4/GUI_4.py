@@ -76,13 +76,12 @@ class gameBoard:
         """Setup the dropdown menu for the game board size selection"""
         self.setup_frame.grid(row=0, column=0, sticky='nsew')
 
-        tk.Label(self.setup_frame, text='Setup Your Game!', font=('Arial', 16, 'bold')).grid(row=0, column=0,
-                                                                                             columnspan=2, pady=(0, 20))
+        title_label = tk.Label(self.setup_frame, text='Setup Your Game!', font=('Arial', 16, 'bold'))
+        title_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))
 
-        tk.Label(self.setup_frame, text='Choose the size of your game board from the dropdown menu').grid(row=1,
-                                                                                                          column=0,
-                                                                                                          sticky=tk.W,
-                                                                                                          pady=5)
+        size_label = tk.Label(self.setup_frame, text='Choose the size of your game board from the dropdown menu')
+        size_label.grid(row=1, column=0, sticky=tk.W, pady=5)
+
         sizes = [f"{i}x{i}" for i in range(3, 13)]
         ttk.Combobox(self.setup_frame, textvariable=self.config.dimensions, values=sizes,
                      state='readonly', width=10).grid(row=1, column=1, sticky=tk.W, pady=5, padx=(10, 0))
@@ -96,6 +95,17 @@ class gameBoard:
                         value='Simple').grid(row=2, column=1, sticy=tk.W, pady=2, padx=(10,0))
         ttk.Radiobutton(self.setup_frame, text='General, most SOS chains wins!', variable=self.config.rule_set,
                         value='General').grid(row=3, column=1, sticky=tk.W, pady=2, padx=(10,0))
+
+    def player_type_radio_buttons(self):
+        """Setup player type selection widgets"""
+        player_type = tk.Label(self.setup_frame, text='Choose opponent type')
+        player_type.grid(row=4, column=0, sticky=tk.W, pady=5)
+
+        ttk.Radiobutton(self.setup_frame, text='Human vs Human', variable=self.config.game_type, value='Human'
+                        ).grid(row=4, column=1, sticky=tk.W, pady=2, padx=(10,0))
+        ttk.Radiobutton(self.setup_frame, text='Human vs Computer', variable=self.config.game_type, value='Computer'
+                        ).grid(row=4, column=2, sticky=tk.W, pady=2, padx=(10,0))
+
 
 
     def startGame(self):
