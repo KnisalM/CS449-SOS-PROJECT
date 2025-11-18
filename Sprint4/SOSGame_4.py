@@ -45,6 +45,13 @@ class computerPlayer(Player):
 
     def get_empty_cells(self, cell_state):
         """find all empty cells that are present on the board"""
+        empty_cells = []
+        board_size = len(cell_state)
+        for i in range(board_size):
+            for j in range(board_size):
+                if cell_state[i][j] == '':
+                    empty_cells.append((i,j))
+        return empty_cells
 
 
 
