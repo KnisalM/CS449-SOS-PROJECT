@@ -43,16 +43,22 @@ class computerPlayer(Player):
         super().__init__(player_number, player_type)
         self.opponent_number = 1 if player_number == 2 else 2
 
-    def get_empty_cells(self, cell_state):
-        """find all empty cells that are present on the board"""
-        empty_cells = []
-        board_size = len(cell_state)
-        for i in range(board_size):
-            for j in range(board_size):
-                if cell_state[i][j] == '':
-                    empty_cells.append((i,j))
-        return empty_cells
+    def valid_position(self, row, col, board_size):
+        """Check function to make sure the move returned by the computer logic is a valid move"""
+        return 0 <= row < board_size and 0 <= col < board_size
 
+    def test_s_o_completes_chain(self, cell_state, cell_owners, player_num):
+        """This function will test if placing an S or an O in the chain would complete a valid SOS Chain"""
+        completions = []
+        board_size = len(cell_state)
+
+        # Check using each empty cell as a starting point
+        for row in range(board_size):
+            for col in range(board_size):
+                if cell_state[row][col] != '':
+                    continue
+
+                # Test if placing an 'S' completes SOS chain for that player
 
 
 class SOSGame(gameBoard):
@@ -97,7 +103,7 @@ class SOSGame(gameBoard):
         # If next Player is a computer, trigger computer move simulation
         current_player = self.getCurrentPlayer()
         if (current_player.player_type == 'Computer') and self.activeGame:
-            self.root.after(500, self.execute_computer_move()) # This function will be implemented after this call
+            self.root.after(500, self.execute_computer_move())  # This function will be implemented after this call
 
     def execute_computer_move(self):
         # Execute a computer move
@@ -106,7 +112,6 @@ class SOSGame(gameBoard):
             row, col, move_char = current_player.decide_move(self.cellState, self.cellOwner)
             if row is not None and col is not None:
                 self.makeAMove(row, col, move_char, current_player.color)
-
 
     def updatePlayerChar(self):
         """get what character the player has selected for the move to be made"""
