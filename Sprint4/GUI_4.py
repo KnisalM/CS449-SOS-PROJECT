@@ -38,7 +38,8 @@ class gameBoard:
             value='')  # store whether the player has selected to play a Simple or General game mode
         self.p2Move = tk.StringVar(value='S')  # Is p2 making an 'S' or 'O' move
         self.p1Move = tk.StringVar(value='S')  # is p1 making an 'S' or 'O' move
-        self.gameType = tk.StringVar(value='Human') # Human for Human vs Human, Computer for Human vs Computer
+        self.p1_type = tk.StringVar(value='Human')  # GUI tracking instance variable for Red Player Human or Computer
+        self.p2_type = tk.StringVar(value='Human')  # GUI tracking instance variable for Red Player Human or Computer
 
         # Create Frames that setup and main game will run in
         self.setupFrame = tk.Frame(
@@ -83,26 +84,38 @@ class gameBoard:
         simpleRB.grid(row=2, column=1, sticky=tk.W, pady=2, padx=(10, 0))
         generalRB.grid(row=3, column=1, sticky=tk.W, pady=2, padx=(10, 0))
 
-
-
     def playerTypeSelection(self):
         """This function will implement the selection of the player opponent type
-        Player 1 will be Red Player and be a human player each time, and computer
-        player will always be player 2, the Blue player"""
-        playerTypeLabel = tk.Label(self.setupFrame, text='Choose Opponent Type')
-        playerTypeLabel.grid(row=4, column=0, sticky=tk.W, pady=5)
+        with either red or blue player being human or computer"""
 
-        humanRB = ttk.Radiobutton(self.setupFrame, text='Human vs Human', variable=self.gameType,
-                                  value='Human')
-        computerRB = ttk.Radiobutton(self.setupFrame, text='Human vs Computer', variable=self.gameType,
-                                     value='Computer')
-        humanRB.grid(row=4, column=1, sticky=tk.W, pady=2, padx=(10,0))
-        computerRB.grid(row=5, column=1, sticky=tk.W, pady=2, padx=(10,0))
+        player_label = tk.Label(self.setupFrame, text='Choose Player Types', font=('Arial', 12, 'bold'))
+        player_label.grid(row=5, column=0, columnspan=2, sticky=tk.W, pady=(10, 15))
 
-        # Track the state of the game conditions, dimensions and ruleSet, display begin button when conditions are satisfied
+        # Red Player Type Selection
+        red_player_label = tk.Label(self.setupFrame, text='Red Player Type')
+        red_player_label.grid(row=6, column=1, sticky=tk.W, pady=5)
+
+        red_human_RB = ttk.Radiobutton(self.setupFrame, text='Human', variable=self.p1_type, value='Human')
+        red_computer_RB = ttk.Radiobutton(self.setupFrame, text='Computer', variable=self.p1_type, value='Computer')
+
+        red_human_RB.grid(row=7, column=1, sticky=tk.W, pady=2, padx=(10, 0))
+        red_computer_RB.grid(row=8, column=1, sticky=tk.W, pady=2, padx=(10, 0))
+
+        # Blue Player Type Selection
+        blue_player_label = tk.Label(self.setupFrame, text='Blue Player Type')
+        blue_player_label.grid(row=6, column=2, sticky=tk.W, pady=5)
+
+        blue_human_RB = ttk.Radiobutton(self.setupFrame, text='Human', variable=self.p2_type, value='Human')
+        blue_computer_RB = ttk.Radiobutton(self.setupFrame, text='Computer', variable=self.p2_type, value='Computer')
+
+        blue_human_RB.grid(row=7, column=2, sticky=tk.W, pady=2, padx=(10, 0))
+        blue_computer_RB.grid(row=8, column=2, sticky=tk.W, pady=2, padx=(10, 0))
+
+        # Add a Trace to the function so that when the conditions are met
         self.dimensions.trace('w', self.startConditions)
         self.ruleSet.trace('w', self.startConditions)
-        self.gameType.trace('w', self.startConditions)
+        self.p1_type.trace('w', self.startConditions)
+        self.p2_type.trace('w', self.startConditions)
 
     def startConditions(self, *args):
         """This function determines when the conditions dimensions and ruleSet have been chosen, and allows the user to
@@ -113,10 +126,11 @@ class gameBoard:
 
     Post conditions: The player will see a button displayed that says 'Begin', that will initialize the game board when pressed """
         # Check if the player has selected their game board dimensions and ruleSet yet, create and display Begin button
-        if self.dimensions.get() and self.ruleSet.get() and self.gameType.get():
+        if self.dimensions.get() and self.ruleSet.get() and self.p1_type.get() and self.p2_type.get():
             beginLabel = tk.Label(self.setupFrame,
                                   text=f"You've chosen to play a {self.ruleSet.get()} game on a {self.dimensions.get()} "
-                                       f"sized board, against a {self.gameType.get()}, begin?")
+                                       f"sized board, with Red Played by a {self.p1_type.get()}, and Blue Played by a"
+                                       f" {self.p2_type.get()}, begin?")
             beginLabel.grid(row=6, column=0, sticky=tk.W, pady=5)
             startGame = tk.Button(self.setupFrame, text='Begin', command=self.startGame)
             startGame.grid(row=6, column=1, sticky=tk.W, pady=5)
