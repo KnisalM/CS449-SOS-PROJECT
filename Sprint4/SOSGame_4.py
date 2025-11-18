@@ -56,12 +56,13 @@ class SOSGame(gameBoard):
         self.cellState = []  # Track the state of the cells and whether there is currently a play made on a cell
         self.cellOwner = []  # Track ownership of cells
 
-
     def initializePlayers(self):
-        """Initialize the players based on selected game type"""
-
-        # Player 1 is always human player
-        player1 = Player(1, 'Human')
+        """Initialize the players based on selected player types for each player"""
+        # Player 2 changes based on the game type selected
+        if self.p1_type.get() == 'Human':
+            player1 = Player(1, 'Human')
+        else:
+            player1 = computerPlayer(1)
 
         # Player 2 changes based on the game type selected
         if self.gameType.get() == 'Human':
