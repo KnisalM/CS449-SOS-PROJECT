@@ -38,7 +38,13 @@ class computerPlayer(Player):
     implement the logic for a computer player to choose how it makes decisions on move placement,
     blocking the other player from making an SOS, and making moves to lay out a path to create
     an SOS ahead of time"""
-    pass
+
+    def __init__(self, player_number, player_type='Computer'):
+        super().__init__(player_number, player_type)
+        self.opponent_number = 1 if player_number == 2 else 2
+
+    def get_empty_cells
+
 
 
 class SOSGame(gameBoard):
