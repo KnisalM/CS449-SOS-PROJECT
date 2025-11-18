@@ -83,7 +83,15 @@ class SOSGame(gameBoard):
         # If next Player is a computer, trigger computer move simulation
         current_player = self.getCurrentPlayer()
         if (current_player.player_type == 'Computer') and self.activeGame:
-            self.root.after(500, self.executeComputerMove()) # This function will be implemented after this call
+            self.root.after(500, self.execute_computer_move()) # This function will be implemented after this call
+
+    def execute_computer_move(self):
+        # Execute a computer move
+        current_player = self.getCurrentPlayer()
+        if current_player.player_type == 'Computer' and self.activeGame:
+            row, col, move_char = current_player.decide_move(self.cellState, self.cellOwner)
+            if row is not None and col is not None:
+                self.makeAMove(row, col, move_char, current_player.color)
 
 
     def updatePlayerChar(self):
