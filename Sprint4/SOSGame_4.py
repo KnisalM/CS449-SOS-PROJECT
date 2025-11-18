@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from GUI_4 import GameBoard
+from GUI_4 import gameBoard
 
 
 class Player:
@@ -15,10 +15,15 @@ class Player:
         self.color = 'Red' if player_number == 1 else 'Blue'  # Color of character's placed on board
         self.name = f"Player {player_number}"  # Determines Player Name for displaying on the board whose turn it is
 
-    def set_char(self, character):
+        self.gameInstance = None
+    def setChar(self, character):
         """This function will set the character for the player to play based on their selection in the frame"""
         if character in ['S', 'O']:
             self.character = character
+
+    def getChar(self):
+        """Get the current selected character"""
+        return self.character
 
     def incrementScore(self):
         """This function will increment the player's score when they create a valid SOS
@@ -26,11 +31,16 @@ class Player:
          != 0, and will track the player's score in a general game until there are no moves left"""
         self.score += 1
 
+
 class computerPlayer(Player):
-    """this class will extend the Player class to a computer player's logic."""
+    """this class will extend the Player class to a computer player's logic. This class will
+    implement the logic for a computer player to choose how it makes decisions on move placement,
+    blocking the other player from making an SOS, and making moves to lay out a path to create
+    an SOS ahead of time"""
+    pass
 
 
-class SOSGame(GameBoard):
+class SOSGame(gameBoard):
     """This class will extend the class gameBoard from GUI_2.py, and will begin implementing the actual game logic onto the board"""
 
     def __init__(self, root):
@@ -51,15 +61,12 @@ class SOSGame(GameBoard):
 
         # Player 1 is always human player
         player1 = Player(1, 'Human')
-        player1.setGameInstance(self)
 
         # Player 2 changes based on the game type selected
         if self.gameType.get() == 'Human':
             player2 = Player(2, 'Human')
         else:
             player2 = computerPlayer(2)
-
-        player2.setGameInstance(self)
 
         self.players = [player1, player2]
 
@@ -81,12 +88,11 @@ class SOSGame(GameBoard):
         else:
             # Human v Computer - show player types
             if currentPlayer.player_number == 1:
-                playerText = "Human"
+                playerText = "Human Player's turn"
             else:
-                playerText = "Computer"
+                playerText = "Computer Player's Turn"
 
-        self.turnDisplayLabel = tk.Label(self.game_frame, text=f"It is the {playerText} Player's Turn",
-                                         font=('Arial', 16),
+        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is the {playerText}", font=('Arial', 16),
                                          fg=currentPlayer.color)
         self.turnDisplayLabel.grid(row=3, column=0, columnspan=3, pady=10, sticky='ew')
 
@@ -95,25 +101,50 @@ class SOSGame(GameBoard):
         self.currentPlayer = (self.currentPlayer + 1) % 2
         self.updateTurnFrame()
 
-        # If computer game, trigger computer move
-        if ((self.gameType.get() == 'Computer') and
-                (self.players[self.currentPlayer].playerType == 'computer') and self.activeGame):
-            pass
-
     def updatePlayerChar(self):
         """get what character the player has selected for the move to be made"""
-        self.players[0].setChar(self.p1_move.get())
-        self.players[1].setChar(self.p2_move.get())
+        self.players[0].setChar(self.p1Move.get())
+        self.players[1].setChar(self.p2Move.get())
 
     def cellClicked(self, row, col):
         """Define the events when an empty cell is clicked"""
         if not self.activeGame or self.cellState[row][col] != '':
             return
 
-        player = self.getCurrentPlayer()
-        player.makeAMove(row, col)
+        self.updatePlayerChar()
+        currentPlayer = self.getCurrentPlayer()
+        moveChar = currentPlayer.getChar()
 
-    def check_sos_formed(self, row, col, player):
+        self.makeAMove(row, col, moveChar, currentPlayer.color)
+
+    def makeAMove(self, row, col, moveChar, color):
+        """Execute when a valid move is made to reflect on board and update game state
+    Commonly Used Functionality between both general and simple SOSGame subclasses"""
+        boardSize = len(self.cells)
+        if boardSize <= 5:
+            fontSize = 14
+        elif boardSize <= 8:
+            fontSize = 12
+        elif boardSize <= 10:
+            fontSize = 10
+        else:
+            fontSize = 9
+        fontConfig = ('Arial', fontSize, 'bold')
+        self.cellState[row][col] = moveChar
+        self.cellOwner[row][col] = self.currentPlayer  # Track player that made move
+        self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color,
+                                    relief='sunken', font=fontConfig)
+
+        # Check for a SOS chain after the move by calling checkSOSFormed function
+        sosChains = self.checkSOSFormed(row, col, moveChar)
+        currentPlayer = self.getCurrentPlayer()
+        for chain in sosChains:
+            self.drawSOSChain(chain, currentPlayer.color)
+            currentPlayer.incrementScore()
+
+        self.gameOverHandler()
+
+    def checkSOSFormed(self, row, col, player):
         """This function will check if an SOS has been formed after each move. If a player has created an SOS, then their
         score will be incremented. A simple game will utilize this to tell a game is over when one of the player's score
         is !=0, and a general game will use this to increment the player's score and track who wins by who has the most
