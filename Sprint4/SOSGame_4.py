@@ -80,6 +80,12 @@ class SOSGame(gameBoard):
         self.currentPlayer = (self.currentPlayer + 1) % 2
         self.updateTurnFrame(self.getCurrentPlayer())
 
+        # If next Player is a computer, trigger computer move simulation
+        current_player = self.getCurrentPlayer()
+        if (current_player.player_type == 'Computer') and self.activeGame:
+            self.root.after(500, self.executeComputerMove()) # This function will be implemented after this call
+
+
     def updatePlayerChar(self):
         """get what character the player has selected for the move to be made"""
         self.players[0].setChar(self.p1Move.get())
