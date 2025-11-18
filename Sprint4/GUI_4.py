@@ -44,6 +44,7 @@ class gameBoard:
         # Create Frames that setup and main game will run in
         self.setupFrame = tk.Frame(
             self.root)  # This creates the setup Frame where the player is asked to set up their board, ties it to the parent window self.root
+        self.turnDisplayLabel = None  # Displays whose turn it currently is
         self.gameFrame = tk.Frame(
             self.root)  # Creates Frame where the game will take place, ties to parent window self.root
 
@@ -131,9 +132,9 @@ class gameBoard:
                                   text=f"You've chosen to play a {self.ruleSet.get()} game on a {self.dimensions.get()} "
                                        f"sized board, with Red Played by a {self.p1_type.get()}, and Blue Played by a"
                                        f" {self.p2_type.get()}, begin?")
-            beginLabel.grid(row=6, column=0, sticky=tk.W, pady=5)
+            beginLabel.grid(row=10, column=0, sticky=tk.W, pady=5)
             startGame = tk.Button(self.setupFrame, text='Begin', command=self.startGame)
-            startGame.grid(row=6, column=1, sticky=tk.W, pady=5)
+            startGame.grid(row=10, column=1, sticky=tk.W, pady=5)
 
     def createUIElements(self):
         """This Function Initializes the game board
@@ -163,7 +164,7 @@ class gameBoard:
             row = []
             for j in range(dimN):
                 button = tk.Button(boardFrame, text='', width=4, height=2)
-                button.grid(row=i, column=j, sticky='nswe')
+                button.grid(row=i, column=j, sticky=tk.NSEW)
                 row.append(button)
             self.cells.append(row)
 
@@ -172,16 +173,21 @@ class gameBoard:
             boardFrame.grid_columnconfigure(i, weight=1)
 
         # Create Player Frames
-        if self.gameType.get() == 'Human':
-            createPlayerFrame(self.gameFrame, 1, 0, 'Red Player', self.p1Move)
-            createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p2Move)
-        else:
-            createPlayerFrame(self.gameFrame, 1, 0, 'Human', self.p1Move)
-            createPlayerFrame(self.gameFrame, 1, 2, 'Computer', self.p2Move)
+        createPlayerFrame(self.gameFrame, 1, 0, 'Red Player', self.p1Move)
+        createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p1Move)
 
     def startGame(self):
         """Template method that will be implemented by subclasses in SOSGame_4.py file
 """
+
+    def updateTurnFrame(self, current_player):
+        if self.turnDisplayLabel:
+            self.turnDisplayLabel.destroy()
+
+        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is the {current_player.color} Player's turn",
+                                         font=('Arial', 16), fg=current_player.color)
+        self.turnDisplayLabel.grid(row=3, column=0, columnspan=3, pady=10, sticky=tk.EW)
+
 
     def drawSOSChain(self, cellLocations, pColor):
         """This function will be the helper function that will create the drawn line
@@ -201,7 +207,6 @@ class setupGame(gameBoard):
         """Override startGame to create appropriate game instance based on rules"""
         ruleSet = self.ruleSet.get()
         dimensions = self.dimensions.get()
-        gameType = self.gameType.get()
 
         # Store the move values
         p1MoveVal = self.p1Move.get()
@@ -222,7 +227,6 @@ class setupGame(gameBoard):
         # Pass variables to game instance
         gameInstance.dimensions.set(dimensions)
         gameInstance.ruleSet.set(ruleSet)
-        gameInstance.gameType.set(gameType)
         gameInstance.p1Move.set(p1MoveVal)
         gameInstance.p2Move.set(p2MoveVal)
 

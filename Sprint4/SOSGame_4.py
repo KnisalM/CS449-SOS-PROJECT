@@ -16,6 +16,7 @@ class Player:
         self.name = f"Player {player_number}"  # Determines Player Name for displaying on the board whose turn it is
 
         self.gameInstance = None
+
     def setChar(self, character):
         """This function will set the character for the player to play based on their selection in the frame"""
         if character in ['S', 'O']:
@@ -54,7 +55,7 @@ class SOSGame(gameBoard):
         self.activeGame = True
         self.cellState = []  # Track the state of the cells and whether there is currently a play made on a cell
         self.cellOwner = []  # Track ownership of cells
-        self.turnDisplayLabel = None  # Displays whose turn it currently is
+
 
     def initializePlayers(self):
         """Initialize the players based on selected game type"""
@@ -74,32 +75,10 @@ class SOSGame(gameBoard):
         """Get and return the current player"""
         return self.players[self.currentPlayer]
 
-    def updateTurnFrame(self):
-        """Update the GUI to reflect the turn"""
-        currentPlayer = self.getCurrentPlayer()
-
-        if self.turnDisplayLabel:
-            self.turnDisplayLabel.destroy()
-
-        # Update display frame based on game type
-        if self.gameType.get() == 'Human':
-            # Human v Human game mode show the colors
-            playerText = f"{currentPlayer.color}'s Turn"
-        else:
-            # Human v Computer - show player types
-            if currentPlayer.player_number == 1:
-                playerText = "Human Player's turn"
-            else:
-                playerText = "Computer Player's Turn"
-
-        self.turnDisplayLabel = tk.Label(self.gameFrame, text=f"It is the {playerText}", font=('Arial', 16),
-                                         fg=currentPlayer.color)
-        self.turnDisplayLabel.grid(row=3, column=0, columnspan=3, pady=10, sticky='ew')
-
     def switchTurn(self):
         """Switch turns so that player who is not playing can't make a move and scores are tracked appropriately"""
         self.currentPlayer = (self.currentPlayer + 1) % 2
-        self.updateTurnFrame()
+        self.updateTurnFrame(self.getCurrentPlayer())
 
     def updatePlayerChar(self):
         """get what character the player has selected for the move to be made"""
@@ -250,7 +229,7 @@ class SOSGame(gameBoard):
                 self.cells[i][j].config(command=lambda row=i, col=j: self.cellClicked(row, col))
 
         self.updatePlayerChar()
-        self.updateTurnFrame()
+        self.updateTurnFrame(self.getCurrentPlayer())
 
 
 class simpleSOSGame(SOSGame):
