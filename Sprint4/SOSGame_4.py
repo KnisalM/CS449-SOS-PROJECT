@@ -47,8 +47,18 @@ class computerPlayer(Player):
         """Check function to make sure the move returned by the computer logic is a valid move"""
         return 0 <= row < board_size and 0 <= col < board_size
 
+    def get_empty_cells(self, cell_state):
+        """Find all empty cells on the board"""
+        empty_cells = []
+        board_size = len(cell_state)
+        for i in range(board_size):
+            for j in range(board_size):
+                if cell_state[i][j] == '':
+                    empty_cells.append((i, j))
+        return empty_cells
+
     def test_s_o_completes_chain(self, cell_state, cell_owners, player_num):
-        """This function will test if placing an S or an O in the chain would complete a valid SOS Chain"""
+        """This function will simulate placing an S or an O on each empty cell to see if it would complete an SOS"""
         completions = []
         board_size = len(cell_state)
 
@@ -59,6 +69,43 @@ class computerPlayer(Player):
                     continue
 
                 # Test if placing an 'S' completes SOS chain for that player
+                if self.completes_sos(row, col, 'S', cell_state, cell_owners, player_num, board_size):
+                    completions.append(('S', row, col))
+
+                if self.completes_sos(row, col, 'O', cell_state, cell_owners, player_num, board_size):
+                    completions.append(('O', row, col))
+
+        return completions
+
+    def completes_sos(self, row, col, char, cell_state, cell_owners, player_num, board_size):
+        """This function will check a passed character to see if it completes a valid SOS chain"""
+        directions = [(0, 1), (1, 0), (1, 1), (1, -1), (0, -1), (-1, 0), (-1, -1), (-1, 1)]
+
+        for direction_row, direction_col in directions:
+            # check placement for all positions in a 3 cell sequence
+            for placement in [-2, -1, 0]:
+                positions = []
+
+                for i in range(3):
+                    r = row + (placement + i) * direction_row
+                    c = col + (placement + i) * direction_col
+
+                    if self.valid_position(r, c, board_size):
+                        positions.append((r, c))
+                    else:
+                        break
+                if len(positions) == 3:
+                    # Check if placing the passed character completes an SOS
+                    values = [cell_state[r][c] if (r, c) != (row, col) else char for r,c in positions]
+                    owners = [cell_owners[r][c] for r,c in positions]
+
+                    # Check if SOS pattern is formed and fully owned by the computer player calling
+                    if (values[0] == 'S' and values[1] == 'O' and values[2] == 'S' and all(owners == player_num
+                                                                                           for owner in owners if owner
+                                                                                           is not None)):
+                        return True
+        return False
+
 
 
 class SOSGame(gameBoard):
