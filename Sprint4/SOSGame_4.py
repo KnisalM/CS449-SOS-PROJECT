@@ -43,7 +43,8 @@ class computerPlayer(Player):
         super().__init__(player_number, player_type)
         self.opponent_number = 1 if player_number == 2 else 2
 
-    def get_empty_cells
+    def get_empty_cells(self, cell_state):
+        """find all empty cells that are present on the board"""
 
 
 
