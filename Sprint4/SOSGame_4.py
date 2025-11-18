@@ -49,7 +49,6 @@ class SOSGame(gameBoard):
         super().__init__(root)
 
         # Initialize game variables
-        self.gameType = tk.StringVar(value='Human')
         self.players = []
         self.currentPlayer = 0  # Start with Player 1
         self.activeGame = True
@@ -65,7 +64,7 @@ class SOSGame(gameBoard):
             player1 = computerPlayer(1)
 
         # Player 2 changes based on the game type selected
-        if self.gameType.get() == 'Human':
+        if self.p2_type.get() == 'Human':
             player2 = Player(2, 'Human')
         else:
             player2 = computerPlayer(2)
@@ -116,7 +115,7 @@ class SOSGame(gameBoard):
                                     relief='sunken', font=fontConfig)
 
         # Check for a SOS chain after the move by calling checkSOSFormed function
-        sosChains = self.checkSOSFormed(row, col, moveChar)
+        sosChains = self.checkSOSFormed(row, col)
         currentPlayer = self.getCurrentPlayer()
         for chain in sosChains:
             self.drawSOSChain(chain, currentPlayer.color)
@@ -124,7 +123,7 @@ class SOSGame(gameBoard):
 
         self.gameOverHandler()
 
-    def checkSOSFormed(self, row, col, player):
+    def checkSOSFormed(self, row, col):
         """This function will check if an SOS has been formed after each move. If a player has created an SOS, then their
         score will be incremented. A simple game will utilize this to tell a game is over when one of the player's score
         is !=0, and a general game will use this to increment the player's score and track who wins by who has the most

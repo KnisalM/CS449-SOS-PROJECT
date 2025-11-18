@@ -1,7 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-import pylint
-import unittest
 
 
 def createPlayerFrame(parent, row, column, player, moveChar):
@@ -174,7 +172,7 @@ class gameBoard:
 
         # Create Player Frames
         createPlayerFrame(self.gameFrame, 1, 0, 'Red Player', self.p1Move)
-        createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p1Move)
+        createPlayerFrame(self.gameFrame, 1, 2, 'Blue Player', self.p2Move)
 
     def startGame(self):
         """Template method that will be implemented by subclasses in SOSGame_4.py file
