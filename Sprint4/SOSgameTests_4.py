@@ -1170,6 +1170,16 @@ class testComputerPlayerClass(unittest.TestCase):
         self.cell_state =[['' for _ in range(self.board_size)] for _ in range(self.board_size)]
         self.cell_owners = [[None for _ in range(self.board_size)] for _ in range(self.board_size)]
 
+    def testAC6_1_ComputerPlacesSWhenNoViableChain(self):
+        """Test AC6.1 Computer will place an S randomly when there is no viable chain to continue"""
+
+        row, col, char = self.computer_player.decide_move(self.cell_state, self.cell_owners)
+
+        # Verify that an S was placed at a valid empty position
+        self.assertEqual(char, 'S')
+        self.assertTrue(0 <= row < 3)
+        self.assertTrue(0 <= col < 3)
+        self.assertEqual(self.cell_state[row][col], '') # Position was empty
 
 
 
