@@ -1160,5 +1160,18 @@ class testGeneralSOSGame(unittest.TestCase):
                          "Blue Player score should remain 3")
 
 
+class testComputerPlayerClass(unittest.TestCase):
+    def setUp(self):
+        """set up the necessary text fixtures for computer player tests"""
+        self.computer_player = SOSGame.computerPlayer(player_number=1)
+        self.board_size = 3
+
+        # Create an empty board state
+        self.cell_state =[['' for _ in range(self.board_size)] for _ in range(self.board_size)]
+        self.cell_owners = [[None for _ in range(self.board_size)] for _ in range(self.board_size)]
+
+
+
+
 if __name__ == '__main__':
     unittest.main()
