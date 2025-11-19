@@ -133,6 +133,23 @@ class computerPlayer(Player):
     def decide_move(self, cell_state, cell_owners):
         """this logic function will implement all helper functions to simulate computer logic of determining
         the placement of a move"""
+        import random
+
+        board_size = len(cell_state)
+
+        # AC 6.6: Complete own SOS if it is possible
+
+
+
+        # AC 6.5 and 6.4: Block opponent from completing an SOS chain
+
+
+
+        # AC 6.2 AND 6.3: Build upon existing partial chains
+
+
+
+        # AC 6.1: No viable chains exist, place a random S on a valid position on the board
 
 
 
