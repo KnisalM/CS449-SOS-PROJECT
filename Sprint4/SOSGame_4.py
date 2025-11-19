@@ -138,7 +138,10 @@ class computerPlayer(Player):
         board_size = len(cell_state)
 
         # AC 6.6: Complete own SOS if it is possible
-
+        own_completions = self.test_s_o_completes_chain(cell_state, cell_owners, self.player_number)
+        if own_completions:
+            char, row, col = own_completions[0]
+            return row, col, char
 
 
         # AC 6.5 and 6.4: Block opponent from completing an SOS chain
