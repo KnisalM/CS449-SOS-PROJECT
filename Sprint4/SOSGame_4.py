@@ -188,12 +188,12 @@ class computerPlayer(Player):
 
         # AC 6.2 AND 6.3: Build upon existing partial chains
         current_partials = self.find_partial_sos(cell_state, cell_owners, self.player_number)
-        if current_partials['S']:
-            row, col = current_partials['S'][0]
-            return row, col, 'O'
-
         if current_partials['O']:
             row, col = current_partials['O'][0]
+            return row, col, 'O'
+
+        if current_partials['S']:
+            row, col = current_partials['S'][0]
             return row, col, 'S'
 
         # AC 6.1: No viable chains exist, place a random S on a valid position on the board
