@@ -76,7 +76,7 @@ class computerPlayer(Player):
         return completions
 
     def completes_sos(self, row, col, char, cell_state, cell_owners, player_num, board_size):
-        """This function will check a passed character to see if it completes a valid SOS chain"""
+        """This function will check if placing a character completes an SOS pattern"""
         directions = [(0, 1), (1, 0), (1, 1), (1, -1), (0, -1), (-1, 0), (-1, -1), (-1, 1)]
 
         for direction_row, direction_col in directions:
@@ -95,27 +95,10 @@ class computerPlayer(Player):
                 if len(positions) == 3:
                     # Check if placing the passed character completes an SOS
                     values = [cell_state[r][c] if (r, c) != (row, col) else char for r, c in positions]
-                    owners = [cell_owners[r][c] for r, c in positions]
 
-                    # Check if SOS pattern is formed and fully owned by the computer player calling
-                    if (values[0] == 'S' and values[1] == 'O' and values[2] == 'S'):
-
-                        # Check ownership - for computer's own moves, we're more flexible
-                        # For opponent blocking, we need to be more strict
-                        if player_num == self.player_number:
-                            # For computer's own SOS completion, allow mixed ownership
-                            # as long as the move would create a valid SOS
-                            return True
-                        else:
-                            # For opponent blocking, check if the existing cells are owned by opponent
-                            valid_for_blocking = True
-                            for idx, (r, c) in enumerate(positions):
-                                if (r, c) != (row, col) and cell_state[r][c] != '':
-                                    if cell_owners[r][c] != player_num:
-                                        valid_for_blocking = False
-                                        break
-                            if valid_for_blocking:
-                                return True
+                    # If SOS pattern is formed, return True regardless of ownership
+                    if values[0] == 'S' and values[1] == 'O' and values[2] == 'S':
+                        return True
         return False
 
     def find_partial_sos(self, cell_state, cell_owners, player_num):
@@ -184,7 +167,12 @@ class computerPlayer(Player):
         # AC 6.6: Complete own SOS if it is possible
         own_completions = self.test_s_o_completes_chain(cell_state, cell_owners, self.player_number)
         if own_completions:
-            char, row, col = own_completions[0]
+            # attempt O completions to diversify placements of S or O
+            o_complete = [comp for comp in own_completions if comp[0] == 'O']
+            if o_complete:
+                char, row, col = o_complete[0]
+            else:
+                char, row, col = own_completions[0]
             return row, col, char
 
         # AC 6.5 and 6.4: Block opponent from completing an SOS chain
