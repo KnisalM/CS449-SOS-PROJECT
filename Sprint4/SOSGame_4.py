@@ -15,8 +15,6 @@ class Player:
         self.color = 'Red' if player_number == 1 else 'Blue'  # Color of character's placed on board
         self.name = f"Player {player_number}"  # Determines Player Name for displaying on the board whose turn it is
 
-        self.gameInstance = None
-
     def setChar(self, character):
         """This function will set the character for the player to play based on their selection in the frame"""
         if character in ['S', 'O']:
@@ -100,10 +98,20 @@ class computerPlayer(Player):
                     owners = [cell_owners[r][c] for r, c in positions]
 
                     # Check if SOS pattern is formed and fully owned by the computer player calling
-                    if (values[0] == 'S' and values[1] == 'O' and values[2] == 'S' and all(owners == player_num
-                                                                                           for owner in owners if owner
-                                                                                                                  is not None)):
-                        return True
+                    if (values[0] == 'S' and values[1] == 'O' and values[2] == 'S'):
+                        # Check all non-empty cells in the chain are owned by the specified player
+                        # The current move (row, col) will be owned by player_num if placed
+                        valid_ownership = True
+                        for idx, (r, c) in enumerate(positions):
+                            if (r, c) == (row, col):
+                                # This is the proposed move - it would be owned by player_num
+                                continue
+                            elif cell_owners[r][c] != player_num:
+                                valid_ownership = False
+                                break
+
+                        if valid_ownership:
+                            return True
         return False
 
     def find_partial_sos(self, cell_state, cell_owners, player_num):
@@ -156,7 +164,7 @@ class computerPlayer(Player):
             return row, col, 'O'
 
         if current_partials['O']:
-            row, col = current_partials['S'][0]
+            row, col = current_partials['O'][0]
             return row, col, 'S'
 
         # AC 6.1: No viable chains exist, place a random S on a valid position on the board
@@ -205,11 +213,6 @@ class SOSGame(gameBoard):
         self.currentPlayer = (self.currentPlayer + 1) % 2
         self.updateTurnFrame(self.getCurrentPlayer())
 
-        # If next Player is a computer, trigger computer move simulation
-        current_player = self.getCurrentPlayer()
-        if (current_player.player_type == 'Computer') and self.activeGame:
-            self.root.after(500, self.execute_computer_move())  # This function will be implemented after this call
-
     def execute_computer_move(self):
         # Execute a computer move
         current_player = self.getCurrentPlayer()
@@ -233,6 +236,9 @@ class SOSGame(gameBoard):
         moveChar = currentPlayer.getChar()
 
         self.makeAMove(row, col, moveChar, currentPlayer.color)
+
+        if self.activeGame and self.getCurrentPlayer().player_type == 'Computer':
+            self.root.after(500, self.execute_computer_move)
 
     def makeAMove(self, row, col, moveChar, color):
         """Execute when a valid move is made to reflect on board and update game state
@@ -260,6 +266,9 @@ class SOSGame(gameBoard):
             currentPlayer.incrementScore()
 
         self.gameOverHandler()
+
+        if self.activeGame:
+            self.switchTurn()
 
     def checkSOSFormed(self, row, col):
         """This function will check if an SOS has been formed after each move. If a player has created an SOS, then their
@@ -386,9 +395,6 @@ class simpleSOSGame(SOSGame):
         elif self.isBoardFull():
             # Board is now full and no SOS was made
             self.endGame("Game ended in a draw, no one scored!")
-        else:
-            # Switch turns if no SOS was formed
-            self.switchTurn()
 
 
 class generalSOSGame(SOSGame):
@@ -402,9 +408,6 @@ class generalSOSGame(SOSGame):
         if self.isBoardFull():
             # Board is full - determine winner
             self.determineWinner()
-        else:
-            # Continue game - switch turns
-            self.switchTurn()
 
     def determineWinner(self):
         """Determine and announce the winner when the board is full in a general game"""
