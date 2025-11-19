@@ -96,19 +96,19 @@ class computerPlayer(Player):
                         break
                 if len(positions) == 3:
                     # Check if placing the passed character completes an SOS
-                    values = [cell_state[r][c] if (r, c) != (row, col) else char for r,c in positions]
-                    owners = [cell_owners[r][c] for r,c in positions]
+                    values = [cell_state[r][c] if (r, c) != (row, col) else char for r, c in positions]
+                    owners = [cell_owners[r][c] for r, c in positions]
 
                     # Check if SOS pattern is formed and fully owned by the computer player calling
                     if (values[0] == 'S' and values[1] == 'O' and values[2] == 'S' and all(owners == player_num
                                                                                            for owner in owners if owner
-                                                                                           is not None)):
+                                                                                                                  is not None)):
                         return True
         return False
 
     def find_partial_sos(self, cell_state, cell_owners, player_num):
         """Find partial SOS chains that can be built upon"""
-        partials = {'S':[], 'O':[]}
+        partials = {'S': [], 'O': []}
         board_size = len(cell_state)
 
         for row in range(board_size):
@@ -143,17 +143,23 @@ class computerPlayer(Player):
             char, row, col = own_completions[0]
             return row, col, char
 
-
         # AC 6.5 and 6.4: Block opponent from completing an SOS chain
-
-
+        opponent_completions = self.test_s_o_completes_chain(cell_state, cell_owners, self.opponent_number)
+        if opponent_completions:
+            char, row, col = opponent_completions[0]
+            return row, col, char
 
         # AC 6.2 AND 6.3: Build upon existing partial chains
+        current_partials = self.find_partial_sos(cell_state, cell_owners, self.player_number)
+        if current_partials['S']:
+            row, col = current_partials['S'][0]
+            return row, col, 'O'
 
-
+        if current_partials['O']:
+            row, col = current_partials['S'][0]
+            return row, col, 'S'
 
         # AC 6.1: No viable chains exist, place a random S on a valid position on the board
-
 
 
 class SOSGame(gameBoard):
