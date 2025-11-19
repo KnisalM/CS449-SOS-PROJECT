@@ -108,7 +108,31 @@ class computerPlayer(Player):
 
     def find_partial_sos(self, cell_state, cell_owners, player_num):
         """Find partial SOS chains that can be built upon"""
-        partials = {}
+        partials = {'S':[], 'O':[]}
+        board_size = len(cell_state)
+
+        for row in range(board_size):
+            for col in range(board_size):
+                if cell_state[row][col] == 'S' and cell_owners[row][col] == player_num:
+                    # check the adjacent empty cells for the S character to find valid cells around it
+                    for dir_row, dir_col in [(0, 1), (1, 0), (1, 1), (1, -1), (0, -1), (-1, 0), (-1, -1), (-1, 1)]:
+                        adj_row = row + dir_row
+                        adj_col = col + dir_col
+                        if self.valid_position(adj_row, adj_col, board_size) and cell_state[adj_row][adj_col] == '':
+                            partials['S'].append((adj_row, adj_col))
+
+                elif cell_state[row][col] == 'O' and cell_owners[row][col] == player_num:
+                    # Check adjacent empty cells around O character to find valid cells to make a move on
+                    for dir_row, dir_col in [(0, 1), (1, 0), (1, 1), (1, -1), (0, -1), (-1, 0), (-1, -1), (-1, 1)]:
+                        adj_row = row + dir_row
+                        adj_col = col + dir_col
+                        if self.valid_position(adj_row, adj_col, board_size) and cell_state[adj_row][adj_col] == '':
+                            partials['O'].append((adj_row, adj_col))
+        return partials
+
+    def decide_move(self, cell_state, cell_owners):
+        """this logic function will implement all helper functions to simulate computer logic of determining
+        the placement of a move"""
 
 
 
