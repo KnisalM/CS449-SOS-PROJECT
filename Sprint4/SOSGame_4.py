@@ -119,27 +119,59 @@ class computerPlayer(Player):
         return False
 
     def find_partial_sos(self, cell_state, cell_owners, player_num):
-        """Find partial SOS chains that can be built upon"""
+        """Find partial SOS chains that can be built upon - SIMPLIFIED VERSION"""
         partials = {'S': [], 'O': []}
         board_size = len(cell_state)
 
+        # Look for simple patterns where placing one character would create a partial SOS
         for row in range(board_size):
             for col in range(board_size):
-                if cell_state[row][col] == 'S' and cell_owners[row][col] == player_num:
-                    # check the adjacent empty cells for the S character to find valid cells around it
-                    for dir_row, dir_col in [(0, 1), (1, 0), (1, 1), (1, -1), (0, -1), (-1, 0), (-1, -1), (-1, 1)]:
-                        adj_row = row + dir_row
-                        adj_col = col + dir_col
-                        if self.valid_position(adj_row, adj_col, board_size) and cell_state[adj_row][adj_col] == '':
-                            partials['S'].append((adj_row, adj_col))
+                if cell_state[row][col] != '':
+                    continue  # Only look at empty cells
 
-                elif cell_state[row][col] == 'O' and cell_owners[row][col] == player_num:
-                    # Check adjacent empty cells around O character to find valid cells to make a move on
-                    for dir_row, dir_col in [(0, 1), (1, 0), (1, 1), (1, -1), (0, -1), (-1, 0), (-1, -1), (-1, 1)]:
-                        adj_row = row + dir_row
-                        adj_col = col + dir_col
-                        if self.valid_position(adj_row, adj_col, board_size) and cell_state[adj_row][adj_col] == '':
-                            partials['O'].append((adj_row, adj_col))
+                # Check if placing 'O' here would be between two S's owned by this player
+                for dir_row, dir_col in [(0, 1), (1, 0), (1, 1), (1, -1)]:
+                    left_row, left_col = row - dir_row, col - dir_col
+                    right_row, right_col = row + dir_row, col + dir_col
+
+                    if (self.valid_position(left_row, left_col, board_size) and
+                            self.valid_position(right_row, right_col, board_size)):
+
+                        # Pattern: S _ S (need O in middle)
+                        if (cell_state[left_row][left_col] == 'S' and
+                                cell_state[right_row][right_col] == 'S' and
+                                cell_owners[left_row][left_col] == player_num and
+                                cell_owners[right_row][right_col] == player_num):
+                            partials['O'].append((row, col))
+
+                # Check if placing 'S' here would complete SO_ or _OS patterns
+                for dir_row, dir_col in [(0, 1), (1, 0), (1, 1), (1, -1)]:
+                    # Check for SO_ pattern (need S at end)
+                    left_row, left_col = row - dir_row, col - dir_col
+                    mid_row, mid_col = row - 2 * dir_row, col - 2 * dir_col
+
+                    if (self.valid_position(left_row, left_col, board_size) and
+                            self.valid_position(mid_row, mid_col, board_size)):
+
+                        if (cell_state[mid_row][mid_col] == 'S' and
+                                cell_state[left_row][left_col] == 'O' and
+                                cell_owners[mid_row][mid_col] == player_num and
+                                cell_owners[left_row][left_col] == player_num):
+                            partials['S'].append((row, col))
+
+                    # Check for _OS pattern (need S at beginning)
+                    right_row, right_col = row + dir_row, col + dir_col
+                    far_right_row, far_right_col = row + 2 * dir_row, col + 2 * dir_col
+
+                    if (self.valid_position(right_row, right_col, board_size) and
+                            self.valid_position(far_right_row, far_right_col, board_size)):
+
+                        if (cell_state[right_row][right_col] == 'O' and
+                                cell_state[far_right_row][far_right_col] == 'S' and
+                                cell_owners[right_row][right_col] == player_num and
+                                cell_owners[far_right_row][far_right_col] == player_num):
+                            partials['S'].append((row, col))
+
         return partials
 
     def decide_move(self, cell_state, cell_owners):
@@ -381,6 +413,10 @@ class SOSGame(gameBoard):
 
         self.updatePlayerChar()
         self.updateTurnFrame(self.getCurrentPlayer())
+
+        # ADD THIS: Check if first player is computer and trigger their move
+        if self.getCurrentPlayer().player_type == 'Computer' and self.activeGame:
+            self.root.after(500, self.execute_computer_move)
 
 
 class simpleSOSGame(SOSGame):
