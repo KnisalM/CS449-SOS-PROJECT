@@ -1181,6 +1181,35 @@ class testComputerPlayerClass(unittest.TestCase):
         self.assertTrue(0 <= col < 3)
         self.assertEqual(self.cell_state[row][col], '') # Position was empty
 
+    def testAC6_4_ComputerBlocksOpponentSOSWithO(self):
+        """Test AC 6.4: Computer blocks opponent's potential SOS by placing 'O' between two S's"""
+        # Set up opponent's S _ S pattern horizontally
+        self.cell_state[1][0] = 'S'  # Opponent's S
+        self.cell_state[1][2] = 'S'  # Opponent's S
+        self.cell_owners[1][0] = 2  # Opponent owns both S's
+        self.cell_owners[1][2] = 2
+
+        row, col, char = self.computer_player.decide_move(self.cell_state, self.cell_owners)
+
+        # Computer should place O between the two S's to block
+        self.assertEqual(char, 'O')
+        self.assertEqual(row, 1)
+        self.assertEqual(col, 1)  # Exactly between the two S's
+
+    def testAC6_6_ComputerCompletesOwnSOS(self):
+        """Test AC 6.6: Computer completes its own SOS when possible"""
+        # Set up computer's partial SOS chain
+        self.cell_state[0][0] = 'S'  # Computer's S
+        self.cell_state[0][1] = 'O'  # Computer's O
+        self.cell_owners[0][0] = 1  # Computer owns both
+        self.cell_owners[0][1] = 1
+
+        row, col, char = self.computer_player.decide_move(self.cell_state, self.cell_owners)
+
+        # Computer should complete its own SOS with S
+        self.assertEqual(char, 'S')
+        self.assertEqual(row, 0)
+        self.assertEqual(col, 2)  # Completes S-O-S pattern horizontally
 
 
 if __name__ == '__main__':
