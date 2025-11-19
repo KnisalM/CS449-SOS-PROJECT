@@ -178,7 +178,11 @@ class computerPlayer(Player):
         # AC 6.5 and 6.4: Block opponent from completing an SOS chain
         opponent_completions = self.test_s_o_completes_chain(cell_state, cell_owners, self.opponent_number)
         if opponent_completions:
-            char, row, col = opponent_completions[0]
+            o_block = [comp for comp in opponent_completions if comp[0] == 'O']
+            if o_block:
+                char, row, col = o_block[0]
+            else:
+                char, row, col = opponent_completions[0]
             return row, col, char
 
         # AC 6.2 AND 6.3: Build upon existing partial chains
