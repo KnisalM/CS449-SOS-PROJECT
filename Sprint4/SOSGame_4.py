@@ -186,6 +186,7 @@ class computerPlayer(Player):
             return row, col, char
 
 
+
         # AC 6.2 AND 6.3: Build upon existing partial chains
         current_partials = self.find_partial_sos(cell_state, cell_owners, self.player_number)
         if current_partials['O']:
