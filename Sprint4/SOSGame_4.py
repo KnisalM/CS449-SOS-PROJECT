@@ -160,6 +160,10 @@ class computerPlayer(Player):
             return row, col, 'S'
 
         # AC 6.1: No viable chains exist, place a random S on a valid position on the board
+        empty_cells = self.get_empty_cells(cell_state)
+        if empty_cells:
+            row, col = random.choice(empty_cells)
+            return row, col, 'S'
 
 
 class SOSGame(gameBoard):
