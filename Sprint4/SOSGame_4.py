@@ -99,19 +99,23 @@ class computerPlayer(Player):
 
                     # Check if SOS pattern is formed and fully owned by the computer player calling
                     if (values[0] == 'S' and values[1] == 'O' and values[2] == 'S'):
-                        # Check all non-empty cells in the chain are owned by the specified player
-                        # The current move (row, col) will be owned by player_num if placed
-                        valid_ownership = True
-                        for idx, (r, c) in enumerate(positions):
-                            if (r, c) == (row, col):
-                                # This is the proposed move - it would be owned by player_num
-                                continue
-                            elif cell_owners[r][c] != player_num:
-                                valid_ownership = False
-                                break
 
-                        if valid_ownership:
+                        # Check ownership - for computer's own moves, we're more flexible
+                        # For opponent blocking, we need to be more strict
+                        if player_num == self.player_number:
+                            # For computer's own SOS completion, allow mixed ownership
+                            # as long as the move would create a valid SOS
                             return True
+                        else:
+                            # For opponent blocking, check if the existing cells are owned by opponent
+                            valid_for_blocking = True
+                            for idx, (r, c) in enumerate(positions):
+                                if (r, c) != (row, col) and cell_state[r][c] != '':
+                                    if cell_owners[r][c] != player_num:
+                                        valid_for_blocking = False
+                                        break
+                            if valid_for_blocking:
+                                return True
         return False
 
     def find_partial_sos(self, cell_state, cell_owners, player_num):
