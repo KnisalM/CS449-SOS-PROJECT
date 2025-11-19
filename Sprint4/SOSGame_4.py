@@ -106,6 +106,10 @@ class computerPlayer(Player):
                         return True
         return False
 
+    def find_partial_sos(self, cell_state, cell_owners, player_num):
+        """Find partial SOS chains that can be built upon"""
+        partials = {}
+
 
 
 class SOSGame(gameBoard):
