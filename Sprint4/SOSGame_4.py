@@ -249,6 +249,10 @@ class SOSGame(gameBoard):
         self.currentPlayer = (self.currentPlayer + 1) % 2
         self.updateTurnFrame(self.getCurrentPlayer())
 
+        # ADD THIS: If next player is computer and game is still active, trigger their move
+        if self.activeGame and self.getCurrentPlayer().player_type == 'Computer':
+            self.root.after(500, self.execute_computer_move)
+
     def execute_computer_move(self):
         # Execute a computer move
         current_player = self.getCurrentPlayer()
