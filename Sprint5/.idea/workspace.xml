@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="54d2b932-84ef-4b08-9e27-5a301cc7672f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
+    <list default="true" id="54d2b932-84ef-4b08-9e27-5a301cc7672f" name="Changes" comment="Have implemented functionality in the SOSGame class to write moves to a file as the moves happen in the game. Currently, working on implementing the replay game functionality, beginning with adding a replayGame function, which will call helper functions clearBoardForReplay, and self.replayMove">
+      <change beforePath="$PROJECT_DIR$/SOSGame_4.py" beforeDir="false" afterPath="$PROJECT_DIR$/SOSGame_4.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +84,21 @@
       <option name="presentableId" value="Default" />
       <updated>1759101089667</updated>
     </task>
+    <task id="LOCAL-00001" summary="Have implemented functionality in the SOSGame class to write moves to a file as the moves happen in the game. Currently, working on implementing the replay game functionality, beginning with adding a replayGame function, which will call helper functions clearBoardForReplay, and self.replayMove">
+      <created>1765135337509</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1765135337509</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Have implemented functionality in the SOSGame class to write moves to a file as the moves happen in the game. Currently, working on implementing the replay game functionality, beginning with adding a replayGame function, which will call helper functions clearBoardForReplay, and self.replayMove">
+      <created>1765135363778</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1765135363778</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -97,5 +111,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Have implemented functionality in the SOSGame class to write moves to a file as the moves happen in the game. Currently, working on implementing the replay game functionality, beginning with adding a replayGame function, which will call helper functions clearBoardForReplay, and self.replayMove" />
+    <option name="LAST_COMMIT_MESSAGE" value="Have implemented functionality in the SOSGame class to write moves to a file as the moves happen in the game. Currently, working on implementing the replay game functionality, beginning with adding a replayGame function, which will call helper functions clearBoardForReplay, and self.replayMove" />
   </component>
 </project>

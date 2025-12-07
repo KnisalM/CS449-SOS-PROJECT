@@ -427,7 +427,47 @@ class SOSGame(gameBoard):
                         char, rowStr, colStr, color = parts
                         row, col = int(rowStr), int(colStr)
 
-                        self.replayMove
+                        self.replayMove(row, col, char, color)
+
+                        sosChains = self.checkSOSFormed(row, col)
+                        for chain in sosChains:
+                            self.drawSOSChain(chain, color)
+
+                        self.root.update()
+
+                        # Add a slight delay between moves for visibility
+                        time.sleep(1)
+
+            messagebox.showinfo("Replay Complete", "Game Replay Finished")
+
+        except FileNotFoundError:
+            messagebox.showerror("Replay Error", "No Game Log Found")
+        except Exception as e:
+            messagebox.showerror("Replay Error", f"Error during replay: {str(e)}")
+
+    def clearBoardForReplay(self):
+        """Clear board so replay can be done"""
+        dimN = len(self.cells)
+
+        # Reset cell states
+        self.cellState = [['' for _ in range(dimN)] for _ in range(dimN)]
+        self.cellOwner = [[None for _ in range(dimN)] for _ in range(dimN)]
+
+        # Reset all cells to empty
+        for i in range(dimN):
+            for j in range(dimN):
+                self.cells[i][j].config(
+                    text='',
+                    state='normal',
+                    fg='black',
+                    bg='SystemButtonFace',
+                    relief='raised'
+                )
+
+        for player in self.players:
+            player.score = 0
+
+
 
 
 class simpleSOSGame(SOSGame):
