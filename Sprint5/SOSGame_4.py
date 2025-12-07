@@ -1,0 +1,499 @@
+import tkinter as tk
+import time
+from tkinter import messagebox
+from GUI_4 import gameBoard
+
+
+class Player:
+    """This class represents the player's of the game, and their related data"""
+
+    def __init__(self, player_number,
+                 player_type="human"):  # Later sprints will implement that this can be a computer player
+        self.player_number = player_number  # Tracks if this is player 1 or 2
+        self.player_type = player_type  # Will come into use later when implementing a human or computer opponent
+        self.score = 0  # score for all player's must begin at 0
+        self.character = 'S'  # S character selected by default, but at time of event will be updated to selected character
+        self.color = 'Red' if player_number == 1 else 'Blue'  # Color of character's placed on board
+        self.name = f"Player {player_number}"  # Determines Player Name for displaying on the board whose turn it is
+
+    def setChar(self, character):
+        """This function will set the character for the player to play based on their selection in the frame"""
+        if character in ['S', 'O']:
+            self.character = character
+
+    def getChar(self):
+        """Get the current selected character"""
+        return self.character
+
+    def incrementScore(self):
+        """This function will increment the player's score when they create a valid SOS
+         The simple game will utilize this function to end the game when a player's score
+         != 0, and will track the player's score in a general game until there are no moves left"""
+        self.score += 1
+
+
+class computerPlayer(Player):
+    """this class will extend the Player class to a computer player's logic. This class will
+    implement the logic for a computer player to choose how it makes decisions on move placement,
+    blocking the other player from making an SOS, and making moves to lay out a path to create
+    an SOS ahead of time"""
+
+    def __init__(self, player_number, player_type='Computer'):
+        super().__init__(player_number, player_type)
+        self.opponent_number = 1 if player_number == 2 else 2
+
+    def valid_position(self, row, col, board_size):
+        """Check function to make sure the move returned by the computer logic is a valid move"""
+        return 0 <= row < board_size and 0 <= col < board_size
+
+    def get_empty_cells(self, cell_state):
+        """Find all empty cells on the board"""
+        empty_cells = []
+        board_size = len(cell_state)
+        for i in range(board_size):
+            for j in range(board_size):
+                if cell_state[i][j] == '':
+                    empty_cells.append((i, j))
+        return empty_cells
+
+    def test_s_o_completes_chain(self, cell_state, cell_owners, player_num):
+        """This function will simulate placing an S or an O on each empty cell to see if it would complete an SOS"""
+        completions = []
+        board_size = len(cell_state)
+
+        # Check using each empty cell as a starting point
+        for row in range(board_size):
+            for col in range(board_size):
+                if cell_state[row][col] != '':
+                    continue
+
+                # Test if placing an 'S' completes SOS chain for that player
+                if self.completes_sos(row, col, 'S', cell_state, cell_owners, player_num, board_size):
+                    completions.append(('S', row, col))
+
+                if self.completes_sos(row, col, 'O', cell_state, cell_owners, player_num, board_size):
+                    completions.append(('O', row, col))
+
+        return completions
+
+    def completes_sos(self, row, col, char, cell_state, cell_owners, player_num, board_size):
+        """This function will check a passed character to see if it completes a valid SOS chain"""
+        directions = [(0, 1), (1, 0), (1, 1), (1, -1), (0, -1), (-1, 0), (-1, -1), (-1, 1)]
+
+        for direction_row, direction_col in directions:
+            # check placement for all positions in a 3 cell sequence
+            for placement in [-2, -1, 0]:
+                positions = []
+
+                for i in range(3):
+                    r = row + (placement + i) * direction_row
+                    c = col + (placement + i) * direction_col
+
+                    if self.valid_position(r, c, board_size):
+                        positions.append((r, c))
+                    else:
+                        break
+                if len(positions) == 3:
+                    # Check if placing the passed character completes an SOS
+                    values = [cell_state[r][c] if (r, c) != (row, col) else char for r, c in positions]
+                    owners = [cell_owners[r][c] for r, c in positions]
+
+                    # Check if SOS pattern is formed and fully owned by the computer player calling
+                    if (values[0] == 'S' and values[1] == 'O' and values[2] == 'S'):
+                        # Check all non-empty cells in the chain are owned by the specified player
+                        # The current move (row, col) will be owned by player_num if placed
+                        valid_ownership = True
+                        for idx, (r, c) in enumerate(positions):
+                            if (r, c) == (row, col):
+                                # This is the proposed move - it would be owned by player_num
+                                continue
+                            elif cell_owners[r][c] != player_num:
+                                valid_ownership = False
+                                break
+
+                        if valid_ownership:
+                            return True
+        return False
+
+    def find_partial_sos(self, cell_state, cell_owners, player_num):
+        """Find partial SOS chains that can be built upon"""
+        partials = {'S': [], 'O': []}
+        board_size = len(cell_state)
+
+        for row in range(board_size):
+            for col in range(board_size):
+                if cell_state[row][col] == 'S' and cell_owners[row][col] == player_num:
+                    # check the adjacent empty cells for the S character to find valid cells around it
+                    for dir_row, dir_col in [(0, 1), (1, 0), (1, 1), (1, -1), (0, -1), (-1, 0), (-1, -1), (-1, 1)]:
+                        adj_row = row + dir_row
+                        adj_col = col + dir_col
+                        if self.valid_position(adj_row, adj_col, board_size) and cell_state[adj_row][adj_col] == '':
+                            partials['S'].append((adj_row, adj_col))
+
+                elif cell_state[row][col] == 'O' and cell_owners[row][col] == player_num:
+                    # Check adjacent empty cells around O character to find valid cells to make a move on
+                    for dir_row, dir_col in [(0, 1), (1, 0), (1, 1), (1, -1), (0, -1), (-1, 0), (-1, -1), (-1, 1)]:
+                        adj_row = row + dir_row
+                        adj_col = col + dir_col
+                        if self.valid_position(adj_row, adj_col, board_size) and cell_state[adj_row][adj_col] == '':
+                            partials['O'].append((adj_row, adj_col))
+        return partials
+
+    def decide_move(self, cell_state, cell_owners):
+        """this logic function will implement all helper functions to simulate computer logic of determining
+        the placement of a move"""
+        import random
+
+        board_size = len(cell_state)
+
+        # AC 6.6: Complete own SOS if it is possible
+        own_completions = self.test_s_o_completes_chain(cell_state, cell_owners, self.player_number)
+        if own_completions:
+            char, row, col = own_completions[0]
+            return row, col, char
+
+        # AC 6.5 and 6.4: Block opponent from completing an SOS chain
+        opponent_completions = self.test_s_o_completes_chain(cell_state, cell_owners, self.opponent_number)
+        if opponent_completions:
+            char, row, col = opponent_completions[0]
+            return row, col, char
+
+        # AC 6.2 AND 6.3: Build upon existing partial chains
+        current_partials = self.find_partial_sos(cell_state, cell_owners, self.player_number)
+        if current_partials['S']:
+            row, col = current_partials['S'][0]
+            return row, col, 'O'
+
+        if current_partials['O']:
+            row, col = current_partials['O'][0]
+            return row, col, 'S'
+
+        # AC 6.1: No viable chains exist, place a random S on a valid position on the board
+        empty_cells = self.get_empty_cells(cell_state)
+        if empty_cells:
+            row, col = random.choice(empty_cells)
+            return row, col, 'S'
+
+
+class SOSGame(gameBoard):
+    """This class will extend the class gameBoard from GUI_2.py, and will begin implementing the actual game logic onto the board"""
+
+    def __init__(self, root):
+        # Initialize gameBoard components
+        super().__init__(root)
+
+        # Initialize game variables
+        self.players = []
+        self.currentPlayer = 0  # Start with Player 1
+        self.activeGame = True
+        self.cellState = []  # Track the state of the cells and whether there is currently a play made on a cell
+        self.cellOwner = []  # Track ownership of cells
+
+        # Initialize move logging variables
+        self.moveLog = []
+        self.logFilePath = 'SOSGame_Replay.txt'
+
+    def initializePlayers(self):
+        """Initialize the players based on selected player types for each player"""
+        # Player 2 changes based on the game type selected
+        if self.p1_type.get() == 'Human':
+            player1 = Player(1, 'Human')
+        else:
+            player1 = computerPlayer(1)
+
+        # Player 2 changes based on the game type selected
+        if self.p2_type.get() == 'Human':
+            player2 = Player(2, 'Human')
+        else:
+            player2 = computerPlayer(2)
+
+        self.players = [player1, player2]
+
+    def getCurrentPlayer(self):
+        """Get and return the current player"""
+        return self.players[self.currentPlayer]
+
+    def switchTurn(self):
+        """Switch turns so that player who is not playing can't make a move and scores are tracked appropriately"""
+        self.currentPlayer = (self.currentPlayer + 1) % 2
+        self.updateTurnFrame(self.getCurrentPlayer())
+
+    def execute_computer_move(self):
+        # Execute a computer move
+        current_player = self.getCurrentPlayer()
+        if current_player.player_type == 'Computer' and self.activeGame:
+            row, col, move_char = current_player.decide_move(self.cellState, self.cellOwner)
+            if row is not None and col is not None:
+                self.makeAMove(row, col, move_char, current_player.color)
+
+    def updatePlayerChar(self):
+        """get what character the player has selected for the move to be made"""
+        self.players[0].setChar(self.p1Move.get())
+        self.players[1].setChar(self.p2Move.get())
+
+    def cellClicked(self, row, col):
+        """Define the events when an empty cell is clicked"""
+        if not self.activeGame or self.cellState[row][col] != '':
+            return
+
+        self.updatePlayerChar()
+        currentPlayer = self.getCurrentPlayer()
+        moveChar = currentPlayer.getChar()
+
+        self.makeAMove(row, col, moveChar, currentPlayer.color)
+
+        if self.activeGame and self.getCurrentPlayer().player_type == 'Computer':
+            self.root.after(500, self.execute_computer_move)
+
+    def makeAMove(self, row, col, moveChar, color):
+        """Execute when a valid move is made to reflect on board and update game state
+    Commonly Used Functionality between both general and simple SOSGame subclasses"""
+        boardSize = len(self.cells)
+        if boardSize <= 5:
+            fontSize = 14
+        elif boardSize <= 8:
+            fontSize = 12
+        elif boardSize <= 10:
+            fontSize = 10
+        else:
+            fontSize = 9
+        fontConfig = ('Arial', fontSize, 'bold')
+        self.cellState[row][col] = moveChar
+        self.cellOwner[row][col] = self.currentPlayer  # Track player that made move
+        self.cells[row][col].config(text=moveChar, fg=color, state='disabled', disabledforeground=color,
+                                    relief='sunken', font=fontConfig)
+
+        currentPlayer = self.getCurrentPlayer()
+        moveRecord = {
+            'char': moveChar,
+            'row': row,
+            'col': col,
+            'playerColor': currentPlayer.color
+        }
+        # Check for a SOS chain after the move by calling checkSOSFormed function
+        sosChains = self.checkSOSFormed(row, col)
+        self.writeMoveToFile(moveRecord)
+        for chain in sosChains:
+            self.drawSOSChain(chain, currentPlayer.color)
+            currentPlayer.incrementScore()
+
+        self.gameOverHandler()
+
+        if self.activeGame:
+            self.switchTurn()
+
+    def checkSOSFormed(self, row, col):
+        """This function will check if an SOS has been formed after each move. If a player has created an SOS, then their
+        score will be incremented. A simple game will utilize this to tell a game is over when one of the player's score
+        is !=0, and a general game will use this to increment the player's score and track who wins by who has the most
+        SOS made when there are no moves left"""
+        sosChains = []
+        boardDim = len(self.cellState)
+
+        # Define the directions to check in, their opposites are handled by checking in both directions
+        directionsToCheck = [
+            (0, 1), (1, 0), (1, 1), (1, -1), (0, -1), (-1, 0), (-1, -1), (-1, 1)
+        ]
+
+        # Use a set to track unique SOS Chains
+        uniqueChains = set()
+
+        for directionOne, directionTwo in directionsToCheck:
+
+            # Updating function to check both directions from an O placed in the middle and check when a char is placed at beginning or end
+            patternsToCheck = [
+                [0, 1, 2],
+                [-1, 0, 1],
+                [-2, -1, 0]
+            ]
+
+            for pattern in patternsToCheck:
+
+                # Calculate what the positions are for the 3 positions that would form an SOS in this direction
+                positions = []
+                validPositions = True
+
+                for offset in pattern:
+                    r = row + (offset * directionOne)
+                    c = col + (offset * directionTwo)
+
+                    if 0 <= r < boardDim and 0 <= c < boardDim:
+                        positions.append((r, c))
+                    else:
+                        validPositions = False
+                        break
+
+                # If there are 3 valid positions in the list, check if they form an SOS
+                if validPositions and len(positions) == 3:
+                    # get cell values and owners
+                    cellValues = []
+                    cellOwners = []
+
+                    for posRow, posCol in positions:
+                        cellValues.append(self.cellState[posRow][posCol])
+                        cellOwners.append(self.cellOwner[posRow][posCol])
+
+                    # Check if pattern is an SOS
+                    if cellValues[0] == 'S' and cellValues[1] == 'O' and cellValues[2] == 'S':
+                        # Check all cells are same player
+                        if (cellOwners[0] is not None and
+                                cellOwners[0] == cellOwners[1] == cellOwners[2]):
+
+                            chainId = tuple(sorted(positions))  # Sort to make order consistent
+                            if chainId not in uniqueChains:
+                                uniqueChains.add(chainId)
+                                sosChains.append(positions)
+
+        return sosChains
+
+    def gameOverHandler(self):
+        """Template Method to be overriden by the subclasses"""
+        pass
+
+    def isBoardFull(self):
+        """Function will check to see if there are remaining moves
+        this will be used by general game to declare a tie if both player's scores = 0 when this function is called
+        and returns a positive boolean value, and will be the end game trigger in the general game to determine
+        when the game is over, check the scores, and declare a winner"""
+        return all(cell != '' for row in self.cellState for cell in row)
+
+    def endGame(self, message):
+        """Common logic for the end of a game"""
+        self.activeGame = False
+        self.saveGameLog(message)
+        messagebox.showinfo("Game Over", message)
+        for row in self.cells:
+            for cell in row:
+                cell.config(state='disabled')
+
+    def startGame(self):
+        """Initialize the game board state and prepare it for the game"""
+        self.createUIElements()
+        self.initializePlayers()
+
+        dimN = int(self.dimensions.get().split('x')[0])
+
+        # Initialize the game state
+        self.cellState = [['' for _ in range(dimN)] for _ in range(dimN)]
+        self.cellOwner = [[None for _ in range(dimN)] for _ in range(dimN)]
+
+        self.activeGame = True
+
+        # Ensure all scores are reset
+        for player in self.players:
+            player.score = 0
+
+        self.initializeGameLog()
+
+        # Set up cell clicks
+        for i in range(dimN):
+            for j in range(dimN):
+                self.cells[i][j].config(command=lambda row=i, col=j: self.cellClicked(row, col))
+
+        self.updatePlayerChar()
+        self.updateTurnFrame(self.getCurrentPlayer())
+
+    def initializeGameLog(self):
+        """Initialize the game log file"""
+        open(self.logFilePath, 'w').close()
+
+    def writeMoveToFile(self, moveRecord):
+        """Write a singular move to the file"""
+        if not self.logFilePath:
+            return
+
+        with open(self.logFilePath, 'a') as f:
+            locationStr = f"{moveRecord['row']},{moveRecord['col']}"
+            f.write(f"{moveRecord['char']},{locationStr},{moveRecord['player_color']}\n")
+
+    def saveGameLog(self, gameResult):
+        """Save final game state to log file"""
+        if not self.logFilePath:
+            return
+
+        print(f"Game log saved to: {self.logFilePath}")
+
+    def replayGame(self):
+        try:
+            with open(self.logFilePath, 'r') as f:
+                moves = f.readlines()
+
+            self.clearBoardForReplay
+
+            for moveLine in moves:
+                if moveLine: # Skip any accidental empty lines
+                    parts = moveLine.split(',')
+                    if len(parts) == 4:
+                        char, rowStr, colStr, color = parts
+                        row, col = int(rowStr), int(colStr)
+
+                        self.replayMove
+
+
+class simpleSOSGame(SOSGame):
+    """This class will implement the SOS game with the general rule set, in which the player who completes an SOS chain
+    first wins the game"""
+
+    def gameOverHandler(self):
+        """This function will be called after a move has been made to determine if the move that was made
+        created an SOS chain, and if so, end the game and announce the player who made the SOS as the winner"""
+
+        currentPlayer = self.getCurrentPlayer()
+
+        # If Player scored, they win game
+        if currentPlayer.score > 0:
+            self.endGame(f"{currentPlayer.name} wins!")
+        elif self.isBoardFull():
+            # Board is now full and no SOS was made
+            self.endGame("Game ended in a draw, no one scored!")
+
+
+class generalSOSGame(SOSGame):
+    """This class will implement the SOS game with the general rule set, in which the player
+    with the most complete SOS chains at the end of the game will be the winner"""
+
+    def gameOverHandler(self):
+        """This function will determine if a general game has ended by checking if there are valid moves left to make
+        if there are no valid moves left, the function will evaluate which of the two player's has scored the most
+        points, and will announce that that player is the winner"""
+        if self.isBoardFull():
+            # Board is full - determine winner
+            self.determineWinner()
+
+    def determineWinner(self):
+        """Determine and announce the winner when the board is full in a general game"""
+        p1Score = self.players[0].score
+        p2Score = self.players[1].score
+
+        if p1Score > p2Score:
+            winner = self.players[0]
+            message = f"{winner.name} wins the game with a score of {winner.score}"
+        elif p2Score > p1Score:
+            winner = self.players[1]
+            message = f"{winner.name} wins the game with a score of {winner.score}"
+        else:
+            message = f"It's a tie! Both Players scored {p1Score} points"
+
+        self.endGame(message)
+
+    # Create a setup class to handle rule selection, will look at refactoring into classes, but testing for function
+
+
+def main():
+    root = tk.Tk()
+    root.title('SOS GAME')
+    root.geometry('1000x800')
+    root.resizable(True, True)
+
+    root.grid_columnconfigure(0, weight=1)
+    root.grid_rowconfigure(0, weight=1)
+
+    # Import setupGame locally to prevent circular imports
+    from GUI_4 import setupGame
+    setupInstance = setupGame(root)
+
+    root.mainloop()
+
+
+if __name__ == '__main__':
+    main()
