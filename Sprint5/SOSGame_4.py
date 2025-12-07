@@ -366,6 +366,8 @@ class SOSGame(gameBoard):
             for cell in row:
                 cell.config(state='disabled')
 
+        self.root.after(1000, self.replayGame)
+
     def startGame(self):
         """Initialize the game board state and prepare it for the game"""
         self.createUIElements()
@@ -404,7 +406,7 @@ class SOSGame(gameBoard):
 
         with open(self.logFilePath, 'a') as f:
             locationStr = f"{moveRecord['row']},{moveRecord['col']}"
-            f.write(f"{moveRecord['char']},{locationStr},{moveRecord['player_color']}\n")
+            f.write(f"{moveRecord['char']},{locationStr},{moveRecord['playerColor']}\n")
 
     def saveGameLog(self, gameResult):
         """Save final game state to log file"""
@@ -418,13 +420,14 @@ class SOSGame(gameBoard):
             with open(self.logFilePath, 'r') as f:
                 moves = f.readlines()
 
-            self.clearBoardForReplay
+            self.clearBoardForReplay()
 
             for moveLine in moves:
                 if moveLine: # Skip any accidental empty lines
                     parts = moveLine.split(',')
                     if len(parts) == 4:
                         char, rowStr, colStr, color = parts
+                        color = color.strip()
                         row, col = int(rowStr), int(colStr)
 
                         self.replayMove(row, col, char, color)
@@ -440,10 +443,13 @@ class SOSGame(gameBoard):
 
             messagebox.showinfo("Replay Complete", "Game Replay Finished")
 
+            self.root.after(1000, self.root.destroy())
         except FileNotFoundError:
             messagebox.showerror("Replay Error", "No Game Log Found")
+            self.root.after(1000, self.root.destroy())
         except Exception as e:
             messagebox.showerror("Replay Error", f"Error during replay: {str(e)}")
+            self.root.after(1000, self.root.destroy())
 
     def clearBoardForReplay(self):
         """Clear board so replay can be done"""
@@ -467,6 +473,36 @@ class SOSGame(gameBoard):
         for player in self.players:
             player.score = 0
 
+
+    def replayMove(self, row, col, moveChar, color):
+        """Make a move during replay"""
+        boardSize = len(self.cells)
+        if boardSize <= 5:
+            fontSize = 14
+        elif boardSize <= 8:
+            fontSize = 12
+        elif boardSize <= 10:
+            fontSize = 10
+        else:
+            fontSize = 9
+        fontConfig = ('Arial', fontSize, 'bold')
+
+        # Update game state
+        self.cellState[row][col] = moveChar
+
+        # Determine player number from color
+        player_num = 0 if color == 'Red' else 1
+        self.cellOwner[row][col] = player_num
+
+        # Update cell display
+        self.cells[row][col].config(
+            text=moveChar,
+            fg=color,
+            state='disabled',
+            disabledforeground=color,
+            relief='sunken',
+            font=fontConfig
+        )
 
 
 
