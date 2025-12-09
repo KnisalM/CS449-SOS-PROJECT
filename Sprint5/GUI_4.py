@@ -208,6 +208,8 @@ class setupGame(gameBoard):
         # Store the move values
         p1MoveVal = self.p1Move.get()
         p2MoveVal = self.p2Move.get()
+        p1Type = self.p1_type.get()
+        p2Type = self.p2_type.get()
 
         # Destroy setup frame
         self.setupFrame.destroy()
@@ -226,6 +228,8 @@ class setupGame(gameBoard):
         gameInstance.ruleSet.set(ruleSet)
         gameInstance.p1Move.set(p1MoveVal)
         gameInstance.p2Move.set(p2MoveVal)
+        gameInstance.p1_type.set(p1Type)
+        gameInstance.p2_type.set(p2Type)
 
         self.instance = gameInstance
         gameInstance.startGame()

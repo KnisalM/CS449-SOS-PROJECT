@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="54d2b932-84ef-4b08-9e27-5a301cc7672f" name="Changes" comment="Added the self.clearBoardForReplay function to reset the board before the game is replayed on screen">
+    <list default="true" id="54d2b932-84ef-4b08-9e27-5a301cc7672f" name="Changes" comment="The replay functionality is now complete, but I am having some issues with the player type selection, where I am picking to play a human vs human game, and blue player is still being controlled by a computer. Investigating code currently to try and find source of this bug, as this was not happening previously.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SOSGame_4.py" beforeDir="false" afterPath="$PROJECT_DIR$/SOSGame_4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI_4.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI_4.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +28,27 @@
   }
 }</component>
   <component name="RunManager" selected="Python.SOSGame_4">
+    <configuration name="GUI_4" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Sprint5" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GUI_4.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="SOSGame_4" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Sprint5" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -73,6 +94,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.SOSGame_4" />
+        <item itemvalue="Python.GUI_4" />
       </list>
     </recent_temporary>
   </component>
@@ -106,7 +128,14 @@
       <option name="project" value="LOCAL" />
       <updated>1765135984433</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="The replay functionality is now complete, but I am having some issues with the player type selection, where I am picking to play a human vs human game, and blue player is still being controlled by a computer. Investigating code currently to try and find source of this bug, as this was not happening previously.">
+      <created>1765137691657</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1765137691657</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -123,6 +152,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Have implemented functionality in the SOSGame class to write moves to a file as the moves happen in the game. Currently, working on implementing the replay game functionality, beginning with adding a replayGame function, which will call helper functions clearBoardForReplay, and self.replayMove" />
     <MESSAGE value="Added the self.clearBoardForReplay function to reset the board before the game is replayed on screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added the self.clearBoardForReplay function to reset the board before the game is replayed on screen" />
+    <MESSAGE value="The replay functionality is now complete, but I am having some issues with the player type selection, where I am picking to play a human vs human game, and blue player is still being controlled by a computer. Investigating code currently to try and find source of this bug, as this was not happening previously." />
+    <option name="LAST_COMMIT_MESSAGE" value="The replay functionality is now complete, but I am having some issues with the player type selection, where I am picking to play a human vs human game, and blue player is still being controlled by a computer. Investigating code currently to try and find source of this bug, as this was not happening previously." />
   </component>
 </project>
